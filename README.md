@@ -1,0 +1,1 @@
+This branch is to be used for Releases, for RCs use the RC branch
