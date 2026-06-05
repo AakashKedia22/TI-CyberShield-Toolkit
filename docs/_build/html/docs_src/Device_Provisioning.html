@@ -1,0 +1,501 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>4 : Device Provisioning &mdash; TI Cybershield Toolkit 0.8 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=d37b194a" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=a0e24af7"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="5 : GUI Reference" href="GUI_Reference.html" />
+    <link rel="prev" title="3 : Certificate Generation" href="Certificate_Generation.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            TI Cybershield Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Release_Notes.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Disclaimer.html">Disclaimer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Installation.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Introduction.html">1 : Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Key_Management.html">2 : Key Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Certificate_Generation.html">3 : Certificate Generation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">4 : Device Provisioning</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#provisioning-overview">4.1 Provisioning Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#connection-methods">4.2 Connection Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#key-provisioning-process">4.3 Key Provisioning Process</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#prerequisites">4.3.1 Prerequisites</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#key-provisioning-with-gui">4.3.2 Key Provisioning with GUI</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#key-provisioning-with-cli">4.3.3 Key Provisioning with CLI</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#device-configuration-and-binary-signing">4.4 Device Configuration and Binary Signing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#code-provisioning-process">4.5 Code Provisioning Process</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">4.5.1 Prerequisites</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#code-provisioning-with-gui">4.5.2 Code Provisioning with GUI</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#code-provisioning-with-cli">4.5.3 Code Provisioning with CLI</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#verifying-device-state">4.6 Verifying Device State</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#using-the-device-state-detector">4.6.1 Using the Device State Detector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#interpreting-provisioning-logs">4.6.2 Interpreting Provisioning Logs</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="GUI_Reference.html">5 : GUI Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CLI_Reference.html">6 : CLI Reference (Used in Python Environment)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Debugging.html">7 : Debugging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Appendix.html">8 : Appendix</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">TI Cybershield Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">4 : Device Provisioning</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="device-provisioning">
+<h1>4 : Device Provisioning<a class="headerlink" href="#device-provisioning" title="Link to this heading"></a></h1>
+<p>This section covers the device provisioning process, including key provisioning and code provisioning.</p>
+<section id="provisioning-overview">
+<h2>4.1 Provisioning Overview<a class="headerlink" href="#provisioning-overview" title="Link to this heading"></a></h2>
+<p>Device provisioning is a two-stage process:</p>
+<ol class="arabic simple">
+<li><p><strong>Key Provisioning</strong>: Transitions the device from HS-FS (Field Secure) state to HS-KP (Key Provisioned) state by programming keys and other security parameters.</p></li>
+<li><p><strong>Code Provisioning</strong>: Transitions the device from HS-KP state to HS-SE (Security Enabled) state by programming the device with secure code.</p></li>
+</ol>
+<div class="admonition warning" id="provisioning-irreversible">
+<p class="admonition-title">Warning</p>
+<ul class="simple">
+<li><p>Provisioning is an irreversible process. Once keys are programmed, they cannot be changed.</p></li>
+<li><p>Incorrect provisioning can permanently affect device functionality.</p></li>
+<li><p>Always perform provisioning in a controlled environment to avoid issues like electrical failures.</p></li>
+</ul>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p>For a complete description of device states and their properties, see <a class="reference internal" href="Introduction.html#device-states"><span class="std std-ref">1.4 Device States and Transition</span></a>.</p>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p>Prebuilt HSM binaries for key and code provisioning are available via the secure binaries addon.
+See <a class="reference internal" href="Introduction.html#secure-binaries-addon"><span class="std std-ref">1.6 Secure Binaries Addon</span></a> for details.</p>
+</div>
+</section>
+<section id="connection-methods">
+<h2>4.2 Connection Methods<a class="headerlink" href="#connection-methods" title="Link to this heading"></a></h2>
+<p>The TI Cybershield Toolkit supports two main connection methods for device provisioning:</p>
+<dl class="simple">
+<dt><strong>UART Connection</strong>:</dt><dd><ul class="simple">
+<li><p>Uses serial communication via USB-to-UART adapter</p></li>
+<li><p>Requires a properly configured serial port</p></li>
+<li><p>Device must be in ROM boot mode or UART boot mode</p></li>
+</ul>
+</dd>
+<dt><strong>JTAG Connection</strong>:</dt><dd><ul class="simple">
+<li><p>Uses JTAG/XDS debug probe</p></li>
+<li><p>Requires Code Composer Studio (CCS) installation</p></li>
+<li><p>Provides more debugging capabilities</p></li>
+</ul>
+</dd>
+</dl>
+<p>The choice of connection method depends on the device and your specific requirements.</p>
+</section>
+<section id="key-provisioning-process">
+<h2>4.3 Key Provisioning Process<a class="headerlink" href="#key-provisioning-process" title="Link to this heading"></a></h2>
+<section id="prerequisites">
+<h3>4.3.1 Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading"></a></h3>
+<p>Before starting key provisioning:</p>
+<ol class="arabic simple">
+<li><p>Ensure you have a properly generated certificate (see <a class="reference internal" href="Certificate_Generation.html#certificate-generation"><span class="std std-ref">3 : Certificate Generation</span></a>)</p></li>
+<li><p>Confirm the device is in HS-FS state</p></li>
+<li><p>Set up the appropriate connection (UART or JTAG). For JTAG, <a class="reference external" href="https://www.ti.com/tool/CCSTUDIO">CCS 20.5.0</a> must be installed.</p></li>
+<li><p>Have the necessary binary files (flash kernel, OTP keywriter binary)</p></li>
+</ol>
+</section>
+<section id="key-provisioning-with-gui">
+<h3>4.3.2 Key Provisioning with GUI<a class="headerlink" href="#key-provisioning-with-gui" title="Link to this heading"></a></h3>
+<p>The key provisioning process in the GUI:</p>
+<ol class="arabic simple">
+<li><p>Launch the GUI application by running the <code class="docutils literal notranslate"><span class="pre">cstgui</span></code> command in the terminal (see <a class="reference internal" href="Installation.html#installation-guide"><span class="std std-ref">Installation Guide</span></a> for setup)</p></li>
+<li><p>Navigate to the “Key Provisioning” tab</p></li>
+<li><p>Select the connection method (UART or JTAG)</p></li>
+<li><p>Provide the required file paths:
+* Flash kernel
+* OTP keywriter binary
+* Certificate
+* Serial port (for UART) or CCS path (for JTAG)</p></li>
+<li><p>Click “Provision Keys” button</p></li>
+<li><p>Follow the on-screen instructions to complete the process</p></li>
+<li><p>Verify successful provisioning with the device state detector</p></li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>If the secure binaries addon is installed, the OTP keywriter binary is automatically detected and configured for the selected device. Manual configuration is only required if the addon is not installed.</p></li>
+<li><p>The JTAG flash kernel is included with the package at <code class="docutils literal notranslate"><span class="pre">host/bin/asm/f29h85x/secure_ram_based_jtag_kernel.out</span></code> and is pre-populated automatically.</p></li>
+</ul>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<blockquote>
+<div><p>The secure binaries addon as part of 26.00.00_STS includes only the <strong>SR_10 (Rev A)</strong> OTP Keywriter binary.</p>
+</div></blockquote>
+<p>Users with <strong>Rev B or Rev C silicon (SR_20)</strong> must obtain the SR_20-specific OTP Keywriter
+binary separately from the SBL Keywriter package. Contact a TI representative for more
+information.</p>
+</div>
+<a class="reference internal image-reference" href="../_images/key_provisioning_advanced_settings.png"><img alt="Key Provisioning Advanced Settings" src="../_images/key_provisioning_advanced_settings.png" style="width: 600px;" />
+</a>
+<p>To configure custom binaries:</p>
+<ol class="arabic simple">
+<li><p>In the Key Provisioning tab, click <strong>Advanced Settings</strong> (▼ button)</p></li>
+<li><p>Update the binary paths as needed:
+* <strong>CCS Path</strong>: Path to Code Composer Studio installation (for JTAG)
+* <strong>JTAG Flash Kernel</strong>: Path to your device-specific JTAG kernel binary
+* <strong>OTP Keywriter Binary</strong>: Path to your device-specific OTP keywriter/HSM binary
+* <strong>Certificate</strong>: Path to the generated certificate file</p></li>
+<li><p>Close Advanced Settings and proceed with “Provision Keys via JTAG”</p></li>
+</ol>
+</section>
+<section id="key-provisioning-with-cli">
+<h3>4.3.3 Key Provisioning with CLI<a class="headerlink" href="#key-provisioning-with-cli" title="Link to this heading"></a></h3>
+<p>To provision keys using the command-line interface via JTAG:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cst<span class="w"> </span>--device<span class="w"> </span>f29h85x<span class="w"> </span>jtag_keyprov<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--ccs-path<span class="w"> </span>CCS_PATH<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--certificate<span class="w"> </span>PATH_TO_CERTIFICATE<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--otp-kw-bin<span class="w"> </span>PATH_TO_OTP_KW_BIN<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--jtag-kernel<span class="w"> </span>PATH_TO_JTAG_KERNEL
+</pre></div>
+</div>
+<p>Example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cst<span class="w"> </span>--device<span class="w"> </span>f29h85x<span class="w"> </span>jtag_keyprov<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--ccs-path<span class="w"> </span>~/ti/ccs2050/<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--certificate<span class="w"> </span>~/ti/f29h85x/certificates/final_certificate.bin<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--otp-kw-bin<span class="w"> </span>~/ti/TICST/addons/f29h85x/bin/otp_kw_f29h85x_hs_fs.hsmimage.bin<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--jtag-kernel<span class="w"> </span>host/bin/asm/f29h85x/secure_ram_based_jtag_kernel.out
+</pre></div>
+</div>
+<p>Parameters:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--ccs-path</span></code>: Path to CCS installation (required)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--certificate</span></code>: Path to the certificate file (required)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--otp-kw-bin</span></code>: Path to the OTP keywriter binary (required). If the Security Addon is
+installed, this is found at <code class="docutils literal notranslate"><span class="pre">~/ti/TICST/addons/f29h85x/bin/</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--jtag-kernel</span></code>: Path to the JTAG kernel binary (required)</p></li>
+</ul>
+</section>
+</section>
+<section id="device-configuration-and-binary-signing">
+<h2>4.4 Device Configuration and Binary Signing<a class="headerlink" href="#device-configuration-and-binary-signing" title="Link to this heading"></a></h2>
+<p>Before provisioning code, binaries must be signed and encrypted with your Secondary Manufacturer keys (SMPK/SMEK). The Configuration page (step 2 in the GUI workflow) is where this is performed.</p>
+<p>If the Security Addon is installed, all prebuilt binaries from the addon can be signed and
+encrypted in a single step. On the <strong>Configuration</strong> page, click <strong>Sign and Encrypt All
+Prebuilt Binaries</strong> to automatically sign and encrypt all of the following addon binaries
+using your provisioned SMPK/SMEK keys with their optimal configurations:</p>
+<ul class="simple">
+<li><p><strong>Prebuilt TIFS HSSE Firmware</strong> — TI’s HSM firmware image for the HS-SE state</p></li>
+<li><p><strong>Prebuilt C29 Secure Image</strong> — reference C29 application image</p></li>
+<li><p><strong>Security Configuration (seccfg)</strong> — device security configuration binary</p></li>
+</ul>
+<a class="reference internal image-reference" href="../_images/sign_and_encrypt_prebuilt_binaries.png"><img alt="Sign and Encrypt All Prebuilt Binaries on the Configuration page" src="../_images/sign_and_encrypt_prebuilt_binaries.png" style="width: 600px;" />
+</a>
+<p>Once signed, these binaries are immediately ready to use for code provisioning — no
+further manual signing steps are required.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <strong>Sign and Encrypt All Prebuilt Binaries</strong> button operates exclusively on the prebuilt
+binaries included with the Security Addon. For signing and encrypting your own custom
+binaries, use the <strong>Advanced Certificate Options</strong> section on the Configuration page.</p>
+</div>
+</section>
+<section id="code-provisioning-process">
+<h2>4.5 Code Provisioning Process<a class="headerlink" href="#code-provisioning-process" title="Link to this heading"></a></h2>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>All binaries to be flashed during code provisioning must be signed and encrypted using the Secondary Manufacturer keys (SMPK/SMEK) that were programmed onto the device during key provisioning. See <span class="xref std std-ref">section 4.4</span> for how to sign and encrypt binaries before proceeding.</p>
+</div>
+<section id="id1">
+<h3>4.5.1 Prerequisites<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<p>Before starting code provisioning:</p>
+<ol class="arabic simple">
+<li><p>Ensure the device is in HS-KP state (key provisioned)</p></li>
+<li><p>Set up the appropriate connection (UART or JTAG). For JTAG, <a class="reference external" href="https://www.ti.com/tool/CCSTUDIO">CCS 20.5.0</a> must be installed.</p></li>
+<li><p>Have the necessary binary files (signed and encrypted with your Secondary Manufacturer keys).
+If the Security Addon is installed, use <strong>Sign and Encrypt All Prebuilt Binaries</strong> on the
+Configuration page to produce all required signed binaries in one step (see <span class="xref std std-ref">section 4.4</span>):
+* Flash kernel
+* HSM code provisioning image
+* HSM CPU code (optional)
+* C29 CPU code (optional)
+* Security configuration (required for HS-KP devices)</p></li>
+</ol>
+</section>
+<section id="code-provisioning-with-gui">
+<h3>4.5.2 Code Provisioning with GUI<a class="headerlink" href="#code-provisioning-with-gui" title="Link to this heading"></a></h3>
+<a class="reference internal image-reference" href="../_images/code_provisioning_tab.png"><img alt="Code Provisioning tab on the Provisioning page" src="../_images/code_provisioning_tab.png" style="width: 600px;" />
+</a>
+<p>The code provisioning process in the GUI:</p>
+<ol class="arabic simple">
+<li><p>Launch the GUI application by running the <code class="docutils literal notranslate"><span class="pre">cstgui</span></code> command in the terminal (see <a class="reference internal" href="Installation.html#installation-guide"><span class="std std-ref">Installation Guide</span></a> for setup)</p></li>
+<li><p>Navigate to the “Code Provisioning” tab</p></li>
+<li><p>Select the connection method (UART or JTAG)</p></li>
+<li><p>Provide the required file paths:
+* Flash kernel
+* HSM code provisioning image
+* HSM CPU code (optional)
+* C29 CPU code (optional)
+* Security configuration (required for HS-KP devices)</p></li>
+<li><p>Select which components to provision using the checkboxes</p></li>
+<li><p>Click “Provision Code” button</p></li>
+<li><p>Follow the on-screen instructions to complete the process</p></li>
+<li><p>Verify successful provisioning with the device state detector</p></li>
+</ol>
+</section>
+<section id="code-provisioning-with-cli">
+<h3>4.5.3 Code Provisioning with CLI<a class="headerlink" href="#code-provisioning-with-cli" title="Link to this heading"></a></h3>
+<p><strong>JTAG:</strong></p>
+<p>To provision code using the command-line interface via JTAG:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cst<span class="w"> </span>--device<span class="w"> </span>f29h85x<span class="w"> </span>jtag_codeprov<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--ccs-path<span class="w"> </span>CCS_PATH<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--jtag-kernel<span class="w"> </span>PATH_TO_JTAG_KERNEL<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--hsm-image<span class="w"> </span>PATH_TO_HSM_CODE_PROV_IMAGE<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--hsm-cpu-code<span class="w"> </span>PATH_TO_HSM_CPU_IMAGE<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--c29-cpu-code<span class="w"> </span>PATH_TO_C29_CPU_IMAGE<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--seccfg<span class="w"> </span>PATH_TO_SECCFG
+</pre></div>
+</div>
+<p>Example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cst<span class="w"> </span>--device<span class="w"> </span>f29h85x<span class="w"> </span>jtag_codeprov<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--ccs-path<span class="w"> </span>~/ti/ccs2050/<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--jtag-kernel<span class="w"> </span>host/bin/asm/f29h85x/secure_ram_based_jtag_kernel.out<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--hsm-image<span class="w"> </span>~/ti/f29h85x/signedImages/tifs_f29h85x_hs_se_code_provisioning.release.hs.hsmimage<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--hsm-cpu-code<span class="w"> </span>~/ti/f29h85x/signedImages/tifs_f29h85x_hs_se.release.hs.hsmimage<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--c29-cpu-code<span class="w"> </span>~/ti/f29h85x/signedImages/secure_boot_manager.cert.bin<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--seccfg<span class="w"> </span>~/ti/f29h85x/signedImages/seccfg.bin
+</pre></div>
+</div>
+<p>Parameters:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--ccs-path</span></code>: Path to CCS installation (required for JTAG)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--jtag-kernel</span></code>: Path to the JTAG kernel binary (required)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--hsm-image</span></code>: HSM <strong>code provisioning</strong> image — this is the image specifically built
+for the code provisioning flow, not the standard HSM runtime image (required)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--hsm-cpu-code</span></code>: HSM CPU runtime image to be flashed (optional)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--c29-cpu-code</span></code>: C29 CPU image to be flashed (optional)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--seccfg</span></code>: Security configuration binary (required for HS-KP devices)</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Prebuilt versions of <code class="docutils literal notranslate"><span class="pre">--hsm-image</span></code>, <code class="docutils literal notranslate"><span class="pre">--hsm-cpu-code</span></code>, and <code class="docutils literal notranslate"><span class="pre">--c29-cpu-code</span></code> are
+available in the Security Addon package at <code class="docutils literal notranslate"><span class="pre">~/ti/TICST/addons/f29h85x/</span></code>. After signing
+and encrypting them with your SMPK/SMEK keys (see <span class="xref std std-ref">section 4.4</span>), the signed
+outputs will be in your configured output directory ready for use here.</p>
+</div>
+<p><strong>UART:</strong></p>
+<p>To provision code using the command-line interface via UART:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cst<span class="w"> </span>--device<span class="w"> </span>f29h85x<span class="w"> </span>uart_codeprov<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--uart-kernel<span class="w"> </span>PATH_TO_UART_KERNEL<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--port<span class="w"> </span>SERIAL_PORT<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--target<span class="w"> </span>TARGET_BAUD<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--input<span class="w"> </span>INPUT_PARAMS<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--hsm-image<span class="w"> </span>PATH_TO_HSM_CODE_PROV_IMAGE<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--hsm-cpu-code<span class="w"> </span>PATH_TO_HSM_CPU_IMAGE<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--c29-cpu-code<span class="w"> </span>PATH_TO_C29_CPU_IMAGE<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--seccfg<span class="w"> </span>PATH_TO_SECCFG
+</pre></div>
+</div>
+<p>Example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cst<span class="w"> </span>--device<span class="w"> </span>f29h85x<span class="w"> </span>uart_codeprov<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--uart-kernel<span class="w"> </span>~/ti/f29h85x/signedImages/ram_based_uart_sbl.cert.bin<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--port<span class="w"> </span>/dev/ttyACM2<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--target<span class="w"> </span><span class="m">115200</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--input<span class="w"> </span><span class="m">3</span>,5,6,7<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--hsm-image<span class="w"> </span>~/ti/f29h85x/signedImages/tifs_f29h85x_hs_se_code_provisioning.release.hs.hsmimage<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--hsm-cpu-code<span class="w"> </span>~/ti/f29h85x/signedImages/tifs_f29h85x_hs_se.release.hs.hsmimage<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--c29-cpu-code<span class="w"> </span>~/ti/f29h85x/signedImages/secure_boot_manager.cert.bin<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--seccfg<span class="w"> </span>~/ti/f29h85x/signedImages/seccfg.bin
+</pre></div>
+</div>
+<p>Parameters:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--uart-kernel</span></code>: Path to the RAM-based UART SBL kernel binary (required)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--port</span></code>: Serial port connected to the device (e.g. <code class="docutils literal notranslate"><span class="pre">/dev/ttyACM2</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--target</span></code>: Target baud rate (e.g. <code class="docutils literal notranslate"><span class="pre">115200</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--input</span></code>: Comma-separated list of component IDs to provision:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">3</span></code>: HSM code provisioning image (always required)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">5</span></code>: Security configuration</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">6</span></code>: HSM CPU code</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">7</span></code>: C29 CPU code</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--hsm-image</span></code>: HSM <strong>code provisioning</strong> image (same as JTAG)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--hsm-cpu-code</span></code>: HSM CPU runtime image to be flashed (optional)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--c29-cpu-code</span></code>: C29 CPU image to be flashed (optional)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--seccfg</span></code>: Security configuration binary (required for HS-KP devices)</p></li>
+</ul>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">--uart-kernel</span></code> (RAM-based UART SBL) must be signed and encrypted with the same
+SMPK/SMEK keys that were provisioned onto the device during key provisioning. Use the
+<strong>Sign and Encrypt All Prebuilt Binaries</strong> button on the Configuration page
+(see <span class="xref std std-ref">section 4.4</span>) to produce a correctly signed version from the prebuilt
+binary included in the Security Addon.</p>
+</div>
+</section>
+</section>
+<section id="verifying-device-state">
+<h2>4.6 Verifying Device State<a class="headerlink" href="#verifying-device-state" title="Link to this heading"></a></h2>
+<p>After provisioning, it’s important to verify that the device state has changed as expected.</p>
+<section id="using-the-device-state-detector">
+<h3>4.6.1 Using the Device State Detector<a class="headerlink" href="#using-the-device-state-detector" title="Link to this heading"></a></h3>
+<p>The TI Cybershield Toolkit includes a device state detector that can identify the current state of a device:</p>
+<dl class="simple">
+<dt>Using GUI:</dt><dd><ol class="arabic simple">
+<li><p>Navigate to the “Device State” section</p></li>
+<li><p>Click “Detect Device State” button</p></li>
+<li><p>View the detected device state information</p></li>
+</ol>
+</dd>
+</dl>
+<p>Using CLI:</p>
+<p>For UART:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cst<span class="w"> </span>--device<span class="w"> </span>f29h85x<span class="w"> </span>devTypeUART<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--uart-kernel<span class="w"> </span>PATH_TO_UART_KERNEL<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--port<span class="w"> </span>SERIAL_PORT<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--targetbaud<span class="w"> </span>BAUD_RATE
+</pre></div>
+</div>
+<p>Example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cst<span class="w"> </span>--device<span class="w"> </span>f29h85x<span class="w"> </span>devTypeUART<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--uart-kernel<span class="w"> </span>~/ti/f29h85x/signedImages/ram_based_uart_sbl.cert.bin<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--port<span class="w"> </span>/dev/ttyACM2<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--targetbaud<span class="w"> </span><span class="m">115200</span>
+</pre></div>
+</div>
+<p>For JTAG:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cst<span class="w"> </span>--device<span class="w"> </span>f29h85x<span class="w"> </span>devTypeJTAG<span class="w"> </span>--ccs<span class="w"> </span>CCS_PATH
+</pre></div>
+</div>
+<p>Example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cst<span class="w"> </span>--device<span class="w"> </span>f29h85x<span class="w"> </span>devTypeJTAG<span class="w"> </span>--ccs<span class="w"> </span>~/ti/ccs2050/
+</pre></div>
+</div>
+<p>Expected states after provisioning:
+* After key provisioning: HS-KP (Keys Provisioned)
+* After code provisioning: HS-SE (Security Enabled)</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p><strong>JTAG Debug Limitation After Code Provisioning</strong>: After code provisioning is completed using the JTAG flow, the device state detection via JTAG will fail because debug access is closed in the HS-SE state. JTAG cannot detect the updated device state once the device transitions to HS-SE.</p>
+<p>To verify if the device has successfully transitioned to HS-SE state:</p>
+<ol class="arabic simple">
+<li><p>Navigate to the second page of the tool (Configuration page)</p></li>
+<li><p>Select <strong>UART</strong> mode for device state detection</p></li>
+<li><p>Click “Detect Device State” using UART</p></li>
+<li><p>The tool will correctly identify the HS-SE state via UART communication</p></li>
+</ol>
+</div>
+</section>
+<section id="interpreting-provisioning-logs">
+<span id="log-file-locations"></span><h3>4.6.2 Interpreting Provisioning Logs<a class="headerlink" href="#interpreting-provisioning-logs" title="Link to this heading"></a></h3>
+<p>The TI Cybershield Toolkit creates detailed logs during the provisioning process. These logs contain important information about the provisioning status:</p>
+<ul class="simple">
+<li><p><strong>Key programming status</strong>: Success/failure of each key component</p></li>
+<li><p><strong>OTP programming status</strong>: Success/failure of OTP field programming</p></li>
+<li><p><strong>Code provisioning status</strong>: Success/failure of code component programming</p></li>
+<li><p><strong>Detailed error information</strong>: If provisioning fails</p></li>
+</ul>
+<p>Log files are stored in the following locations:
+* Key provisioning logs: <code class="docutils literal notranslate"><span class="pre">ti_cst_f29h85x_0X_XX_XX/host/src/apps/tifs/kp_cp_f29h85x/log.txt</span></code>
+* Code provisioning logs: <code class="docutils literal notranslate"><span class="pre">ti_cst_f29h85x_0X_XX_XX/host/src/apps/tifs/kp_cp_f29h85x/cp_logs.txt</span></code></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>A debug response of 0x00000000 in the logs typically indicates successful programming, despite any error messages that might appear.
+For a full list of error codes, see <a class="reference internal" href="Appendix.html#error-codes"><span class="std std-ref">9.2 Error Code Reference</span></a>.</p>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="Certificate_Generation.html" class="btn btn-neutral float-left" title="3 : Certificate Generation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="GUI_Reference.html" class="btn btn-neutral float-right" title="5 : GUI Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Texas Instruments.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

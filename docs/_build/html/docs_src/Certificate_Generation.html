@@ -1,0 +1,405 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>3 : Certificate Generation &mdash; TI Cybershield Toolkit 0.8 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=d37b194a" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=a0e24af7"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="4 : Device Provisioning" href="Device_Provisioning.html" />
+    <link rel="prev" title="2 : Key Management" href="Key_Management.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            TI Cybershield Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Release_Notes.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Disclaimer.html">Disclaimer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Installation.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Introduction.html">1 : Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Key_Management.html">2 : Key Management</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">3 : Certificate Generation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#certificate-overview">3.1 Certificate Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#certificate-generation-process">3.2 Certificate Generation Process</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#using-the-gui-for-certificate-generation">3.3 Using the GUI for Certificate Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#using-the-cli-for-certificate-generation">3.4 Using the CLI for Certificate Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#certificate-contents">3.5 Certificate Contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#extended-otp-configuration">3.6 Extended OTP Configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#extended-otp-memory-layout">3.6.1 Extended OTP Memory Layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#using-the-gui-for-extended-otp">3.6.2 Using the GUI for Extended OTP</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Device_Provisioning.html">4 : Device Provisioning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="GUI_Reference.html">5 : GUI Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CLI_Reference.html">6 : CLI Reference (Used in Python Environment)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Debugging.html">7 : Debugging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Appendix.html">8 : Appendix</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">TI Cybershield Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">3 : Certificate Generation</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="certificate-generation">
+<span id="id1"></span><h1>3 : Certificate Generation<a class="headerlink" href="#certificate-generation" title="Link to this heading"></a></h1>
+<p>This section describes the process for generating certificates required for secure provisioning of devices.</p>
+<div class="admonition note" id="openssl-requirement">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>OpenSSL 3.0.2 (March 2022) or newer is required for certificate generation.</p></li>
+<li><p>Check your OpenSSL version by running <code class="docutils literal notranslate"><span class="pre">openssl</span> <span class="pre">version</span></code> at the command prompt.</p></li>
+</ul>
+</div>
+<section id="certificate-overview">
+<h2>3.1 Certificate Overview<a class="headerlink" href="#certificate-overview" title="Link to this heading"></a></h2>
+<p>Certificates are required to securely provision keys and other security parameters to devices. The TI Cybershield Toolkit uses X.509 certificates with specialized extensions to securely transfer key material and other security parameters to the device.</p>
+<p>The certificate generation process:</p>
+<ol class="arabic simple">
+<li><p>Takes Secondary Manufacturer keys (SMPK/SMEK) as input</p></li>
+<li><p>Encrypts the sensitive portions with the TI Field Encryption Key (TI FEK)</p></li>
+<li><p>Creates a signed X.509 certificate that contains the encrypted key material</p></li>
+<li><p>Packages the certificate in a format suitable for device provisioning</p></li>
+</ol>
+<div class="admonition note" id="cert-size-limit">
+<p class="admonition-title">Note</p>
+<p>The maximum certificate size supported by the OTP keywriter firmware is 8192 bytes.</p>
+</div>
+</section>
+<section id="certificate-generation-process">
+<h2>3.2 Certificate Generation Process<a class="headerlink" href="#certificate-generation-process" title="Link to this heading"></a></h2>
+<p>The certificate generation process follows these steps:</p>
+<ol class="arabic">
+<li><p>Generate a cryptographically secure <strong>true random</strong> 256-bit AES encryption key</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The AES key is generated using a cryptographically secure True Random Number Generator (TRNG).
+This satisfies FIPS 140-2/3 requirements for random number generation, as confirmed during
+TUV audit.</p>
+</div>
+</li>
+<li><p>Use this AES-256 key to encrypt all X.509 extension fields requiring protection</p></li>
+<li><p>Create X.509 extensions using the TI FEK (public key):
+* Encrypt the AES-256 key with the TI FEK
+* Sign the AES-256 key with the SMPK, then encrypt with the TI FEK
+* (Optional) Sign the AES-256 key with the BMPK, then encrypt with the TI FEK</p></li>
+<li><p>Combine these extensions into an X.509 configuration</p></li>
+<li><p>Sign the certificate using the SMPK (private key)</p></li>
+<li><p>(Optional) For backup keys, sign with the BMPK (private key)</p></li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>Which key signs the X.509 certificate?</strong></p>
+<p>The X.509 certificate is signed by the customer’s <strong>Secondary Manufacturer Private Key (SMPK private)</strong>.
+The TI FEK is <strong>not</strong> used to sign the certificate itself — it is used only to encrypt the AES key
+within the certificate extensions, protecting the customer key material from all parties except TI’s
+HSM firmware.</p>
+</div>
+</section>
+<section id="using-the-gui-for-certificate-generation">
+<h2>3.3 Using the GUI for Certificate Generation<a class="headerlink" href="#using-the-gui-for-certificate-generation" title="Link to this heading"></a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>Addon detected — TI FEK auto-configured</strong>: If the Security Addon is installed, the
+correct TI FEK public key for your selected device is automatically detected and
+pre-configured. Please verify the correct SR version is selected for the TIFEK (SR_10 for Rev 0/Rev A users and SR_20 for Rev B/Rev C Users). See
+<a class="reference internal" href="Installation.html#addon-installation"><span class="std std-ref">Security Addon Installation</span></a> for setup instructions.</p>
+</div>
+<p>The certificate generation process is integrated into the GUI workflow:</p>
+<ol class="arabic simple">
+<li><p>Launch the GUI application by running the <code class="docutils literal notranslate"><span class="pre">cstgui</span></code> command in the terminal (see <a class="reference internal" href="Installation.html#installation-guide"><span class="std std-ref">Installation Guide</span></a> for setup)</p></li>
+<li><p>Navigate to the “Device &amp; Key Selection” page</p></li>
+<li><p>Select the device type and key type</p></li>
+<li><p>Navigate to the Certificate Generation section. Configure the following parameters:</p>
+<ul class="simple">
+<li><p><strong>MSV (Model Specific Value)</strong>: Customer-defined value (hexadecimal, e.g., <code class="docutils literal notranslate"><span class="pre">0x1E22D</span></code>)</p></li>
+<li><p><strong>Software Revisions</strong>: Set sr_sbl, sr_hsmRT, sr_app, sr_ssu to the appropriate values
+(typically <code class="docutils literal notranslate"><span class="pre">1</span></code> for initial provisioning)</p></li>
+<li><p><strong>Key Count</strong>: Select <code class="docutils literal notranslate"><span class="pre">1</span></code> (SMPK only) or <code class="docutils literal notranslate"><span class="pre">2</span></code> (SMPK + BMPK)</p></li>
+<li><p><strong>Key Revision</strong>: Select <code class="docutils literal notranslate"><span class="pre">1</span></code> (use SMPK) or <code class="docutils literal notranslate"><span class="pre">2</span></code> (use BMPK) for the active signing key</p></li>
+</ul>
+</li>
+<li><p>Configure Advanced Settings if needed:</p>
+<ul class="simple">
+<li><p><strong>TI FEK Public Key</strong>: Set only if the secure binaries addon is not installed (see note below)</p></li>
+<li><p><strong>Device SR Version</strong>: Must match your silicon revision (<code class="docutils literal notranslate"><span class="pre">SR_10</span></code> for Rev A, <code class="docutils literal notranslate"><span class="pre">SR_20</span></code> for Rev B and Rev C)</p></li>
+<li><p><strong>Key protection options</strong>: Check <code class="docutils literal notranslate"><span class="pre">Enable</span> <span class="pre">Write</span> <span class="pre">Protection</span></code> for SMPK/SMEK/BMPK/BMEK
+to prevent future key modification</p></li>
+</ul>
+</li>
+<li><p>Click <strong>Generate Certificate</strong> and specify the output file path</p></li>
+</ol>
+<p>The generated certificate will be stored in the location specified during the process.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p><strong>About the TI FEK Public Key:</strong></p>
+<p>The TI Field Encryption Key (TI FEK) is owned and controlled exclusively by Texas Instruments.
+The FEK public key is embedded within TI’s HSM firmware binary and is fixed for a given device
+family — customers do <strong>not</strong> generate their own FEK.</p>
+<ul class="simple">
+<li><p>If the <strong>secure binaries addon</strong> is installed, the correct TI FEK public key is automatically
+detected and pre-configured for the selected device. No manual action is needed.</p></li>
+<li><p>The actual production
+FEK public key path must be set in <strong>Advanced Settings → Basic → TI FEK Public Key</strong> to match
+the key embedded in your HSM binary (obtained from TI).</p></li>
+</ul>
+</div>
+<a class="reference internal image-reference" href="../_images/certificate_tifek_config.png"><img alt="TI FEK Public Key Configuration in Advanced Settings" src="../_images/certificate_tifek_config.png" style="width: 600px;" />
+</a>
+<p>To configure a custom TI FEK Public Key:</p>
+<ol class="arabic simple">
+<li><p>In the Certificate Generation tab, click <strong>Advanced Settings</strong></p></li>
+<li><p>Navigate to the <strong>Basic</strong> tab</p></li>
+<li><p>Update the <strong>TI FEK Public Key</strong> field with the path to your HSM-specific public key</p></li>
+<li><p>Configure other parameters as needed (MSV, Device SR Version)</p></li>
+<li><p>Proceed with certificate generation</p></li>
+</ol>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p><strong>Device Revision-Specific Configuration:</strong></p>
+<ul>
+<li><p><strong>Rev B and Rev C Devices</strong>: Users with Rev B or Rev C silicon must ensure the <strong>Device SR Version</strong>
+in the Advanced Settings is <code class="docutils literal notranslate"><span class="pre">SR_20</span></code>. Additionally, you must use the Rev B/C-specific <strong>OTP Keywriter</strong>
+binary during provisioning. Refer to the SBL Keywriter documentation for details on selecting the
+correct binary for your device revision.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<blockquote>
+<div><p>The secure binaries addon as part of 26.00.00_STS includes only the SR_10 (Rev A) OTP Keywriter binary.</p>
+</div></blockquote>
+<p>Rev B/C users must obtain the SR_20-specific binary from the SBL Keywriter package.
+Contact a TI representative for more information.</p>
+</div>
+</li>
+<li><p><strong>Rev 0 and Rev A Devices</strong>: Users with Rev 0 or Rev A silicon  must ensure the <strong>Device SR Version</strong>
+in the Advanced Settings is <code class="docutils literal notranslate"><span class="pre">SR_10</span></code>.</p></li>
+</ul>
+</div>
+</section>
+<section id="using-the-cli-for-certificate-generation">
+<h2>3.4 Using the CLI for Certificate Generation<a class="headerlink" href="#using-the-cli-for-certificate-generation" title="Link to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">gencert</span></code> subcommand is invoked via <code class="docutils literal notranslate"><span class="pre">cst</span> <span class="pre">--device</span> <span class="pre">f29h85x</span> <span class="pre">gencert</span></code>. The key source
+is specified via global flags before <code class="docutils literal notranslate"><span class="pre">gencert</span></code> — either a session or signing algorithm flags:</p>
+<p><strong>Option A — Using a session:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cst<span class="w"> </span>--device<span class="w"> </span>f29h85x<span class="w"> </span>--session<span class="w"> </span>SESSION_NAME<span class="w"> </span>--password<span class="w"> </span>PASSWORD<span class="w"> </span>gencert<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-t<span class="w"> </span>PATH_TO_TIFEK_PUB<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--msv<span class="w"> </span>0x1E22D<span class="w"> </span>--msv_protect<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--smpk<span class="w"> </span>--smek<span class="w"> </span>--s_protect<span class="w"> </span>--smek_protect<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--bmpk<span class="w"> </span>--bmek<span class="w"> </span>--b_protect<span class="w"> </span>--bmek_protect<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--sr_sbl<span class="w"> </span><span class="m">1</span><span class="w"> </span>--sr_hsmRT<span class="w"> </span><span class="m">1</span><span class="w"> </span>--sr_app<span class="w"> </span><span class="m">1</span><span class="w"> </span>--sr_ssu<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--keycnt<span class="w"> </span><span class="m">2</span><span class="w"> </span>--keycnt_protect<span class="w"> </span>--keyrev<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-d<span class="w"> </span>f29h85x<span class="w"> </span>--devSrVer<span class="w"> </span>SR_10
+</pre></div>
+</div>
+<p><strong>Option B — Using signing algorithm flags:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cst<span class="w"> </span>--device<span class="w"> </span>f29h85x<span class="w"> </span>--smpk_signing_algorithm<span class="w"> </span>rsa4k<span class="w"> </span>--bmpk_signing_algorithm<span class="w"> </span>rsa4k<span class="w"> </span>gencert<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-t<span class="w"> </span>PATH_TO_TIFEK_PUB<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--msv<span class="w"> </span>0x1E22D<span class="w"> </span>--msv_protect<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--smpk<span class="w"> </span>--smek<span class="w"> </span>--s_protect<span class="w"> </span>--smek_protect<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--bmpk<span class="w"> </span>--bmek<span class="w"> </span>--b_protect<span class="w"> </span>--bmek_protect<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--sr_sbl<span class="w"> </span><span class="m">1</span><span class="w"> </span>--sr_hsmRT<span class="w"> </span><span class="m">1</span><span class="w"> </span>--sr_app<span class="w"> </span><span class="m">1</span><span class="w"> </span>--sr_ssu<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--keycnt<span class="w"> </span><span class="m">2</span><span class="w"> </span>--keycnt_protect<span class="w"> </span>--keyrev<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-d<span class="w"> </span>f29h85x<span class="w"> </span>--devSrVer<span class="w"> </span>SR_10
+</pre></div>
+</div>
+<p>Example (Rev A, SR_10, using a session):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cst<span class="w"> </span>--device<span class="w"> </span>f29h85x<span class="w"> </span>--session<span class="w"> </span>MySession<span class="w"> </span>--password<span class="w"> </span>securePassword<span class="w"> </span>gencert<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-t<span class="w"> </span>~/ti/TICST/addons/f29h85x/tifek/SR_10/ti_fek_public.pem<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--msv<span class="w"> </span>0x1E22D<span class="w"> </span>--msv_protect<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--smpk<span class="w"> </span>--smek<span class="w"> </span>--s_protect<span class="w"> </span>--smek_protect<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--bmpk<span class="w"> </span>--bmek<span class="w"> </span>--b_protect<span class="w"> </span>--bmek_protect<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--sr_sbl<span class="w"> </span><span class="m">1</span><span class="w"> </span>--sr_hsmRT<span class="w"> </span><span class="m">1</span><span class="w"> </span>--sr_app<span class="w"> </span><span class="m">1</span><span class="w"> </span>--sr_ssu<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--keycnt<span class="w"> </span><span class="m">2</span><span class="w"> </span>--keycnt_protect<span class="w"> </span>--keyrev<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-d<span class="w"> </span>f29h85x<span class="w"> </span>--devSrVer<span class="w"> </span>SR_10
+</pre></div>
+</div>
+<p>Common parameters:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--device</span></code>: Target device (global flag, before <code class="docutils literal notranslate"><span class="pre">gencert</span></code>; e.g. <code class="docutils literal notranslate"><span class="pre">f29h85x</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--session</span></code>: Session name for key access (Option A; global flag)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--password</span></code>: Session password (Option A; global flag)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--smpk_signing_algorithm</span></code>: SMPK signing algorithm (Option B; global flag, e.g. <code class="docutils literal notranslate"><span class="pre">rsa4k</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--bmpk_signing_algorithm</span></code>: BMPK signing algorithm (Option B; global flag, e.g. <code class="docutils literal notranslate"><span class="pre">rsa4k</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-t,</span> <span class="pre">--tifek</span></code>: Path to the TI FEK public key (required). If the Security Addon is
+installed, the correct key is included in the addon at <code class="docutils literal notranslate"><span class="pre">~/ti/TICST/addons/f29h85x/tifek/</span></code>
+for both SR_10 (Rev A) and SR_20 (Rev B/Rev C) — select the key matching your device revision.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-d,</span> <span class="pre">--device</span></code>: Device type passed to the <code class="docutils literal notranslate"><span class="pre">gencert</span></code> subcommand (e.g. <code class="docutils literal notranslate"><span class="pre">f29h85x</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--devSrVer</span></code>: Device security revision (<code class="docutils literal notranslate"><span class="pre">SR_10</span></code> for Rev A, <code class="docutils literal notranslate"><span class="pre">SR_20</span></code> for Rev B/C)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--msv</span></code>: Model Specific Value (hexadecimal)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--msv_protect</span></code>: Enable write protection for MSV</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--smpk</span></code> / <code class="docutils literal notranslate"><span class="pre">--smek</span></code>: Include SMPK/SMEK in certificate</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--s_protect</span></code> / <code class="docutils literal notranslate"><span class="pre">--smek_protect</span></code>: Enable write protection for SMPK/SMEK</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--bmpk</span></code> / <code class="docutils literal notranslate"><span class="pre">--bmek</span></code>: Include backup BMPK/BMEK in certificate (optional)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--b_protect</span></code> / <code class="docutils literal notranslate"><span class="pre">--bmek_protect</span></code>: Enable write protection for BMPK/BMEK</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--sr_sbl</span></code>, <code class="docutils literal notranslate"><span class="pre">--sr_hsmRT</span></code>, <code class="docutils literal notranslate"><span class="pre">--sr_app</span></code>, <code class="docutils literal notranslate"><span class="pre">--sr_ssu</span></code>: Software revision values</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--keycnt</span></code>: Number of key sets (<code class="docutils literal notranslate"><span class="pre">1</span></code> or <code class="docutils literal notranslate"><span class="pre">2</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--keycnt_protect</span></code>: Enable write protection for key count</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--keyrev</span></code>: Active key revision (<code class="docutils literal notranslate"><span class="pre">1</span></code> or <code class="docutils literal notranslate"><span class="pre">2</span></code>)</p></li>
+</ul>
+</section>
+<section id="certificate-contents">
+<h2>3.5 Certificate Contents<a class="headerlink" href="#certificate-contents" title="Link to this heading"></a></h2>
+<p>The certificate contains the following key components:</p>
+<ul class="simple">
+<li><p><strong>SMPK (Secondary Manufacturer Private Key)</strong>: Used for image authentication</p></li>
+<li><p><strong>SMEK (Secondary Manufacturer Encryption Key)</strong>: Used for image decryption</p></li>
+<li><p><strong>BMPK/BMEK (Backup Secondary Manufacturer Keys)</strong>: Optional backup keys</p></li>
+<li><p><strong>Configuration Fields</strong>: Various device configuration parameters:
+* KEY_COUNT: Number of key sets provisioned (1 or 2)
+* KEY_REVISION: Current active key revision (1 or 2)
+* SWREV fields: Software revision values for various components
+* MSV (Model Specific Value): Customer-specific value</p></li>
+</ul>
+</section>
+<section id="extended-otp-configuration">
+<h2>3.6 Extended OTP Configuration<a class="headerlink" href="#extended-otp-configuration" title="Link to this heading"></a></h2>
+<p>The certificate optionally carries <strong>Extended OTP</strong> data that is permanently programmed into the
+device’s extended One-Time-Programmable memory during key provisioning. This is an opt-in
+feature — leave it disabled if you do not need it.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Extended OTP is <strong>permanently programmed</strong> into the device at provisioning time and cannot
+be erased or modified after the keywriter runs. Verify all values carefully before
+generating the certificate.</p>
+</div>
+<section id="extended-otp-memory-layout">
+<h3>3.6.1 Extended OTP Memory Layout<a class="headerlink" href="#extended-otp-memory-layout" title="Link to this heading"></a></h3>
+<p>The F29H85x extended OTP region is <strong>1664 bits</strong> total, organised as 13 rows of
+128 bits each:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Row 0  →  bit offset    0 – 127
+Row 1  →  bit offset  128 – 255
+Row 2  →  bit offset  256 – 383
+...
+Row 12 →  bit offset 1536 – 1663
+</pre></div>
+</div>
+<p>Only one row can be selected per certificate. The region is identified by a starting bit
+index (derived automatically from the selected row) and a <strong>size in bits</strong> that you supply.
+Both the index and size must be multiples of 8 and the size must be at least 32 bits.</p>
+</section>
+<section id="using-the-gui-for-extended-otp">
+<h3>3.6.2 Using the GUI for Extended OTP<a class="headerlink" href="#using-the-gui-for-extended-otp" title="Link to this heading"></a></h3>
+<p>The GUI exposes the Extended OTP feature through the <strong>Extended OTP</strong> tab inside the
+<strong>Advanced Settings</strong> collapsible section on the Certificate Generation panel.</p>
+<a class="reference internal image-reference" href="../_images/ext_otp.png"><img alt="Extended OTP tab in Advanced Settings showing the 13-row selection table" src="../_images/ext_otp.png" style="width: 600px;" />
+</a>
+<p><strong>Step-by-step:</strong></p>
+<ol class="arabic simple">
+<li><p>On the <strong>Device &amp; Key Selection</strong> page, select your device and complete key setup.</p></li>
+<li><p>Scroll to the <strong>Certificate Generation</strong> section and click <strong>Advanced Settings</strong> to
+expand it.</p></li>
+<li><p>Select the <strong>Extended OTP</strong> tab. The table displays all 13 rows with their corresponding
+bit-address ranges.</p></li>
+<li><p>By default, <strong>Disabled (no extended OTP)</strong> is selected. If you do not need extended OTP,
+leave this option selected.</p></li>
+<li><p>To program a row, click the radio button next to it. The <strong>Value (hex)</strong> and
+<strong>Size (bits)</strong> fields for that row become editable; all other rows remain grayed out.</p></li>
+<li><p>Fill in the two active fields:</p>
+<ul class="simple">
+<li><p><strong>Value (hex)</strong> — The data to program into the selected OTP row, as a hexadecimal
+string (e.g. <code class="docutils literal notranslate"><span class="pre">0x80000001</span></code>). Must be a valid hexadecimal number.</p></li>
+<li><p><strong>Size (bits)</strong> — The number of bits from the row to program. Rules:</p>
+<ul>
+<li><p>Must be a whole integer.</p></li>
+<li><p>Minimum: <strong>32 bits</strong>.</p></li>
+<li><p>Must be a <strong>multiple of 8</strong> (byte-aligned).</p></li>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">128</span></code> to program the full row width.</p></li>
+<li><p>Use a smaller value (e.g. <code class="docutils literal notranslate"><span class="pre">32</span></code>) when only a subset of the row carries meaningful
+data — bits beyond the specified size are left unprogrammed.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Click <strong>Generate Certificate</strong>. The extended OTP parameters are embedded in the
+certificate and programmed to the device during key provisioning.</p></li>
+</ol>
+<p>The GUI computes the bit index automatically as <code class="docutils literal notranslate"><span class="pre">row_number</span> <span class="pre">×</span> <span class="pre">128</span></code> and passes
+<code class="docutils literal notranslate"><span class="pre">ext_otp</span></code>, <code class="docutils literal notranslate"><span class="pre">ext_otp_indx</span></code>, and <code class="docutils literal notranslate"><span class="pre">ext_otp_size</span></code> to the certificate tool.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="Key_Management.html" class="btn btn-neutral float-left" title="2 : Key Management" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Device_Provisioning.html" class="btn btn-neutral float-right" title="4 : Device Provisioning" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Texas Instruments.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

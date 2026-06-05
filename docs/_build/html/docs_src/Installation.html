@@ -1,0 +1,347 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Installation Guide &mdash; TI Cybershield Toolkit 0.8 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=d37b194a" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=a0e24af7"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="1 : Introduction" href="Introduction.html" />
+    <link rel="prev" title="Disclaimer" href="Disclaimer.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            TI Cybershield Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Release_Notes.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Disclaimer.html">Disclaimer</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#system-requirements">System Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installation-methods">Installation Methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#using-python-package-installer-pip">Using Python Package Installer (pip)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#launching-the-application">Launching the Application</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#platform-specific-setup">Platform-Specific Setup</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#linux">Linux</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#windows">Windows</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#macos">macOS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#verifying-installation">Verifying Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#security-addon-installation">Security Addon Installation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#obtaining-the-addon">Obtaining the Addon</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#downloading-and-installing">Downloading and Installing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#installation-location">Installation Location</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#what-the-addon-includes">What the Addon Includes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#installation-troubleshooting">Installation Troubleshooting</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Introduction.html">1 : Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Key_Management.html">2 : Key Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Certificate_Generation.html">3 : Certificate Generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Device_Provisioning.html">4 : Device Provisioning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="GUI_Reference.html">5 : GUI Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CLI_Reference.html">6 : CLI Reference (Used in Python Environment)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Debugging.html">7 : Debugging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Appendix.html">8 : Appendix</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">TI Cybershield Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Installation Guide</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="installation-guide">
+<span id="id1"></span><h1>Installation Guide<a class="headerlink" href="#installation-guide" title="Link to this heading"></a></h1>
+<p>This section provides detailed instructions for installing the TI Cybershield Toolkit on different platforms. This is primarily intended for developers and is not required for normal users.</p>
+<section id="system-requirements">
+<h2>System Requirements<a class="headerlink" href="#system-requirements" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt><strong>Hardware Requirements</strong>:</dt><dd><ul class="simple">
+<li><p>PC with USB port for device connection</p></li>
+<li><p>UART or JTAG connection hardware</p></li>
+</ul>
+</dd>
+<dt><strong>Software Requirements</strong>:</dt><dd><ul class="simple">
+<li><p>Python 3.10 or higher</p></li>
+<li><p>For Windows: appropriate USB-to-Serial drivers</p></li>
+<li><p>For Linux: appropriate permissions for serial port access</p></li>
+<li><p><a class="reference external" href="https://www.ti.com/tool/CCSTUDIO">Code Composer Studio (CCS) 20.5.0</a> — required for JTAG provisioning (key provisioning, code provisioning) and <code class="docutils literal notranslate"><span class="pre">signSecCfg</span></code> signing</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>For GUI functionality, a desktop environment supporting Qt5 is required.</p></li>
+<li><p>For PKCS#11 HSM smart card support, additional hardware and drivers are required.</p></li>
+<li><p>CCS is only required for JTAG-based operations. UART-only workflows do not need CCS installed.</p></li>
+</ul>
+</div>
+</section>
+<section id="installation-methods">
+<h2>Installation Methods<a class="headerlink" href="#installation-methods" title="Link to this heading"></a></h2>
+<p>The TI Cybershield Toolkit can be installed using different methods depending on your requirements.</p>
+<section id="using-python-package-installer-pip">
+<h3>Using Python Package Installer (pip)<a class="headerlink" href="#using-python-package-installer-pip" title="Link to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Install virtual environment tool</span>
+pip<span class="w"> </span>install<span class="w"> </span>virtualenv
+
+<span class="c1"># Create a virtual environment</span>
+virtualenv<span class="w"> </span>venv
+
+<span class="c1"># Activate the virtual environment</span>
+<span class="c1"># On Linux/macOS:</span>
+<span class="nb">source</span><span class="w"> </span>venv/bin/activate
+<span class="c1"># On Windows:</span>
+venv<span class="se">\\</span>Scripts<span class="se">\\</span>activate
+
+<span class="c1"># Switch to host directory to find the pyproject.toml file</span>
+<span class="nb">cd</span><span class="w"> </span>host
+
+<span class="c1"># Install the package and its dependencies</span>
+pip<span class="w"> </span>install<span class="w"> </span>-e.
+
+<span class="c1"># For GUI support, add the gui extra</span>
+pip<span class="w"> </span>install<span class="w"> </span>-e.<span class="o">[</span>gui<span class="o">]</span>
+
+<span class="c1"># On macOS, use pip3 and quote the argument:</span>
+pip3<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;.[gui]&#39;</span>
+
+<span class="c1"># For development and testing tools</span>
+pip<span class="w"> </span>install<span class="w"> </span>-e.<span class="o">[</span>dev<span class="o">]</span>
+
+<span class="c1"># For documentation building tools</span>
+pip<span class="w"> </span>install<span class="w"> </span>-e.<span class="o">[</span>docs<span class="o">]</span>
+</pre></div>
+</div>
+<p>After installation, you will have access to the <cite>cst</cite> command-line tool and the <cite>cstgui</cite> GUI application.</p>
+</section>
+<section id="launching-the-application">
+<h3>Launching the Application<a class="headerlink" href="#launching-the-application" title="Link to this heading"></a></h3>
+<p>To start the GUI, run the following command in your terminal (or virtual environment if one is active):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cstgui
+</pre></div>
+</div>
+<p>To use the command-line interface:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cst<span class="w"> </span>--device<span class="w"> </span>f29h85x<span class="w"> </span>--help
+</pre></div>
+</div>
+</section>
+</section>
+<section id="platform-specific-setup">
+<h2>Platform-Specific Setup<a class="headerlink" href="#platform-specific-setup" title="Link to this heading"></a></h2>
+<section id="linux">
+<h3>Linux<a class="headerlink" href="#linux" title="Link to this heading"></a></h3>
+<p>On Linux, you need to ensure your user has appropriate permissions to access serial ports.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Add your user to the required groups</span>
+sudo<span class="w"> </span>adduser<span class="w"> </span>&lt;username&gt;<span class="w"> </span>dialout
+sudo<span class="w"> </span>adduser<span class="w"> </span>&lt;username&gt;<span class="w"> </span>plugdev
+
+<span class="c1"># Log out and log back in for the changes to take effect</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Do NOT run <cite>cst</cite> or <cite>cstgui</cite> as root or with sudo. Instead, fix the permissions by adding the user to the appropriate groups.</p>
+</div>
+</section>
+<section id="windows">
+<h3>Windows<a class="headerlink" href="#windows" title="Link to this heading"></a></h3>
+<p>On Windows, ensure you have installed the appropriate drivers for your USB-to-Serial adapter. For JTAG functionality, ensure you have installed Code Composer Studio (CCS) <strong>20.5.0</strong> and configured it properly.</p>
+</section>
+<section id="macos">
+<h3>macOS<a class="headerlink" href="#macos" title="Link to this heading"></a></h3>
+<p>On macOS, you may need to install additional drivers for USB-to-Serial adapters. Follow the manufacturer’s instructions for your specific hardware.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>On macOS, ensure Python 3.10 or higher is installed. The system default Python may be older — install a newer version via <a class="reference external" href="https://www.python.org/downloads/">python.org</a> or Homebrew:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>brew<span class="w"> </span>install<span class="w"> </span>python@3.10
+</pre></div>
+</div>
+<p>Also use <code class="docutils literal notranslate"><span class="pre">pip3</span></code> instead of <code class="docutils literal notranslate"><span class="pre">pip</span></code> and quote the extras argument to avoid shell interpretation issues:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip3<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;.[gui]&#39;</span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+<section id="verifying-installation">
+<h2>Verifying Installation<a class="headerlink" href="#verifying-installation" title="Link to this heading"></a></h2>
+<p>After installation, verify that the tools are properly installed:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check command-line tool</span>
+cst<span class="w"> </span>--version
+
+<span class="c1"># Check GUI tool (if installed)</span>
+cstgui<span class="w"> </span>--version
+</pre></div>
+</div>
+</section>
+<section id="security-addon-installation">
+<span id="addon-installation"></span><h2>Security Addon Installation<a class="headerlink" href="#security-addon-installation" title="Link to this heading"></a></h2>
+<p>The TI Cybershield Toolkit supports an optional <strong>Security Addon</strong> package that provides prebuilt secure
+binaries, enabling production-ready provisioning with minimal effort and no risk of using
+untested binaries.</p>
+<section id="obtaining-the-addon">
+<h3>Obtaining the Addon<a class="headerlink" href="#obtaining-the-addon" title="Link to this heading"></a></h3>
+<p>The Security Addon is distributed as part of the <strong>F29H85X-TIFS-SDK</strong> (F29H85x foundational
+security software), available through the <a class="reference external" href="https://www.ti.com/tool/F29-SDK">F29-SDK page on ti.com</a>.</p>
+<ol class="arabic simple">
+<li><p>Navigate to the <a class="reference external" href="https://www.ti.com/tool/F29-SDK">F29-SDK Downloads page</a></p></li>
+<li><p>Locate <strong>F29H85X-TIFS-SDK — F29H85x foundational security software</strong> and click <strong>Request</strong></p></li>
+</ol>
+<a class="reference internal image-reference" href="../_images/addons_request.png"><img alt="Requesting F29H85X-TIFS-SDK on the F29-SDK Downloads page" src="../_images/addons_request.png" style="width: 700px;" />
+</a>
+<p>Once access is granted to the F29H85X-TIFS-SDK, the Security Addon for the TI Cybershield Toolkit
+will also be available for download within the same package.</p>
+</section>
+<section id="downloading-and-installing">
+<h3>Downloading and Installing<a class="headerlink" href="#downloading-and-installing" title="Link to this heading"></a></h3>
+<p>After gaining access, open the F29H85X-TIFS-SDK downloads page and scroll to the
+<strong>ti_cst_f29h85x_addon</strong> installers (highlighted below). Download the installer for your
+operating system:</p>
+<a class="reference internal image-reference" href="../_images/cst_addons_installers.png"><img alt="Security Addon installers in the F29H85X-TIFS-SDK downloads" src="../_images/cst_addons_installers.png" style="width: 500px;" />
+</a>
+<ul class="simple">
+<li><p><strong>Windows</strong>: <code class="docutils literal notranslate"><span class="pre">ti_cst_f29h85x_addon_XX_XX_XX_XX-windows-x64-installer.exe</span></code></p></li>
+<li><p><strong>macOS</strong>: <code class="docutils literal notranslate"><span class="pre">ti_cst_f29h85x_addon_XX_XX_XX_XX-osx-installer.dmg</span></code></p></li>
+<li><p><strong>Linux</strong>: <code class="docutils literal notranslate"><span class="pre">ti_cst_f29h85x_addon_XX_XX_XX_XX-linux-x64-installer.run</span></code></p></li>
+</ul>
+<p>Run the installer and follow the on-screen installation steps.</p>
+</section>
+<section id="installation-location">
+<h3>Installation Location<a class="headerlink" href="#installation-location" title="Link to this heading"></a></h3>
+<p>The default installation path is:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>~/ti/TICST/addons
+</pre></div>
+</div>
+<p>You may choose a custom location during installation. If you install to the default path,
+the TI Cybershield Toolkit will <strong>automatically detect</strong> the addon and load all secure binaries without
+any manual configuration — a green <strong>“Security addon detected”</strong> message will appear on the
+Device &amp; Key Selection page:</p>
+<a class="reference internal image-reference" href="../_images/addon_detection.png"><img alt="Security addon auto-detected at the default path" src="../_images/addon_detection.png" style="width: 700px;" />
+</a>
+<p>If you installed to a custom location, provide the path manually using the <strong>Addon Path</strong>
+field on the Device &amp; Key Selection page (click <strong>Browse</strong> to navigate to your folder).</p>
+</section>
+<section id="what-the-addon-includes">
+<h3>What the Addon Includes<a class="headerlink" href="#what-the-addon-includes" title="Link to this heading"></a></h3>
+<p>The Security Addon package contains:</p>
+<ul class="simple">
+<li><p><strong>OTP Keywriter binary</strong> — SR_10 (Rev A) variant</p></li>
+<li><p><strong>TI FEK public keys</strong> — for both SR_10 (Rev A) and SR_20 (Rev B/Rev C) device revisions</p></li>
+<li><p><strong>Prebuilt Code Provisioning binaries</strong> — ready-to-use HSM provisioning images</p></li>
+<li><p><strong>Prebuilt C29 Secure Image examples</strong> — reference secure application images for the C29 core</p></li>
+<li><p><strong>Prebuilt TIFS HSSE Firmware</strong> — TI HSM firmware for HS-SE state</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>With the addon installed, the <strong>Sign and Encrypt All Prebuilt Binaries</strong> feature on the
+Configuration page allows you to sign and encrypt all binaries in a single click using your
+keys, enabling a complete provisioning workflow with tested binaries and minimal effort.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The addon includes only the <strong>SR_10 (Rev A)</strong> OTP Keywriter binary. Users with <strong>Rev B or
+Rev C silicon (SR_20)</strong> must obtain the SR_20-specific OTP Keywriter binary separately from
+the SBL Keywriter package. Contact a TI representative for more information.</p>
+</div>
+</section>
+</section>
+<section id="installation-troubleshooting">
+<h2>Installation Troubleshooting<a class="headerlink" href="#installation-troubleshooting" title="Link to this heading"></a></h2>
+<p>Common installation issues and their solutions:</p>
+<ul class="simple">
+<li><p><strong>Missing Dependencies</strong>: Ensure you have Python 3.10 or higher installed</p></li>
+<li><p><strong>Permission Errors</strong>: On Linux, ensure your user is in the appropriate groups</p></li>
+<li><p><strong>GUI Not Starting</strong>: Ensure Qt5 dependencies are installed</p></li>
+<li><p><strong>PKCS#11 Errors</strong>: Verify the PKCS#11 library is correctly installed and specified</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="Disclaimer.html" class="btn btn-neutral float-left" title="Disclaimer" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Introduction.html" class="btn btn-neutral float-right" title="1 : Introduction" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Texas Instruments.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,11 @@
+.. include:: ../device_includes.rst
+
+=========================================
+Disclaimer
+=========================================
+
+.. warning::
+
+    Secure Provisioning (Key as well as Code) is an atomic process which needs to be done in a controlled environment.
+    In case of any failure due to environmental or electrical issue, may lead the device into a non-recoverable state from User as well as TI.
+    Hence it is recommended to ensure the sanity of the setup throughout the provisioning flow.

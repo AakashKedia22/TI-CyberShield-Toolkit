@@ -1,0 +1,467 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>5 : GUI Reference &mdash; TI Cybershield Toolkit 0.8 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=d37b194a" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=a0e24af7"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="6 : CLI Reference (Used in Python Environment)" href="CLI_Reference.html" />
+    <link rel="prev" title="4 : Device Provisioning" href="Device_Provisioning.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            TI Cybershield Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Release_Notes.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Disclaimer.html">Disclaimer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Installation.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Introduction.html">1 : Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Key_Management.html">2 : Key Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Certificate_Generation.html">3 : Certificate Generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Device_Provisioning.html">4 : Device Provisioning</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">5 : GUI Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#workflow-overview">5.1 Workflow Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#device-key-selection">5.2 Device &amp; Key Selection</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#certificate-generation-in-the-gui">5.2.1 Certificate Generation in the GUI</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#configuration">5.3 Configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#custom-binary-signing">5.3.1 Custom Binary Signing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sec-cfg-signing">5.3.2 Sec-Cfg Signing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#debug-authentication-and-root-of-trust">5.3.3 Debug Authentication and Root of Trust</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#provisioning">5.4 Provisioning</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#automated-cli-script-generation">5.4.1 Automated CLI Script Generation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#advanced-options">5.5 Advanced Options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#results-and-diagnostics">5.6 Results and Diagnostics</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="CLI_Reference.html">6 : CLI Reference (Used in Python Environment)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Debugging.html">7 : Debugging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Appendix.html">8 : Appendix</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">TI Cybershield Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">5 : GUI Reference</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="gui-reference">
+<h1>5 : GUI Reference<a class="headerlink" href="#gui-reference" title="Link to this heading"></a></h1>
+<p>This section provides a reference guide to the TI Cybershield Toolkit graphical user interface.</p>
+<section id="workflow-overview">
+<h2>5.1 Workflow Overview<a class="headerlink" href="#workflow-overview" title="Link to this heading"></a></h2>
+<p>To launch the GUI, run the following command in your terminal:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cstgui
+</pre></div>
+</div>
+<p>The CST GUI workflow consists of three main steps:</p>
+<ol class="arabic simple">
+<li><p><strong>Device &amp; Key Selection</strong> - Select device and configure key options</p></li>
+<li><p><strong>Configuration</strong> - Set up connection and device parameters</p></li>
+<li><p><strong>Provisioning</strong> - Perform key and code provisioning operations</p></li>
+</ol>
+</section>
+<section id="device-key-selection">
+<h2>5.2 Device &amp; Key Selection<a class="headerlink" href="#device-key-selection" title="Link to this heading"></a></h2>
+<a class="reference internal image-reference" href="../_images/device_selection.png"><img alt="Device &amp; Key Selection Screen" src="../_images/device_selection.png" style="width: 600px;" />
+</a>
+<p>This page configures device type and key management options:</p>
+<dl class="simple">
+<dt><strong>Device Selection</strong>:</dt><dd><ul class="simple">
+<li><p>Device family: F29H85x</p></li>
+</ul>
+</dd>
+<dt><strong>Key Management</strong>:</dt><dd><ul class="simple">
+<li><p><strong>New Keys</strong>: Generate RSA4K keys locally using OpenSSL and store in a password-protected folder</p></li>
+<li><p><strong>Existing Keys</strong>: Access keys from a previously created session folder</p></li>
+<li><p><strong>SDK Dummy Keys</strong>: Use TI Developer keys for testing and development</p></li>
+<li><p><strong>PKCS#11 Smart Card</strong>: Use an HSM smart card for key operations</p></li>
+</ul>
+</dd>
+<dt><strong>Configuration Options</strong>:</dt><dd><ul class="simple">
+<li><p>CCS Path: Required for JTAG-based provisioning</p></li>
+<li><p>Certificate Parameters: Model-specific values, key protection options</p></li>
+</ul>
+</dd>
+</dl>
+<section id="certificate-generation-in-the-gui">
+<h3>5.2.1 Certificate Generation in the GUI<a class="headerlink" href="#certificate-generation-in-the-gui" title="Link to this heading"></a></h3>
+<p>The certificate generation workflow is accessed from the “Device &amp; Key Selection” page after
+selecting a device and key type. Configure the following parameters before generating:</p>
+<dl class="simple">
+<dt><strong>Certificate Parameters</strong>:</dt><dd><ul class="simple">
+<li><p><strong>MSV (Model Specific Value)</strong>: Customer-defined hexadecimal value (e.g., <code class="docutils literal notranslate"><span class="pre">0x1E22D</span></code>)</p></li>
+<li><p><strong>Software Revisions</strong>: Set sr_sbl, sr_hsmRT, sr_app, sr_ssu (typically <code class="docutils literal notranslate"><span class="pre">1</span></code> for initial provisioning)</p></li>
+<li><p><strong>Key Count</strong>: <code class="docutils literal notranslate"><span class="pre">1</span></code> (SMPK only) or <code class="docutils literal notranslate"><span class="pre">2</span></code> (SMPK + BMPK)</p></li>
+<li><p><strong>Key Revision</strong>: <code class="docutils literal notranslate"><span class="pre">1</span></code> (use SMPK) or <code class="docutils literal notranslate"><span class="pre">2</span></code> (use BMPK) as the active signing key</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Advanced Settings</strong> (click the Advanced Settings button in the Certificate Generation tab):</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>TI FEK Public Key</strong>: Required only when the secure binaries addon is <em>not</em> installed.
+The TI FEK is TI-owned and fixed per device family — customers do not generate this key.
+If the addon is installed, the correct key is detected automatically.</p></li>
+<li><p><strong>Device SR Version</strong>: Must match your silicon revision — <code class="docutils literal notranslate"><span class="pre">SR_10</span></code> for Rev A devices,
+<code class="docutils literal notranslate"><span class="pre">SR_20</span></code> for Rev B and Rev C devices.</p></li>
+<li><p><strong>Write Protection</strong>: Enable <code class="docutils literal notranslate"><span class="pre">Enable</span> <span class="pre">Write</span> <span class="pre">Protection</span></code> for SMPK/SMEK/BMPK/BMEK to
+prevent future key modification after provisioning.</p></li>
+</ul>
+</div></blockquote>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The X.509 certificate is signed by the customer’s <strong>Secondary Manufacturer Private Key (SMPK private)</strong>.
+See <a class="reference internal" href="Certificate_Generation.html#certificate-generation"><span class="std std-ref">3 : Certificate Generation</span></a> for full details on the certificate generation process.</p>
+</div>
+</section>
+</section>
+<section id="configuration">
+<h2>5.3 Configuration<a class="headerlink" href="#configuration" title="Link to this heading"></a></h2>
+<a class="reference internal image-reference" href="../_images/configuration.png"><img alt="Configuration Screen" src="../_images/configuration.png" style="width: 600px;" />
+</a>
+<p>Configure device connections and verify device state:</p>
+<dl class="simple">
+<dt><strong>Connection Options</strong>:</dt><dd><ul class="simple">
+<li><p>UART: Serial port connection</p></li>
+<li><p>JTAG: Debug probe connection</p></li>
+</ul>
+</dd>
+<dt><strong>Device State Detection</strong>:</dt><dd><ul class="simple">
+<li><p>Automatically detects if device is in HS-FS, HS-KP, or HS-SE state</p></li>
+<li><p>Shows compatibility with selected provisioning operation</p></li>
+</ul>
+</dd>
+<dt><strong>Certificate Status</strong>:</dt><dd><ul class="simple">
+<li><p>Displays certificate parameters and validation status</p></li>
+</ul>
+</dd>
+</dl>
+<section id="custom-binary-signing">
+<h3>5.3.1 Custom Binary Signing<a class="headerlink" href="#custom-binary-signing" title="Link to this heading"></a></h3>
+<a class="reference internal image-reference" href="../_images/custom_binary_signing.png"><img alt="Custom Binary Signing tab in the Configuration page" src="../_images/custom_binary_signing.png" style="width: 600px;" />
+</a>
+<p>The <strong>Custom Binary Signing</strong> tab (found under <strong>Advanced Certificate Options</strong> on the
+Configuration page) allows users to sign and optionally encrypt their own custom binary
+files (<code class="docutils literal notranslate"><span class="pre">.bin</span></code>) using their provisioned SMPK or BMPK keys. This is the alternative to
+using the <strong>Sign and Encrypt All Prebuilt Binaries</strong> button — use this tab when you need
+to sign binaries that are not part of the Security Addon prebuilt set.</p>
+<p><strong>Configurable fields:</strong></p>
+<ul class="simple">
+<li><p><strong>Binary File</strong>: Path to the input binary (<code class="docutils literal notranslate"><span class="pre">.bin</span></code>) file to be signed</p></li>
+<li><p><strong>Target Core</strong>: The core the binary targets — <code class="docutils literal notranslate"><span class="pre">HSM</span></code> or <code class="docutils literal notranslate"><span class="pre">C29</span></code></p></li>
+<li><p><strong>Boot Mode</strong>: Boot mode for the signed image (e.g., <code class="docutils literal notranslate"><span class="pre">FLASH</span></code>)</p></li>
+<li><p><strong>Key Revision</strong>: Which key to sign with — <code class="docutils literal notranslate"><span class="pre">Use</span> <span class="pre">SMPK</span> <span class="pre">(1)</span></code> or <code class="docutils literal notranslate"><span class="pre">Use</span> <span class="pre">BMPK</span> <span class="pre">(2)</span></code></p></li>
+<li><p><strong>Software Revision</strong>: Software revision value embedded in the signed image header</p></li>
+<li><p><strong>Load Address</strong>: Memory load address for the binary (e.g., <code class="docutils literal notranslate"><span class="pre">0x10001000</span></code>)</p></li>
+<li><p><strong>Firmware Type</strong>: Firmware type identifier (leave as <code class="docutils literal notranslate"><span class="pre">None</span></code> if not applicable)</p></li>
+<li><p><strong>Output Folder</strong>: Directory where the signed (and optionally encrypted) output will be saved</p></li>
+<li><p><strong>Debug Options</strong>: Debug access level to embed (e.g., <code class="docutils literal notranslate"><span class="pre">DBG_PUBLIC_ENABLE</span></code>)</p></li>
+<li><p><strong>Encryption</strong>: Enable AES-256-CBC encryption of the binary. When checked, provide:</p>
+<ul>
+<li><p><strong>Encryption Key</strong>: Path to the MEK key file (e.g., <code class="docutils literal notranslate"><span class="pre">mcu_custMek.key</span></code> from the addon)</p></li>
+<li><p><strong>Key Derivation Salt</strong>: Path to the key derivation salt file (e.g., <code class="docutils literal notranslate"><span class="pre">kd_salt.txt</span></code> from the addon)</p></li>
+</ul>
+</li>
+<li><p><strong>CCS Path</strong>: Path to CCS installation (required when Target Core is <code class="docutils literal notranslate"><span class="pre">HSM</span></code>)</p></li>
+</ul>
+<p><strong>Output formats:</strong></p>
+<p>The signed output file format depends on the selected <strong>Target Core</strong>:</p>
+<ul class="simple">
+<li><p><strong>HSM core</strong> → <code class="docutils literal notranslate"><span class="pre">.hsmimage</span></code></p></li>
+<li><p><strong>C29 core</strong> → <code class="docutils literal notranslate"><span class="pre">.cert.bin</span></code></p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The signing and encryption operations use the session keys selected on the
+<strong>Device &amp; Key Selection</strong> page (page 1). Ensure you have selected the correct
+session before generating signed images.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><strong>Image Encryption Not Supported on SR_10 (Rev 0 / Rev A) Devices</strong></p>
+<p>Enabling the <strong>Encryption</strong> option is not supported on <strong>SR_10 (Rev 0 / Rev A)</strong> silicon.
+Using image encryption with these device revisions will result in failure during code
+provisioning. Ensure encryption is disabled when targeting SR_10 devices. Contact a TI
+representative for more information.</p>
+</div>
+</section>
+<section id="sec-cfg-signing">
+<h3>5.3.2 Sec-Cfg Signing<a class="headerlink" href="#sec-cfg-signing" title="Link to this heading"></a></h3>
+<a class="reference internal image-reference" href="../_images/custom_seccfg.png"><img alt="Sec-Cfg Signing tab in the Configuration page" src="../_images/custom_seccfg.png" style="width: 600px;" />
+</a>
+<p>The <strong>Sec-Cfg Signing</strong> tab generates signed Security Configuration certificates for
+CPU1, CPU2, and CPU3. The Sec-Cfg image is signed with either SMPK or BMPK keys (selected
+via Key Revision).</p>
+<p><strong>Configurable fields:</strong></p>
+<ul class="simple">
+<li><p><strong>Image Path</strong>: Path to the Sec-Cfg image file (<code class="docutils literal notranslate"><span class="pre">.out</span></code>) to be signed</p></li>
+<li><p><strong>Output Folder</strong>: Directory where the signed Sec-Cfg output will be saved</p></li>
+<li><p><strong>Software Revision</strong>: Software revision value to embed in the signed image</p></li>
+<li><p><strong>Key Revision</strong>: <code class="docutils literal notranslate"><span class="pre">Use</span> <span class="pre">SMPK</span> <span class="pre">(1)</span></code> or <code class="docutils literal notranslate"><span class="pre">Use</span> <span class="pre">BMPK</span> <span class="pre">(2)</span></code></p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>A prebuilt <strong>bankmode 0</strong> Sec-Cfg binary is included in the Security Addon package at
+<code class="docutils literal notranslate"><span class="pre">~/ti/TICST/addons/f29h85x/</span></code>. If the addon is installed, this prebuilt Sec-Cfg can
+be signed directly using this tab without needing to build your own.</p>
+</div>
+</section>
+<section id="debug-authentication-and-root-of-trust">
+<h3>5.3.3 Debug Authentication and Root of Trust<a class="headerlink" href="#debug-authentication-and-root-of-trust" title="Link to this heading"></a></h3>
+<p>The Configuration page also provides two additional advanced certificate tabs:</p>
+<ul class="simple">
+<li><p><strong>Debug Authentication</strong> — Generates a debug certificate that controls JTAG debug access
+levels on a provisioned device. Used to re-enable or restrict debug access post-provisioning.</p></li>
+<li><p><strong>Root of Trust</strong> — Generates a Root of Trust switching certificate that enables the device
+to switch between different Root of Trust key sets, allowing for key rotation in
+security-critical deployments.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For detailed information on the use cases, parameters, and workflows for Debug
+Authentication and Root of Trust certificates, refer to the
+<strong>TIFS F29 SDK documentation</strong>.</p>
+</div>
+</section>
+</section>
+<section id="provisioning">
+<h2>5.4 Provisioning<a class="headerlink" href="#provisioning" title="Link to this heading"></a></h2>
+<a class="reference internal image-reference" href="../_images/provisioning.png"><img alt="Provisioning Screen" src="../_images/provisioning.png" style="width: 600px;" />
+</a>
+<p>Execute key and code provisioning operations:</p>
+<dl class="simple">
+<dt><strong>Key Provisioning</strong>:</dt><dd><ul class="simple">
+<li><dl class="simple">
+<dt>File inputs:</dt><dd><ul>
+<li><p>OTP keywriter binary</p></li>
+<li><p>Flash kernel (UART/JTAG)</p></li>
+<li><p>Certificate</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>Connection settings (port or CCS path)</p></li>
+<li><p>Execution controls for initiating provisioning</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<blockquote>
+<div><p>The secure binaries addon as part of 26.00.00_STS includes only the SR_10 (Rev A) OTP Keywriter binary.</p>
+</div></blockquote>
+<p>Users with Rev B or Rev C silicon (SR_20) must obtain the SR_20-specific OTP Keywriter
+binary separately from the SBL Keywriter package. Contact a TI representative for more
+information.</p>
+</div>
+<dl class="simple">
+<dt><strong>Code Provisioning</strong>:</dt><dd><ul class="simple">
+<li><dl class="simple">
+<dt>Component selection:</dt><dd><ul>
+<li><p>HSM image (required)</p></li>
+<li><p>HSM CPU code (optional)</p></li>
+<li><p>C29 CPU code (optional)</p></li>
+<li><p>Security configuration (required for HS-KP devices)</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>Connection settings</p></li>
+<li><p>Execution controls</p></li>
+</ul>
+</dd>
+<dt><strong>Device State Visualization</strong>:</dt><dd><ul class="simple">
+<li><p>Shows progression from HS-FS to HS-KP to HS-SE states</p></li>
+<li><p>Indicates current device state and provisioning status</p></li>
+</ul>
+</dd>
+</dl>
+<section id="automated-cli-script-generation">
+<h3>5.4.1 Automated CLI Script Generation<a class="headerlink" href="#automated-cli-script-generation" title="Link to this heading"></a></h3>
+<a class="reference internal image-reference" href="../_images/code_provisioning_tab.png"><img alt="Code Provisioning Tab — Finish button generates CLI script" src="../_images/code_provisioning_tab.png" style="width: 600px;" />
+</a>
+<p>When you click the <strong>Finish</strong> button after completing provisioning, the CST GUI
+automatically generates a bash shell script that reproduces every step performed in the
+wizard as equivalent CLI commands.</p>
+<p><strong>What is generated</strong></p>
+<p>The script is saved to:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>~/ti/&lt;device&gt;/provision_&lt;device&gt;.sh
+</pre></div>
+</div>
+<p>For example, after an F29H85x JTAG session:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>~/ti/f29h85x/provision_f29h85x.sh
+</pre></div>
+</div>
+<p>The script contains the following steps in order:</p>
+<ol class="arabic simple">
+<li><p><strong>gencert</strong> — Generate the OTP certificate with all configured parameters</p></li>
+<li><p><strong>signapp</strong> — Sign each prebuilt binary (HSM image, SBL, secure boot manager, etc.)</p></li>
+<li><p><strong>signSecCfg</strong> — Sign the security configuration file</p></li>
+<li><p><strong>jtag_codeprov</strong> / <strong>uart_codeprov</strong> — Run code provisioning with all selected images</p></li>
+</ol>
+<p><strong>Running the script</strong></p>
+<p>The script accepts the CLI binary path as its first argument:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Use TI_CST_CLI if it is on your PATH</span>
+./provision_f29h85x.sh
+
+<span class="c1"># Or pass the full path to the CLI binary</span>
+./provision_f29h85x.sh<span class="w"> </span>/path/to/TI_CST_CLI
+</pre></div>
+</div>
+<p>For <strong>HSM-session</strong> scripts (non-development keys), the session name and password are also
+required:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./provision_f29h85x.sh<span class="w"> </span>/path/to/TI_CST_CLI<span class="w"> </span>MySession<span class="w"> </span>MyPassword
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For development key sessions (F29H85x SDK/f29_development keys), no session name
+or password arguments are needed — the signing algorithm flags are embedded directly.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The script is saved one directory level <strong>above</strong> the certificate output directory so
+that re-running gencert (which clears the certificates folder) does not delete the script.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">--image</span></code> paths in the <strong>signapp</strong> steps point to the standard prebuilt binaries
+directory (<code class="docutils literal notranslate"><span class="pre">~/ti/tisecprov/host/bin/asm/&lt;device&gt;/</span></code>). If you used custom binaries from
+a different location, edit those paths in the script before re-running.</p>
+</div>
+</section>
+</section>
+<section id="advanced-options">
+<h2>5.5 Advanced Options<a class="headerlink" href="#advanced-options" title="Link to this heading"></a></h2>
+<p>Each operation provides advanced configuration:</p>
+<dl class="simple">
+<dt><strong>UART Options</strong>:</dt><dd><ul class="simple">
+<li><p>Serial port and baud rate</p></li>
+<li><p>Binary file paths</p></li>
+<li><p>Special command parameters</p></li>
+</ul>
+</dd>
+<dt><strong>JTAG Options</strong>:</dt><dd><ul class="simple">
+<li><p>CCS configuration</p></li>
+<li><p>Debug probe settings</p></li>
+<li><p>Binary file paths</p></li>
+</ul>
+</dd>
+<dt><strong>Provisioning Parameters</strong>:</dt><dd><ul class="simple">
+<li><p>Component selection parameters (3,5,6,7)</p></li>
+<li><p>Special operating modes</p></li>
+<li><p>Timeout controls</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="results-and-diagnostics">
+<h2>5.6 Results and Diagnostics<a class="headerlink" href="#results-and-diagnostics" title="Link to this heading"></a></h2>
+<a class="reference internal image-reference" href="../_images/provisioning_results.png"><img alt="Results and Diagnostics Screen" src="../_images/provisioning_results.png" style="width: 600px;" />
+</a>
+<p>After operations complete:</p>
+<dl class="simple">
+<dt><strong>Operation Results</strong>:</dt><dd><ul class="simple">
+<li><p>Success/failure status</p></li>
+<li><p>Device information</p></li>
+<li><p>Component status</p></li>
+</ul>
+</dd>
+<dt><strong>Diagnostic Information</strong>:</dt><dd><ul class="simple">
+<li><p>Detailed operation logs</p></li>
+<li><p>Error codes and descriptions</p></li>
+<li><p>Save logs functionality for support</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="Device_Provisioning.html" class="btn btn-neutral float-left" title="4 : Device Provisioning" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="CLI_Reference.html" class="btn btn-neutral float-right" title="6 : CLI Reference (Used in Python Environment)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Texas Instruments.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

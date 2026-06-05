@@ -1,0 +1,73 @@
+.. include:: ../device_includes.rst
+
+=====================================
+Release Notes
+=====================================
+
+This section provides release notes for the |tool_name|.
+
+Version 26.00.00
+================
+
+Features
+--------
+
+* Support for |f29_device| device family
+* Software-based RSA key generation with PBKDF2 password encryption for generated keys
+* PKCS#11 smart card (HSM) based RSA key generation
+* X.509 provisioning certificate configuration and generation
+* Extended OTP configuration via GUI
+* Device state detection via UART and JTAG
+* Custom binary signing
+* Debug authentication certificate generation
+* Custom SECCFG signing
+* Root of Trust (ROT) switching certificate generation
+* Prebuilt binary addon signing
+* Prebuilt RAM-based SBL
+* Prebuilt JTAG flash kernel
+* Device key provisioning via JTAG and UART
+* Device code provisioning — SECCFG, CPU1, CPU3, and HSM via UART and JTAG
+* Provisioning log parsing
+* CLI script generation
+* Device recovery certificate generation and recovery flow (CLI only)
+* Intuitive GUI with wizard-based workflow
+* CLI for full functionality
+* Comprehensive logging and diagnostics
+
+Requirements
+------------
+
+* Python |recommended_python_version|
+* `OpenSSL 3.0.2 or newer <https://slproweb.com/products/Win32OpenSSL.html>`_
+* Qt5 libraries for GUI functionality (see :ref:`Installation Guide <installation-guide>`)
+
+Known Issues / Limitations
+--------------------------
+
+.. warning::
+    **SR_20 (Rev B/Rev C) OTP Keywriter Binary Not Included in Secure Binaries Addon**
+
+    The secure binaries addon ships only the **SR_10 (Rev A)** OTP Keywriter binary.
+    Users with **Rev B or Rev C silicon** must obtain the SR_20-specific OTP Keywriter
+    binary separately from the **SBL Keywriter** package — it is **not** bundled in the
+    addon. Contact a TI representative for more information on obtaining the correct binary
+    for your device revision.
+
+* Vulnerability analysis of this tool was not scoped in this release
+* The latest out-of-box binaries are not compatible with **Rev 0 / Rev A (SR_10)** devices.
+  Customers must either use an older version of TIFS or backport the latest firmware.
+  Contact a TI representative for more information.
+* Only RSA is supported for Key Generation in the tool_name (TCSPT-72)
+* Extended OTP Needs to be manually entered instead of Custom File (TCSPT-71)
+* JTAG connection requires CCS for debug connection (to be removed in future versions)
+* UART connection may require multiple attempts on some systems
+
+Supported Devices
+-----------------
+
+* |f29_device|: All variants
+
+Installation
+------------
+
+See the :doc:`Installation </docs_src/Installation>` section for detailed installation instructions.

@@ -1,0 +1,65 @@
+[project]
+name = "tisecprov"
+dynamic = ["version"]
+description = "TI CyberShield Toolkit"
+authors = [
+    { name = "Ramakrishnan Muthukrishnan", email = "r-muthukrishnan@ti.com" },
+    { name = "Gurvir Singh", email = "g-singh3@ti.com" },
+    { name = "Diwakar Dhyani", email = "d-dhyani@ti.com" },
+    { name = "Prashant Shivhare", email = "p-shivhare@ti.com" }
+]
+license = { text = "MIT" }
+readme = "README.md"
+requires-python = ">=3.10"
+packages = [
+    { include = "tisecprov" },
+    { include = "apps" },
+]
+dependencies = [
+   "cryptography >= 43.0.3",
+   "pyserial >= 3.5",
+   "xmodem >= 0.4.7",
+   "appdirs >= 1.4.4",
+   "asn1crypto >= 1.5.1",
+   "tqdm >= 4.67.1",
+]
+
+[project.optional-dependencies]
+hsm = ["python-pkcs11 >= 0.7.0"]
+gui = ["PyQt5"]
+dev = [
+    "pytest >= 8.3.3",
+    "mypy >= 1.13.0",
+    "pytest-cov >= 6.0.0",
+    "coverage >= 7.6.9",
+    "pylint >= 3.3.4",
+    "black >= 25.1.0",
+]
+installer = [
+    "pyinstaller >= 6.12.0",
+]
+docs = [
+    "sphinx == 8.1.3",
+    "myst-parser >= 4.0.1"
+]
+
+[project.scripts]
+cstgui = "apps.qtgui.main_wizard:main"
+cst = "apps.spt.main:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+path = "src/tisecprov/__init__.py"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+
+[tool.hatch.build]
+packages = ["src/tisecprov", "src/apps"]
+include = [
+    "src/apps/qtgui/assets/*.png",
+    "src/apps/qtgui/assets/*.jpg",
+]

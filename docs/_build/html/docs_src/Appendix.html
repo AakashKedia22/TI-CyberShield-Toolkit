@@ -1,0 +1,396 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>8 : Appendix &mdash; TI Cybershield Toolkit 0.8 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=d37b194a" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=a0e24af7"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="7 : Debugging" href="Debugging.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            TI Cybershield Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Release_Notes.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Disclaimer.html">Disclaimer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Installation.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Introduction.html">1 : Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Key_Management.html">2 : Key Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Certificate_Generation.html">3 : Certificate Generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Device_Provisioning.html">4 : Device Provisioning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="GUI_Reference.html">5 : GUI Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CLI_Reference.html">6 : CLI Reference (Used in Python Environment)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Debugging.html">7 : Debugging</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">8 : Appendix</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#glossary">9.1 Glossary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#error-code-reference">9.2 Error Code Reference</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#general-error-codes">9.2.1 General Error Codes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#otp-programming-error-codes">9.2.2 OTP Programming Error Codes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#code-provisioning-error-codes">9.2.3 Code Provisioning Error Codes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#certificate-format">9.3 Certificate Format</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#certificate-structure">9.3.1 Certificate Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#certificate-fields">9.3.2 Certificate Fields</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#security-recommendations">9.4 Security Recommendations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#key-management">9.4.1 Key Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#production-environment">9.4.2 Production Environment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#post-provisioning-verification">9.4.3 Post-Provisioning Verification</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#references">9.5 References</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#ti-documentation">9.5.1 TI Documentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#security-standards">9.5.2 Security Standards</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#additional-resources">9.5.3 Additional Resources</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">TI Cybershield Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">8 : Appendix</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="appendix">
+<h1>8 : Appendix<a class="headerlink" href="#appendix" title="Link to this heading"></a></h1>
+<p>This section contains supplementary information for the TI Cybershield Toolkit.</p>
+<section id="glossary">
+<h2>9.1 Glossary<a class="headerlink" href="#glossary" title="Link to this heading"></a></h2>
+<dl class="simple glossary">
+<dt id="term-HS-FS">HS-FS<a class="headerlink" href="#term-HS-FS" title="Link to this term"></a></dt><dd><p>High Security - Field Secure. Initial security state of devices where secure boot is not enforced for customer code.</p>
+</dd>
+<dt id="term-HS-KP">HS-KP<a class="headerlink" href="#term-HS-KP" title="Link to this term"></a></dt><dd><p>High Security - Key Provisioned. State after key provisioning where customer keys are programmed and secure boot is enforced with customer keys.</p>
+</dd>
+<dt id="term-HS-SE">HS-SE<a class="headerlink" href="#term-HS-SE" title="Link to this term"></a></dt><dd><p>High Security - Security Enabled. Final security state where the device is fully secured with customer keys and code.</p>
+</dd>
+<dt id="term-SMPK">SMPK<a class="headerlink" href="#term-SMPK" title="Link to this term"></a></dt><dd><p>Secondary Manufacturer Public Key. Customer-owned key used for image authentication. Abbreviated SMPK.</p>
+</dd>
+<dt id="term-SMEK">SMEK<a class="headerlink" href="#term-SMEK" title="Link to this term"></a></dt><dd><p>Secondary Manufacturer Encryption Key. Customer-owned key used for image decryption. Abbreviated SMEK.</p>
+</dd>
+<dt id="term-BMPK">BMPK<a class="headerlink" href="#term-BMPK" title="Link to this term"></a></dt><dd><p>Backup Secondary Manufacturer Public Key. Optional customer-owned backup key for image authentication.</p>
+</dd>
+<dt id="term-BMEK">BMEK<a class="headerlink" href="#term-BMEK" title="Link to this term"></a></dt><dd><p>Backup Secondary Manufacturer Encryption Key. Optional customer-owned backup key for image decryption.</p>
+</dd>
+<dt id="term-TI-FEK">TI FEK<a class="headerlink" href="#term-TI-FEK" title="Link to this term"></a></dt><dd><p>Texas Instruments Field Encryption Key. TI-owned public key embedded in TI’s HSM firmware binary,
+used to encrypt sensitive information (RNG AES key) in provisioning certificates.
+Customers do not generate this key — it is fixed per device family and provided by TI.</p>
+</dd>
+<dt id="term-HSM">HSM<a class="headerlink" href="#term-HSM" title="Link to this term"></a></dt><dd><p>Hardware Security Module. Dedicated hardware device for secure key storage and cryptographic operations.</p>
+</dd>
+<dt id="term-PKCS-11">PKCS#11<a class="headerlink" href="#term-PKCS-11" title="Link to this term"></a></dt><dd><p>Public Key Cryptography Standards #11. API for cryptographic token interface.</p>
+</dd>
+<dt id="term-OTP">OTP<a class="headerlink" href="#term-OTP" title="Link to this term"></a></dt><dd><p>One-Time Programmable. Memory that can be programmed only once.</p>
+</dd>
+<dt id="term-CCS">CCS<a class="headerlink" href="#term-CCS" title="Link to this term"></a></dt><dd><p>Code Composer Studio. TI’s integrated development environment.</p>
+</dd>
+<dt id="term-ROM-Boot-Mode">ROM Boot Mode<a class="headerlink" href="#term-ROM-Boot-Mode" title="Link to this term"></a></dt><dd><p>Initial boot mode where the device executes code from internal ROM.</p>
+</dd>
+<dt id="term-UART-Boot-Mode">UART Boot Mode<a class="headerlink" href="#term-UART-Boot-Mode" title="Link to this term"></a></dt><dd><p>Boot mode where the device can receive code over a serial connection.</p>
+</dd>
+<dt id="term-JTAG">JTAG<a class="headerlink" href="#term-JTAG" title="Link to this term"></a></dt><dd><p>Joint Test Action Group. Industry standard for hardware debugging.</p>
+</dd>
+<dt id="term-XDS">XDS<a class="headerlink" href="#term-XDS" title="Link to this term"></a></dt><dd><p>eXtended Debug Support. TI’s debug probe technology.</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In TI’s device security architecture, “Manufacturer” keys are TI-owned keys (e.g., TI FEK).
+“Secondary Manufacturer” keys (SMPK/SMEK and their backups BMPK/BMEK) are customer-owned keys
+provisioned via this tool.</p>
+</div>
+</section>
+<section id="error-code-reference">
+<span id="error-codes"></span><h2>9.2 Error Code Reference<a class="headerlink" href="#error-code-reference" title="Link to this heading"></a></h2>
+<p>This section provides a reference for common error codes encountered during provisioning.</p>
+<section id="general-error-codes">
+<h3>9.2.1 General Error Codes<a class="headerlink" href="#general-error-codes" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Error Code</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Possible Solutions</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0x00000000</p></td>
+<td><p>Success</p></td>
+<td><p>N/A (operation completed successfully)</p></td>
+</tr>
+<tr class="row-odd"><td><p>0x80000001</p></td>
+<td><p>Generic Error</p></td>
+<td><p>Check logs for more specific information</p></td>
+</tr>
+<tr class="row-even"><td><p>0x80000002</p></td>
+<td><p>Communication Error</p></td>
+<td><p>Check physical connections and retry</p></td>
+</tr>
+<tr class="row-odd"><td><p>0x80000003</p></td>
+<td><p>Timeout Error</p></td>
+<td><p>Verify device is powered and responsive</p></td>
+</tr>
+<tr class="row-even"><td><p>0x80000004</p></td>
+<td><p>Authentication Error</p></td>
+<td><p>Check certificate integrity and signature</p></td>
+</tr>
+<tr class="row-odd"><td><p>0x80000005</p></td>
+<td><p>Permission Error</p></td>
+<td><p>Verify device state supports the requested operation</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="otp-programming-error-codes">
+<h3>9.2.2 OTP Programming Error Codes<a class="headerlink" href="#otp-programming-error-codes" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Error Code</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Possible Solutions</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0x90000001</p></td>
+<td><p>Field Already Programmed</p></td>
+<td><p>Field is locked; cannot be modified</p></td>
+</tr>
+<tr class="row-odd"><td><p>0x90000002</p></td>
+<td><p>Invalid Field ID</p></td>
+<td><p>Check certificate field configuration</p></td>
+</tr>
+<tr class="row-even"><td><p>0x90000003</p></td>
+<td><p>Field Write Error</p></td>
+<td><p>Hardware issue or power interruption during write</p></td>
+</tr>
+<tr class="row-odd"><td><p>0x90000004</p></td>
+<td><p>Field Verification Error</p></td>
+<td><p>Written value does not match expected value</p></td>
+</tr>
+<tr class="row-even"><td><p>0x90000005</p></td>
+<td><p>Field Access Error</p></td>
+<td><p>Current device state prohibits access</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="code-provisioning-error-codes">
+<h3>9.2.3 Code Provisioning Error Codes<a class="headerlink" href="#code-provisioning-error-codes" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Error Code</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Possible Solutions</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0xA0000001</p></td>
+<td><p>Image Authentication Failed</p></td>
+<td><p>Check image signature and key validity</p></td>
+</tr>
+<tr class="row-odd"><td><p>0xA0000002</p></td>
+<td><p>Image Decryption Failed</p></td>
+<td><p>Verify encryption key and algorithm</p></td>
+</tr>
+<tr class="row-even"><td><p>0xA0000003</p></td>
+<td><p>Flash Write Error</p></td>
+<td><p>Check flash memory health and power stability</p></td>
+</tr>
+<tr class="row-odd"><td><p>0xA0000004</p></td>
+<td><p>Flash Verify Error</p></td>
+<td><p>Written data does not match expected data</p></td>
+</tr>
+<tr class="row-even"><td><p>0xA0000005</p></td>
+<td><p>Invalid Image Format</p></td>
+<td><p>Check binary format and header</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="certificate-format">
+<h2>9.3 Certificate Format<a class="headerlink" href="#certificate-format" title="Link to this heading"></a></h2>
+<section id="certificate-structure">
+<h3>9.3.1 Certificate Structure<a class="headerlink" href="#certificate-structure" title="Link to this heading"></a></h3>
+<p>The TI Cybershield Toolkit generates X.509 certificates with the following structure:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Certificate
+├── Version
+├── Serial Number
+├── Signature Algorithm
+├── Issuer
+├── Validity Period
+├── Subject
+├── Subject Public Key Info
+├── X.509 Extensions
+│   ├── TI_Field_1 (Encrypted with TI FEK)
+│   ├── TI_Field_2 (Encrypted with TI FEK)
+│   ├── ...
+│   └── TI_Field_N (Encrypted with TI FEK)
+└── Certificate Signature
+</pre></div>
+</div>
+</section>
+<section id="certificate-fields">
+<h3>9.3.2 Certificate Fields<a class="headerlink" href="#certificate-fields" title="Link to this heading"></a></h3>
+<p>The certificate includes the following key fields:</p>
+<ul class="simple">
+<li><p><strong>SMPK</strong>: Secondary Manufacturer Public Key for image authentication</p></li>
+<li><p><strong>SMEK</strong>: Secondary Manufacturer Encryption Key for image decryption</p></li>
+<li><p><strong>BMPK</strong>: Backup Secondary Manufacturer Public Key (optional)</p></li>
+<li><p><strong>BMEK</strong>: Backup Secondary Manufacturer Encryption Key (optional)</p></li>
+<li><p><strong>KEY_COUNT</strong>: Number of key sets (1 or 2)</p></li>
+<li><p><strong>KEY_REVISION</strong>: Active key revision (1 or 2)</p></li>
+<li><p><strong>SWREV fields</strong>: Software revision values</p></li>
+<li><p><strong>MSV</strong>: Model Specific Value (customer-specific)</p></li>
+</ul>
+</section>
+</section>
+<section id="security-recommendations">
+<h2>9.4 Security Recommendations<a class="headerlink" href="#security-recommendations" title="Link to this heading"></a></h2>
+<section id="key-management">
+<h3>9.4.1 Key Management<a class="headerlink" href="#key-management" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Use strong passwords (12+ characters, mixed case, symbols) for key protection</p></li>
+<li><p>Store keys in a secure, controlled environment</p></li>
+<li><p>Consider using an HSM for production key operations</p></li>
+<li><p>Maintain separate key sets for development and production</p></li>
+<li><p>Implement a key rotation strategy for long-term product security</p></li>
+</ul>
+</section>
+<section id="production-environment">
+<h3>9.4.2 Production Environment<a class="headerlink" href="#production-environment" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Establish a secure provisioning area with limited access</p></li>
+<li><p>Use dedicated provisioning hardware that is physically secured</p></li>
+<li><p>Implement procedural controls for handling security materials</p></li>
+<li><p>Train personnel on security procedures and best practices</p></li>
+<li><p>Maintain detailed logs of all provisioning activities</p></li>
+</ul>
+</section>
+<section id="post-provisioning-verification">
+<h3>9.4.3 Post-Provisioning Verification<a class="headerlink" href="#post-provisioning-verification" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Verify device state after provisioning</p></li>
+<li><p>Perform security validation tests on provisioned devices</p></li>
+<li><p>Document device provisioning status and security configurations</p></li>
+<li><p>Implement secure methods for tracking provisioned devices</p></li>
+</ul>
+</section>
+</section>
+<section id="references">
+<h2>9.5 References<a class="headerlink" href="#references" title="Link to this heading"></a></h2>
+<section id="ti-documentation">
+<h3>9.5.1 TI Documentation<a class="headerlink" href="#ti-documentation" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>F29H85x Technical Reference Manual</p></li>
+<li><p>AM62Px Technical Reference Manual</p></li>
+<li><p>J722S Technical Reference Manual</p></li>
+<li><p>TI Security Developer’s Guide</p></li>
+<li><p>Code Composer Studio User Guide</p></li>
+</ul>
+</section>
+<section id="security-standards">
+<h3>9.5.2 Security Standards<a class="headerlink" href="#security-standards" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>FIPS 140-2/3: Security Requirements for Cryptographic Modules</p></li>
+<li><p>NIST SP 800-57: Recommendation for Key Management</p></li>
+<li><p>NIST SP 800-90A: Recommendation for Random Number Generation</p></li>
+<li><p>ISO/IEC 11889: Trusted Platform Module</p></li>
+</ul>
+</section>
+<section id="additional-resources">
+<h3>9.5.3 Additional Resources<a class="headerlink" href="#additional-resources" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>OpenSSL Documentation (<a class="reference external" href="https://www.openssl.org/docs/">https://www.openssl.org/docs/</a>)</p></li>
+<li><p>PKCS#11 Specification (<a class="reference external" href="http://docs.oasis-open.org/pkcs11/pkcs11-base/v2.40/pkcs11-base-v2.40.html">http://docs.oasis-open.org/pkcs11/pkcs11-base/v2.40/pkcs11-base-v2.40.html</a>)</p></li>
+<li><p>Python Cryptography Documentation (<a class="reference external" href="https://cryptography.io/en/latest/">https://cryptography.io/en/latest/</a>)</p></li>
+<li><p>Qt Documentation (<a class="reference external" href="https://doc.qt.io/">https://doc.qt.io/</a>)</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="Debugging.html" class="btn btn-neutral float-left" title="7 : Debugging" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Texas Instruments.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,333 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TI Cybershield Toolkit User Guide &mdash; TI Cybershield Toolkit 0.8 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="_static/theme_overrides.css?v=d37b194a" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=a0e24af7"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Release Notes" href="docs_src/Release_Notes.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="#" class="icon icon-home">
+            TI Cybershield Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="docs_src/Release_Notes.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docs_src/Disclaimer.html">Disclaimer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docs_src/Installation.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docs_src/Introduction.html">1 : Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docs_src/Key_Management.html">2 : Key Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docs_src/Certificate_Generation.html">3 : Certificate Generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docs_src/Device_Provisioning.html">4 : Device Provisioning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docs_src/GUI_Reference.html">5 : GUI Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docs_src/CLI_Reference.html">6 : CLI Reference (Used in Python Environment)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docs_src/Debugging.html">7 : Debugging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docs_src/Appendix.html">8 : Appendix</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">TI Cybershield Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">TI Cybershield Toolkit User Guide</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="tool-name-user-guide">
+<h1>TI Cybershield Toolkit User Guide<a class="headerlink" href="#tool-name-user-guide" title="Link to this heading"></a></h1>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Table of Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="docs_src/Release_Notes.html">Release Notes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/Release_Notes.html#version-26-00-00">Version 26.00.00</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="docs_src/Release_Notes.html#features">Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs_src/Release_Notes.html#requirements">Requirements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs_src/Release_Notes.html#known-issues-limitations">Known Issues / Limitations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs_src/Release_Notes.html#supported-devices">Supported Devices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs_src/Release_Notes.html#installation">Installation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="docs_src/Disclaimer.html">Disclaimer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docs_src/Installation.html">Installation Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/Installation.html#system-requirements">System Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/Installation.html#installation-methods">Installation Methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="docs_src/Installation.html#using-python-package-installer-pip">Using Python Package Installer (pip)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs_src/Installation.html#launching-the-application">Launching the Application</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/Installation.html#platform-specific-setup">Platform-Specific Setup</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="docs_src/Installation.html#linux">Linux</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs_src/Installation.html#windows">Windows</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs_src/Installation.html#macos">macOS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/Installation.html#verifying-installation">Verifying Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/Installation.html#security-addon-installation">Security Addon Installation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="docs_src/Installation.html#obtaining-the-addon">Obtaining the Addon</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs_src/Installation.html#downloading-and-installing">Downloading and Installing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs_src/Installation.html#installation-location">Installation Location</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs_src/Installation.html#what-the-addon-includes">What the Addon Includes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/Installation.html#installation-troubleshooting">Installation Troubleshooting</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="docs_src/Introduction.html">1 : Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/Introduction.html#scope">1.1 Scope</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/Introduction.html#gui-overview">1.2 GUI Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/Introduction.html#features-supported">1.3 Features Supported</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/Introduction.html#device-states-and-transition">1.4 Device States and Transition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/Introduction.html#tool-architecture">1.5 Tool Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/Introduction.html#secure-binaries-addon">1.6 Secure Binaries Addon</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/Introduction.html#licenses">1.7 Licenses</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="docs_src/Key_Management.html">2 : Key Management</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/Key_Management.html#key-types-and-algorithms">2.1 Key Types and Algorithms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/Key_Management.html#key-sessions">2.2 Key Sessions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/Key_Management.html#generating-keys-with-gui">2.3 Generating Keys with GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/Key_Management.html#generating-keys-with-cli">2.4 Generating Keys with CLI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/Key_Management.html#using-pkcs-11-hsm-smart-cards">2.5 Using PKCS#11 HSM Smart Cards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/Key_Management.html#key-security-best-practices">2.6 Key Security Best Practices</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="docs_src/Certificate_Generation.html">3 : Certificate Generation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/Certificate_Generation.html#certificate-overview">3.1 Certificate Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/Certificate_Generation.html#certificate-generation-process">3.2 Certificate Generation Process</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/Certificate_Generation.html#using-the-gui-for-certificate-generation">3.3 Using the GUI for Certificate Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/Certificate_Generation.html#using-the-cli-for-certificate-generation">3.4 Using the CLI for Certificate Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/Certificate_Generation.html#certificate-contents">3.5 Certificate Contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/Certificate_Generation.html#extended-otp-configuration">3.6 Extended OTP Configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="docs_src/Certificate_Generation.html#extended-otp-memory-layout">3.6.1 Extended OTP Memory Layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs_src/Certificate_Generation.html#using-the-gui-for-extended-otp">3.6.2 Using the GUI for Extended OTP</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="docs_src/Device_Provisioning.html">4 : Device Provisioning</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/Device_Provisioning.html#provisioning-overview">4.1 Provisioning Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/Device_Provisioning.html#connection-methods">4.2 Connection Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/Device_Provisioning.html#key-provisioning-process">4.3 Key Provisioning Process</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="docs_src/Device_Provisioning.html#prerequisites">4.3.1 Prerequisites</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs_src/Device_Provisioning.html#key-provisioning-with-gui">4.3.2 Key Provisioning with GUI</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs_src/Device_Provisioning.html#key-provisioning-with-cli">4.3.3 Key Provisioning with CLI</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/Device_Provisioning.html#device-configuration-and-binary-signing">4.4 Device Configuration and Binary Signing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/Device_Provisioning.html#code-provisioning-process">4.5 Code Provisioning Process</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="docs_src/Device_Provisioning.html#id1">4.5.1 Prerequisites</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs_src/Device_Provisioning.html#code-provisioning-with-gui">4.5.2 Code Provisioning with GUI</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs_src/Device_Provisioning.html#code-provisioning-with-cli">4.5.3 Code Provisioning with CLI</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/Device_Provisioning.html#verifying-device-state">4.6 Verifying Device State</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="docs_src/Device_Provisioning.html#using-the-device-state-detector">4.6.1 Using the Device State Detector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs_src/Device_Provisioning.html#interpreting-provisioning-logs">4.6.2 Interpreting Provisioning Logs</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="docs_src/GUI_Reference.html">5 : GUI Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/GUI_Reference.html#workflow-overview">5.1 Workflow Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/GUI_Reference.html#device-key-selection">5.2 Device &amp; Key Selection</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="docs_src/GUI_Reference.html#certificate-generation-in-the-gui">5.2.1 Certificate Generation in the GUI</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/GUI_Reference.html#configuration">5.3 Configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="docs_src/GUI_Reference.html#custom-binary-signing">5.3.1 Custom Binary Signing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs_src/GUI_Reference.html#sec-cfg-signing">5.3.2 Sec-Cfg Signing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs_src/GUI_Reference.html#debug-authentication-and-root-of-trust">5.3.3 Debug Authentication and Root of Trust</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/GUI_Reference.html#provisioning">5.4 Provisioning</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="docs_src/GUI_Reference.html#automated-cli-script-generation">5.4.1 Automated CLI Script Generation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/GUI_Reference.html#advanced-options">5.5 Advanced Options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/GUI_Reference.html#results-and-diagnostics">5.6 Results and Diagnostics</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="docs_src/CLI_Reference.html">6 : CLI Reference (Used in Python Environment)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/CLI_Reference.html#note-for-this-release-the-cli-is-only-used-via-python-source-and-not-the-executable">Note : For this release, the CLI is only used via Python source and not the executable</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="docs_src/CLI_Reference.html#command-structure">6.1 Command Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs_src/CLI_Reference.html#global-options">6.2 Global Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs_src/CLI_Reference.html#device-information-commands">6.3 Device Information Commands</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/CLI_Reference.html#getsocid">6.3.1 getSoCId</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/CLI_Reference.html#parsesocid">6.3.2 parseSoCId</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/CLI_Reference.html#devtypejtag">6.3.3 devTypeJTAG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/CLI_Reference.html#devtypeuart">6.3.4 devTypeUART</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/CLI_Reference.html#getuidsecap">6.3.5 getUIDSecap</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="docs_src/CLI_Reference.html#key-management-commands">6.4 Key Management Commands</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/CLI_Reference.html#genkeys">6.4.1 genkeys</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="docs_src/CLI_Reference.html#certificate-commands">6.5 Certificate Commands</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/CLI_Reference.html#gencert">6.5.1 gencert</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/CLI_Reference.html#rotcert">6.5.2 rotcert</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/CLI_Reference.html#debugcert">6.5.3 debugcert</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/CLI_Reference.html#devicerecovery">6.5.4 devicerecovery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/CLI_Reference.html#valdcert">6.5.5 valdcert</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="docs_src/CLI_Reference.html#application-signing-commands">6.6 Application Signing Commands</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/CLI_Reference.html#signapp">6.6.1 signapp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/CLI_Reference.html#signseccfg">6.6.2 signSecCfg</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="docs_src/CLI_Reference.html#provisioning-commands">6.7 Provisioning Commands</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/CLI_Reference.html#uart-keyprov">6.7.1 uart_keyprov</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/CLI_Reference.html#jtag-keyprov">6.7.2 jtag_keyprov</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/CLI_Reference.html#uart-codeprov">6.7.3 uart_codeprov</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/CLI_Reference.html#jtag-codeprov">6.7.4 jtag_codeprov</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/CLI_Reference.html#endevrecov">6.7.5 endevrecov</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="docs_src/CLI_Reference.html#command-chaining-and-automation">6.8 Command Chaining and Automation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/CLI_Reference.html#complete-key-provisioning-workflow">6.8.1 Complete Key Provisioning Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/CLI_Reference.html#complete-code-provisioning-workflow">6.8.2 Complete Code Provisioning Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/CLI_Reference.html#device-recovery-workflow">6.8.3 Device Recovery Workflow</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="docs_src/CLI_Reference.html#environment-variables">6.9 Environment Variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs_src/CLI_Reference.html#command-pattern-reference">6.10 Command Pattern Reference</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs_src/CLI_Reference.html#exit-codes">6.11 Exit Codes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="docs_src/Debugging.html">7 : Debugging</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/Debugging.html#logging-and-diagnostics">7.1 Logging and Diagnostics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="docs_src/Debugging.html#log-file-locations">7.1.1 Log File Locations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs_src/Debugging.html#configuring-log-verbosity">7.1.2 Configuring Log Verbosity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs_src/Debugging.html#log-file-analysis">7.1.3 Log File Analysis</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/Debugging.html#common-issues-and-solutions">7.2 Common Issues and Solutions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="docs_src/Debugging.html#connection-issues">7.2.1 Connection Issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs_src/Debugging.html#certificate-generation-issues">7.2.2 Certificate Generation Issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs_src/Debugging.html#key-provisioning-issues">7.2.3 Key Provisioning Issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs_src/Debugging.html#code-provisioning-issues">7.2.4 Code Provisioning Issues</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/Debugging.html#device-recovery-options">7.3 Device Recovery Options</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="docs_src/Debugging.html#hs-fs-devices">7.3.1 HS-FS Devices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs_src/Debugging.html#hs-kp-hs-se-devices">7.3.2 HS-KP/HS-SE Devices</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/Debugging.html#using-external-tools">7.4 Using External Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/Debugging.html#getting-support">7.5 Getting Support</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="docs_src/Appendix.html">8 : Appendix</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/Appendix.html#glossary">9.1 Glossary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/Appendix.html#error-code-reference">9.2 Error Code Reference</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="docs_src/Appendix.html#general-error-codes">9.2.1 General Error Codes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs_src/Appendix.html#otp-programming-error-codes">9.2.2 OTP Programming Error Codes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs_src/Appendix.html#code-provisioning-error-codes">9.2.3 Code Provisioning Error Codes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/Appendix.html#certificate-format">9.3 Certificate Format</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="docs_src/Appendix.html#certificate-structure">9.3.1 Certificate Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs_src/Appendix.html#certificate-fields">9.3.2 Certificate Fields</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/Appendix.html#security-recommendations">9.4 Security Recommendations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="docs_src/Appendix.html#key-management">9.4.1 Key Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs_src/Appendix.html#production-environment">9.4.2 Production Environment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs_src/Appendix.html#post-provisioning-verification">9.4.3 Post-Provisioning Verification</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="docs_src/Appendix.html#references">9.5 References</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="docs_src/Appendix.html#ti-documentation">9.5.1 TI Documentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs_src/Appendix.html#security-standards">9.5.2 Security Standards</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docs_src/Appendix.html#additional-resources">9.5.3 Additional Resources</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="docs_src/Release_Notes.html" class="btn btn-neutral float-right" title="Release Notes" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Texas Instruments.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

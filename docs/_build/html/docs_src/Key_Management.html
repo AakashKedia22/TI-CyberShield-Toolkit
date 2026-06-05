@@ -1,0 +1,262 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>2 : Key Management &mdash; TI Cybershield Toolkit 0.8 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=d37b194a" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=a0e24af7"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="3 : Certificate Generation" href="Certificate_Generation.html" />
+    <link rel="prev" title="1 : Introduction" href="Introduction.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            TI Cybershield Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Release_Notes.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Disclaimer.html">Disclaimer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Installation.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Introduction.html">1 : Introduction</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">2 : Key Management</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#key-types-and-algorithms">2.1 Key Types and Algorithms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#key-sessions">2.2 Key Sessions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#generating-keys-with-gui">2.3 Generating Keys with GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#generating-keys-with-cli">2.4 Generating Keys with CLI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#using-pkcs-11-hsm-smart-cards">2.5 Using PKCS#11 HSM Smart Cards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#key-security-best-practices">2.6 Key Security Best Practices</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Certificate_Generation.html">3 : Certificate Generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Device_Provisioning.html">4 : Device Provisioning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="GUI_Reference.html">5 : GUI Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CLI_Reference.html">6 : CLI Reference (Used in Python Environment)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Debugging.html">7 : Debugging</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Appendix.html">8 : Appendix</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">TI Cybershield Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">2 : Key Management</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="key-management">
+<h1>2 : Key Management<a class="headerlink" href="#key-management" title="Link to this heading"></a></h1>
+<p>This section covers the key management capabilities of the TI Cybershield Toolkit, including key generation, storage, and management.</p>
+<section id="key-types-and-algorithms">
+<span id="key-types"></span><h2>2.1 Key Types and Algorithms<a class="headerlink" href="#key-types-and-algorithms" title="Link to this heading"></a></h2>
+<p>The TI Cybershield Toolkit supports the following key types:</p>
+<dl class="simple">
+<dt><strong>RSA Keys</strong>:</dt><dd><ul class="simple">
+<li><p>4096-bit RSA keys (RSA4K) — the only supported algorithm for key generation</p></li>
+<li><p>Used for digital signatures and certificate validation</p></li>
+</ul>
+</dd>
+<dt><strong>ECDSA / Brainpool Keys</strong> (SDK dummy keys only):</dt><dd><ul class="simple">
+<li><p>secp256r1 (NIST P-256)</p></li>
+<li><p>secp384r1 (NIST P-384)</p></li>
+<li><p>secp521r1 (NIST P-521)</p></li>
+<li><p>brainpool512r1</p></li>
+<li><p>Available as TI-provided SDK dummy keys for development and testing</p></li>
+<li><p>Cannot be generated by the tool; not supported via PKCS#11 HSM smart cards</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Only RSA4K key <strong>generation</strong> is supported. ECDSA and Brainpool algorithms are available
+exclusively as SDK dummy keys (TI Developer keys) for testing and development purposes,
+and can be selected as the signing algorithm when using those dummy keys.</p>
+</div>
+<dl class="simple">
+<dt><strong>Encryption Keys</strong>:</dt><dd><ul class="simple">
+<li><p>256-bit AES symmetric keys</p></li>
+<li><p>Used for image encryption and decryption</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="key-sessions">
+<h2>2.2 Key Sessions<a class="headerlink" href="#key-sessions" title="Link to this heading"></a></h2>
+<p>The TI Cybershield Toolkit uses the concept of “sessions” to manage keys. A session is a password-protected folder on your local machine that holds a set of related keys:</p>
+<ul class="simple">
+<li><p>Secondary Manufacturer Public Key (SMPK)</p></li>
+<li><p>Secondary Manufacturer Private Key (SMPK private)</p></li>
+<li><p>Secondary Manufacturer Encryption Key (SMEK)</p></li>
+<li><p>Backup Secondary Manufacturer Public Key (BMPK) — optional</p></li>
+<li><p>Backup Secondary Manufacturer Encryption Key (BMEK) — optional</p></li>
+</ul>
+<p>Sessions provide a secure way to store and access keys, ensuring that private keys are protected with password encryption. Keys are generated locally on your PC using OpenSSL libraries.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In TI terminology, “Manufacturer” keys refer to TI’s own keys on the device. Customer-owned
+keys are called “Secondary Manufacturer” keys (SMPK/SMEK).</p>
+</div>
+<p>There are three main options for key management:</p>
+<ol class="arabic simple">
+<li><p><strong>New Keys</strong>: Generate a new set of keys (RSA4K algorithm) and store them in a new password-protected session folder</p></li>
+<li><p><strong>Existing Keys</strong>: Access a previously created password-protected session folder (you cannot import external keys directly)</p></li>
+<li><p><strong>SDK Dummy Keys</strong>: Use TI Developer keys for testing and development purposes. Supports RSA4K, ECDSA (secp256r1, secp384r1, secp521r1), and Brainpool (brainpool512r1) signing algorithms</p></li>
+</ol>
+</section>
+<section id="generating-keys-with-gui">
+<h2>2.3 Generating Keys with GUI<a class="headerlink" href="#generating-keys-with-gui" title="Link to this heading"></a></h2>
+<p>The key generation process is integrated into the GUI workflow:</p>
+<ol class="arabic simple">
+<li><p>Launch the GUI application by running the <code class="docutils literal notranslate"><span class="pre">cstgui</span></code> command in the terminal (see <a class="reference internal" href="Installation.html#installation-guide"><span class="std std-ref">Installation Guide</span></a> for setup)</p></li>
+<li><p>Navigate to the “Device &amp; Key Selection” page</p></li>
+<li><p>Select from the key type options:
+* <strong>New Keys</strong>: Generate new RSA4K keys on your PC using OpenSSL
+* <strong>Existing Keys</strong>: Access keys from a previously created password-protected session folder
+* <strong>SDK Dummy Keys</strong>: Use TI Developer keys for testing and development</p></li>
+<li><p>For New Keys:
+* Provide a session name and password
+* RSA4K is the only supported key generation algorithm
+* Complete the key generation process</p></li>
+</ol>
+</section>
+<section id="generating-keys-with-cli">
+<h2>2.4 Generating Keys with CLI<a class="headerlink" href="#generating-keys-with-cli" title="Link to this heading"></a></h2>
+<p>To generate a new key set using the command-line interface:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cst<span class="w"> </span>--device<span class="w"> </span>&lt;Device_name&gt;<span class="w"> </span>genkeys<span class="w"> </span>-s<span class="w"> </span>SESSION_NAME<span class="w"> </span>-p<span class="w"> </span>PASSWORD
+</pre></div>
+</div>
+<p>Example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cst<span class="w"> </span>--device<span class="w"> </span>f29h85x<span class="w"> </span>genkeys<span class="w"> </span>-s<span class="w"> </span>ProductionKeys<span class="w"> </span>-p<span class="w"> </span>securePassword
+</pre></div>
+</div>
+<p>Parameters:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">-s,</span> <span class="pre">--session</span></code>: Name for the session folder to store the generated keys (required)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-p,</span> <span class="pre">--password</span></code>: Password used to protect the keys on disk (required)</p></li>
+</ul>
+</section>
+<section id="using-pkcs-11-hsm-smart-cards">
+<span id="pkcs11-hsm"></span><h2>2.5 Using PKCS#11 HSM Smart Cards<a class="headerlink" href="#using-pkcs-11-hsm-smart-cards" title="Link to this heading"></a></h2>
+<p>The TI Cybershield Toolkit supports PKCS#11 Hardware Security Modules (HSMs) such as the Nitrokey HSM2. This provides enhanced security by performing cryptographic operations on dedicated hardware, preventing private keys from being extracted.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Only RSA keys are supported when using PKCS#11 HSM smart cards. ECDSA key operations are not supported.</p>
+</div>
+<dl class="simple">
+<dt>Prerequisites:</dt><dd><ul class="simple">
+<li><p>A compatible HSM device (e.g., Nitrokey HSM2)</p></li>
+<li><p>PKCS#11 driver module installed</p></li>
+<li><p>Initialized HSM with PIN/SO-PIN configured</p></li>
+</ul>
+</dd>
+<dt>To use a PKCS#11 HSM with the GUI:</dt><dd><ol class="arabic simple">
+<li><p>Select “PKCS#11 Smart Card” in the key type selection</p></li>
+<li><p>Enter the required HSM parameters (PIN, label)</p></li>
+<li><p>Continue with the normal workflow</p></li>
+</ol>
+</dd>
+</dl>
+<p>To use a PKCS#11 HSM with the CLI:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set PKCS11_LIB environment variable if not in the default location</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">PKCS11_LIB</span><span class="o">=</span>/path/to/pkcs11-driver.so
+
+<span class="c1"># Generate certificate using HSM keys</span>
+cst<span class="w"> </span>gencert<span class="w"> </span>--hsm<span class="w"> </span>--hsm-pin<span class="w"> </span><span class="m">123456</span><span class="w"> </span>--hsm-label<span class="w"> </span>HSM<span class="w"> </span>--tifek-pub<span class="w"> </span>tifek/tifekpub.pem<span class="w"> </span>-o<span class="w"> </span>keycert.h
+</pre></div>
+</div>
+</section>
+<section id="key-security-best-practices">
+<h2>2.6 Key Security Best Practices<a class="headerlink" href="#key-security-best-practices" title="Link to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p><strong>Use strong passwords</strong> for protecting key sessions</p></li>
+<li><p><strong>Backup keys securely</strong> in a separate, protected location</p></li>
+<li><p><strong>Use HSM for production keys</strong> whenever possible</p></li>
+<li><p><strong>Limit access</strong> to key storage locations</p></li>
+<li><p><strong>Use different keys</strong> for development and production</p></li>
+<li><p><strong>Periodically rotate keys</strong> for enhanced security</p></li>
+<li><p><strong>Never share private keys</strong> across multiple products or projects</p></li>
+</ol>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Keys used for device provisioning must be kept secure. Compromise of these keys could allow unauthorized code to run on provisioned devices.</p>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="Introduction.html" class="btn btn-neutral float-left" title="1 : Introduction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Certificate_Generation.html" class="btn btn-neutral float-right" title="3 : Certificate Generation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Texas Instruments.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

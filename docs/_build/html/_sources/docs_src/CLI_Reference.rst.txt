@@ -1,0 +1,917 @@
+.. include:: ../device_includes.rst
+
+=====================================
+6 : CLI Reference (Used in Python Environment)
+=====================================
+
+Note : For this release, the CLI is only used via Python source and not the executable
+-------------------------------------------------------------------------------------
+
+This section provides a comprehensive reference guide to the |tool_name| command-line interface (|tool_name_cli|), which offers extensive functionality for device provisioning operations.
+
+6.1 Command Structure
+===================
+
+The ``cst`` tool uses a command-based structure with device-specific sub-commands for different operations:
+
+.. code-block:: text
+
+    cst [global_options] --device DEVICE_TYPE COMMAND [command_options]
+
+Where:
+* ``[global_options]``: Options that apply to all commands
+* ``--device DEVICE_TYPE``: Specifies the target device (e.g., f29h85x, am62px)
+* ``COMMAND``: The specific operation to perform
+* ``[command_options]``: Options specific to the command
+
+6.2 Global Options
+================
+
+These options apply to all commands:
+
+``-v, --verbose``
+    Enable verbose output
+
+``--debug``
+    Enable debug output
+
+``--version``
+    Show version information
+
+``--help``
+    Show help information
+
+``--device {f29h85x,am62px,j722s}``
+    Specify the target device
+
+``--smpk_signing_algorithm {rsa4k,secp256r1,secp384r1,secp521r1,brainpool512r1}``
+    Specify the SMPK signing algorithm
+
+``--bmpk_signing_algorithm {rsa4k,secp256r1,secp384r1,secp521r1,brainpool512r1}``
+    Specify the BMPK signing algorithm (for backup keys)
+
+6.3 Device Information Commands
+============================
+
+6.3.1 getSoCId
+-----------
+
+Retrieves the SoC ID from a connected device via UART.
+
+.. code-block:: bash
+
+    cst --device f29h85x getSoCId --port PORT [options]
+
+Required Parameters:
+
+``--port PORT``
+    Serial port connected to the device
+
+Optional Parameters:
+
+``--timeout SECONDS``
+    Timeout in seconds for the operation
+
+Example:
+
+.. code-block:: bash
+
+    cst --device f29h85x getSoCId --port /dev/ttyACM0 --timeout 10
+
+6.3.2 parseSoCId
+-------------
+
+Parses a previously obtained SoC ID hexadecimal string.
+
+.. code-block:: bash
+
+    cst --device f29h85x parseSoCId -s SOC_ID_HEX_STRING
+
+Required Parameters:
+
+``-s, --soc-id SOC_ID_HEX_STRING``
+    Hexadecimal string representation of the SoC ID
+
+Example:
+
+.. code-block:: bash
+
+    cst --device f29h85x parseSoCId -s 0617ff0000000000000001004632394838355800000000000a00cdab0000010001000000020000000100000000000000000000000000000000000000ea0a5e7e2acbf7b587821766454242f87a23ca45cc1ad0d595661468eb571558b019a4cd88ac5c2e901ce8ca171c2dceed66273e8796c839597402eff5c32ccfce0c44734447afec12ba0b2226c3bdbc15576d212323ece46a9c4ccd6a463e417086083fee572a09a9496dbed447a9f13f9cf535fad75b18e0ee095a4e783c62f428831c8cf37ad269b3c162470e649f2f41876581744f517ad263936d6e22beb4eeb8383155f3142250b1bf27a6d8cc5bbda14c
+
+6.3.3 devTypeJTAG
+--------------
+
+Detects the device type and state via JTAG connection.
+
+.. code-block:: bash
+
+    cst --device f29h85x devTypeJTAG --ccs-path CCS_PATH [options]
+
+Required Parameters:
+
+``--ccs-path CCS_PATH``
+    Path to CCS installation
+
+Example:
+
+.. code-block:: bash
+
+    cst --device f29h85x devTypeJTAG --ccs-path ~/ti/ccs2050/ --verbose
+
+6.3.4 devTypeUART
+-------------
+
+Detects the device type and state via UART connection.
+
+.. code-block:: bash
+
+    cst --device f29h85x devTypeUART --uart-kernel UART_KERNEL --port PORT [options]
+
+Required Parameters:
+
+``--uart-kernel UART_KERNEL``
+    Path to UART kernel binary
+
+``--port PORT``
+    Serial port connected to the device
+
+Optional Parameters:
+
+``--targetbaud BAUD``
+    Target baudrate for communication
+
+.. note::
+   Pre-built UART kernels are provided for convenience:
+
+   - **HS-FS devices**: ``host/bin/asm/f29h85x/ram_based_uart_sbl.bin``
+     — ready to use, no signing required.
+   - **HS-KP / HS-SE devices**: ``host/bin/asm/f29h85x/ram_based_uart_sbl.temp.bin``
+     — unsigned template that must be signed with the SMPK/BMPK keys
+     provisioned on your device before use.
+
+Example:
+
+.. code-block:: bash
+
+    cst --device f29h85x devTypeUART --uart-kernel /path/to/uart_kernel.bin --port /dev/ttyACM0 --targetbaud 921600
+
+6.3.5 getUIDSecap
+--------------
+
+Extracts the device UID (Unique Identifier) and security capabilities via JTAG. The device UID is required for generating device-specific certificates such as debug certificates and device recovery certificates. This command is typically used after enabling device recovery mode when preparing to generate a recovery certificate.
+
+.. note::
+   If this command fails or returns incorrect data, you can alternatively obtain the device UID using the ``getSoCId`` command (via UART) followed by ``parseSoCId`` to extract the UID from the SoC ID.
+
+.. code-block:: bash
+
+    cst --device f29h85x getUIDSecap --ccs-path CCS_PATH [options]
+
+Required Parameters:
+
+``--ccs-path CCS_PATH``
+    Path to CCS installation
+
+Example:
+
+.. code-block:: bash
+
+    cst --device f29h85x getUIDSecap --ccs-path ~/ti/ccs2050/ --verbose
+
+6.4 Key Management Commands
+=========================
+
+6.4.1 genkeys
+----------
+
+Generates a new set of Secondary Manufacturer keys (SMPK/SMEK).
+
+.. code-block:: bash
+
+    cst --device f29h85x [key_algorithms] genkeys -s SESSION -p PASSWORD [options]
+
+Required Parameters:
+
+``-s, --session SESSION``
+    Name for the generated keys
+
+``-p, --password PASSWORD``
+    Password used to protect the keys on disk
+
+Optional Parameters:
+
+``--smpk_signing_algorithm {rsa4k,secp256r1,secp384r1,secp521r1,brainpool512r1}``
+    Signing algorithm for the Secondary Manufacturer Public Key (SMPK).
+
+``--bmpk_signing_algorithm {rsa4k,secp256r1,secp384r1,secp521r1,brainpool512r1}``
+    Signing algorithm for the Backup Secondary Manufacturer Public Key (BMPK).
+
+.. note::
+    Key **generation** only supports RSA4K. For full details on supported key types and algorithms,
+    see :ref:`key-types`.
+
+Example:
+
+.. code-block:: bash
+
+    cst --device f29h85x --smpk_signing_algorithm rsa4k --bmpk_signing_algorithm rsa4k genkeys -s rsa_f29_new -p secure_password
+
+6.5 Certificate Commands
+======================
+
+6.5.1 gencert
+----------
+
+Generates an X.509 certificate for device provisioning with extensive configuration options.
+
+.. code-block:: bash
+
+    cst gencert --device f29h85x [options]
+
+Key-related Parameters (use one of these groups):
+
+``-s SESSION, --session SESSION`` and ``-p PASSWORD, --password PASSWORD``
+    Use an existing session with the specified password
+
+``--smpk_signing_algorithm ALG --bmpk_signing_algorithm ALG``
+    Directly specify signing algorithms without a session (for HSM)
+
+Required Parameters:
+
+``-t, --tifek, --tifek-pub TIFEK``
+    Path to the TI FEK public key. If the Security Addon is installed, the TI FEK keys
+    are included in the addon directory (``~/ti/TICST/addons/`` by default). The addon
+    provides keys for both SR_10 (Rev A) and SR_20 (Rev B/Rev C) — use the key matching
+    your device revision. Note: the GUI auto-selects the correct TI FEK when the addon is
+    detected; the CLI always requires the path to be specified explicitly.
+
+``-d, --device DEVICE``
+    Device type (e.g., f29h85x)
+
+``--devSrVer SR_VERSION``
+    Device security revision version (e.g., SR_10, SR_20)
+
+.. important::
+    **Device Revision-Specific Configuration:**
+
+    * **Rev B and Rev C Devices**: Must use ``--devSrVer SR_20`` and the Rev B/C-specific OTP Keywriter binary during provisioning. Refer to the SBL Keywriter documentation for selecting the correct binary.
+
+      .. note::
+           The secure binaries addon as part of 26.00.00_STS includes only the SR_10 (Rev A) OTP Keywriter binary.
+          Rev B/C users must obtain the SR_20-specific binary from the SBL Keywriter package.
+          Contact a TI representative for more information.
+
+    * **Rev A Devices**: Use ``--devSrVer SR_10`` (default)
+
+Optional Certificate Content Parameters:
+
+``--msv MSV``
+    Model specific value
+
+``--msv_protect``
+    Enable protection for MSV
+
+``--smpk``
+    Include Secondary Manufacturer Public Key (SMPK)
+
+``--smek``
+    Include Secondary Manufacturer Encryption Key (SMEK)
+
+``--s_protect``
+    Enable protection for SMPK
+
+``--smek_protect``
+    Enable protection for SMEK
+
+``--bmpk``
+    Include Backup Secondary Manufacturer Public Key (BMPK)
+
+``--bmek``
+    Include Backup Secondary Manufacturer Encryption Key (BMEK)
+
+``--b_protect``
+    Enable protection for BMPK
+
+``--bmek_protect``
+    Enable protection for BMEK
+
+``--sr_sbl VALUE``
+    Software revision for SBL
+
+``--sr_hsmRT VALUE``
+    Software revision for HSM runtime
+
+``--sr_app VALUE``
+    Software revision for application
+
+``--sr_ssu VALUE``
+    Software revision for SSU
+
+``--keycnt VALUE``
+    Key count (1 or 2)
+
+``--keycnt_protect``
+    Enable protection for key count
+
+``--keyrev VALUE``
+    Key revision (1 or 2)
+
+``--ext_otp VALUE``
+    Extended OTP value
+
+``--ext_otp_indx INDEX``
+    Extended OTP index
+
+``--ext_otp_size SIZE``
+    Extended OTP size
+
+Examples:
+
+.. code-block:: bash
+
+    # Rev A Device (SR_10)
+    cst gencert -s rsa_f29_new -p secure_password --tifek-pub /path/to/ti_fek_public.pem --msv 0x1E22D --msv_protect --bmpk --bmek --b_protect --bmek_protect --smpk --smek --s_protect --smek_protect --sr_sbl 1 --sr_hsmRT 1 --sr_app 1 --sr_ssu 1 --keycnt 2 --keycnt_protect --keyrev 1 -d f29h85x --devSrVer SR_10 --ext_otp 0x80000001 --ext_otp_indx 0 --ext_otp_size 32
+
+    # Rev B Device (SR_20)
+    cst gencert -s rsa_f29_new -p secure_password --tifek-pub /path/to/ti_fek_public.pem --msv 0x1E22D --msv_protect --bmpk --bmek --b_protect --bmek_protect --smpk --smek --s_protect --smek_protect --sr_sbl 1 --sr_hsmRT 1 --sr_app 1 --sr_ssu 1 --keycnt 2 --keycnt_protect --keyrev 1 -d f29h85x --devSrVer SR_20 --ext_otp 0x80000001 --ext_otp_indx 0 --ext_otp_size 32
+
+    # Rev C Device (SR_20 — same as Rev B)
+    cst gencert -s rsa_f29_new -p secure_password --tifek-pub /path/to/ti_fek_public.pem --msv 0x1E22D --msv_protect --bmpk --bmek --b_protect --bmek_protect --smpk --smek --s_protect --smek_protect --sr_sbl 1 --sr_hsmRT 1 --sr_app 1 --sr_ssu 1 --keycnt 2 --keycnt_protect --keyrev 1 -d f29h85x --devSrVer SR_20 --ext_otp 0x80000001 --ext_otp_indx 0 --ext_otp_size 32
+
+6.5.2 rotcert
+----------
+
+Generates a Root of Trust (RoT) switching certificate. This certificate enables the device to switch between different Root of Trust keys, allowing for key rotation in security-critical systems.
+
+.. code-block:: bash
+
+    cst --device f29h85x [key_specification] rotcert [options]
+
+Key-related Parameters (use one of these groups):
+
+``--session SESSION --password PASSWORD``
+    Use an existing session with the specified password
+
+``--smpk_signing_algorithm ALG --bmpk_signing_algorithm ALG``
+    Directly specify signing algorithms without a session
+
+Example:
+
+.. code-block:: bash
+
+    cst --device f29h85x --session rsa_f29_new --password secure_password rotcert
+
+6.5.3 debugcert
+------------
+
+Generates a debug certificate for secured devices.
+
+.. code-block:: bash
+
+    cst --device f29h85x [key_specification] debugcert [options]
+
+Required Parameters:
+
+``--keyrev VALUE``
+    Key revision (1 or 2)
+
+``--swrv VALUE``
+    Software revision
+
+``--dev_dbg_type TYPE``
+    Debug type code
+
+``--dev_uid UID``
+    Device unique identifier (obtained via getUIDSecap)
+
+Example:
+
+.. code-block:: bash
+
+    cst --device f29h85x --session rsa_f29 --password secure_password debugcert --keyrev 1 --swrv 1 --dev_dbg_type 4 --dev_uid 2B30EFDBE1D6A92F57318AC0AF2FE89AC3B2950C6418C587DCD30E93A168C9BD300B1F558ADDD394D452E724EEA3977568984DC3DB97AAF9E3920D8C3C724C40
+
+6.5.4 devicerecovery
+----------------
+
+Generates a device recovery certificate using the device UID. This certificate is signed with the manufacturer's keys and enables debug access on a secured device. The certificate is device-specific and must match the UID of the target device.
+
+.. code-block:: bash
+
+    cst --device f29h85x [key_specification] devicerecovery [options]
+
+Required Parameters:
+
+``--keyrev VALUE``
+    Key revision (1 or 2) - must match the key revision used during device provisioning
+
+``--dev_uid UID``
+    Device unique identifier (obtained via getUIDSecap, or via getSoCId + parseSoCId)
+
+Key Specification (use one):
+
+``--session SESSION --password PASSWORD``
+    Use an existing key session
+
+``--smpk_signing_algorithm ALG --bmpk_signing_algorithm ALG``
+    Directly specify signing algorithms
+
+Examples:
+
+.. code-block:: bash
+
+    # Using key session
+    cst --device f29h85x --session rsa_f29 --password secure_password devicerecovery --keyrev 1 --dev_uid C2BF02F62B090F025E3479F71FDEA022E4862D8AE5135189E8D1C7E2AC20600489DEC02AA01D1957A5F53A3F91DFBC2AE33D4AE1104ACAFB7716E9518590557E
+
+    # Using direct signing algorithms
+    cst --device f29h85x --smpk_signing_algorithm rsa4k --bmpk_signing_algorithm rsa4k devicerecovery --keyrev 1 --dev_uid C2BF02F62B090F025E3479F71FDEA022E4862D8AE5135189E8D1C7E2AC20600489DEC02AA01D1957A5F53A3F91DFBC2AE33D4AE1104ACAFB7716E9518590557E
+
+6.5.5 valdcert
+----------
+
+Validates and loads a device recovery certificate onto the device via JTAG. This is the final step in the device recovery workflow. Upon successful validation, debug access will be enabled on the secured device, allowing JTAG debugging operations.
+
+.. code-block:: bash
+
+    cst --device f29h85x valdcert [options]
+
+Required Parameters:
+
+``--dev_recov_cert CERT_PATH``
+    Path to the device recovery certificate generated by the devicerecovery command
+
+``--ccs-path CCS_PATH``
+    Path to CCS installation
+
+Example:
+
+.. code-block:: bash
+
+    cst --device f29h85x valdcert --dev_recov_cert /path/to/device_recovery.bin --ccs-path ~/ti/ccs2050/ --verbose
+
+6.6 Application Signing Commands
+=============================
+
+6.6.1 signapp
+----------
+
+Signs an application binary with manufacturer keys.
+
+.. code-block:: bash
+
+    cst --device f29h85x [key_specification] signapp [options]
+
+Required Parameters:
+
+``--image IMAGE_PATH``
+    Path to the application binary
+
+``--input-format {BIN,OUT}``
+    Input format (BIN for binary, OUT for ELF)
+
+``--core {C29,HSM}``
+    Target core
+
+``--keyrev VALUE``
+    Key revision (1 or 2)
+
+``--loadaddr ADDRESS``
+    Load address (hexadecimal)
+
+``--swrv VALUE``
+    Software revision
+
+``--boot {FLASH,RAM}``
+    Boot mode
+
+Optional Parameters:
+
+``--debug DEBUG_MODE``
+    Debug mode (e.g., DBG_SOC_DEFAULT)
+
+Example:
+
+.. code-block:: bash
+
+    cst --device f29h85x --session rsa_f29 --password secure_password signapp --image /path/to/app.bin --input-format BIN --core C29 --keyrev 1 --loadaddr 0x10001000 --swrv 1 --boot FLASH
+
+6.6.2 signSecCfg
+------------
+
+Signs a security configuration binary.
+
+.. code-block:: bash
+
+    cst --device f29h85x [key_specification] signSecCfg [options]
+
+Required Parameters:
+
+``--swrv VALUE``
+    Software revision
+
+``--keyrev VALUE``
+    Key revision (1 or 2)
+
+``--image IMAGE_PATH``
+    Path to the security configuration binary
+
+``--output_path OUTPUT_PATH``
+    Path for the signed output
+
+``--boot {FLASH,RAM}``
+    Boot mode
+
+``--ccs-path CCS_PATH``
+    Path to CCS installation
+
+Example:
+
+.. code-block:: bash
+
+    cst --device f29h85x --session rsa_f29 --password secure_password signSecCfg --swrv 1 --keyrev 1 --ccs-path ~/ti/ccs2050 --image /path/to/seccfg.out --output_path ~/output/directory --boot FLASH
+
+6.7 Provisioning Commands
+======================
+
+6.7.1 uart_keyprov
+--------------
+
+Provisions keys via UART connection.
+
+.. code-block:: bash
+
+    cst --device f29h85x uart_keyprov [options]
+
+Required Parameters:
+
+``--otp-kw-bin KW_BINARY``
+    OTP keywriter binary
+
+.. note::
+     The secure binaries addon as part of 26.00.00_STS includes only the SR_10 (Rev A) OTP Keywriter binary.
+    Rev B/C users (SR_20) must obtain the SR_20-specific binary from the SBL Keywriter package.
+    Contact a TI representative for more information.
+
+``--uart-kernel UART_KERNEL``
+    UART flash kernel binary
+
+``--certificate CERTIFICATE``
+    Certificate file containing keys and parameters
+
+``--port PORT``
+    Serial port connected to the device
+
+Example:
+
+.. code-block:: bash
+
+    cst --device f29h85x uart_keyprov --otp-kw-bin /path/to/otp_kw_binary.bin --uart-kernel /path/to/uart_kernel.bin --certificate /path/to/certificate.bin --port /dev/ttyACM0
+
+6.7.2 jtag_keyprov
+--------------
+
+Provisions keys via JTAG connection.
+
+.. code-block:: bash
+
+    cst --device f29h85x jtag_keyprov [options]
+
+Required Parameters:
+
+``--ccs-path CCS_PATH``
+    Path to CCS installation
+
+``--otp-kw-bin KW_BINARY``
+    OTP keywriter binary
+
+.. note::
+     The secure binaries addon as part of 26.00.00_STS includes only the SR_10 (Rev A) OTP Keywriter binary.
+    Rev B/C users (SR_20) must obtain the SR_20-specific binary from the SBL Keywriter package.
+    Contact a TI representative for more information.
+
+``--jtag-kernel JTAG_KERNEL``
+    JTAG kernel binary
+
+``--certificate CERTIFICATE``
+    Certificate file containing keys and parameters
+
+Example:
+
+.. code-block:: bash
+
+    cst --device f29h85x jtag_keyprov --ccs-path ~/ti/ccs2050/ --otp-kw-bin /path/to/otp_kw_binary.bin --jtag-kernel /path/to/jtag_kernel.out --certificate /path/to/certificate.bin
+
+6.7.3 uart_codeprov
+---------------
+
+Provisions code via UART connection.
+
+.. code-block:: bash
+
+    cst --device f29h85x uart_codeprov [options]
+
+Required Parameters:
+
+``--uart-kernel UART_KERNEL``
+    UART flash kernel binary
+
+``--hsm-image HSM_IMAGE``
+    HSM code provisioning image
+
+``--port PORT``
+    Serial port connected to the device
+
+Optional Parameters:
+
+``--hsm-cpu-code HSM_CPU_CODE``
+    HSM CPU code
+
+``--c29-cpu-code C29_CPU_CODE``
+    C29 CPU code
+
+``--seccfg SECURITY_CONFIG``
+    Security configuration
+
+``--targetbaud BAUD``
+    Target baudrate for communication
+
+``--input PARAMETERS``
+    Comma-separated parameter list (e.g., "3,5,6,7")
+
+Example:
+
+.. code-block:: bash
+
+    cst --device f29h85x uart_codeprov --uart-kernel /path/to/uart_kernel.bin --hsm-image /path/to/hsm_image.bin --hsm-cpu-code /path/to/hsm_cpu_code.bin --c29-cpu-code /path/to/c29_cpu_code.bin --seccfg /path/to/seccfg.bin --port /dev/ttyACM0 --targetbaud 921600 --input 3,5,6,7
+
+6.7.4 jtag_codeprov
+----------------
+
+Provisions code via JTAG connection.
+
+.. code-block:: bash
+
+    cst --device f29h85x jtag_codeprov [options]
+
+Required Parameters:
+
+``--ccs-path CCS_PATH``
+    Path to CCS installation
+
+``--jtag-kernel JTAG_KERNEL``
+    JTAG kernel binary
+
+``--hsm-image HSM_IMAGE``
+    HSM code provisioning image
+
+Optional Parameters:
+
+``--hsm-cpu-code HSM_CPU_CODE``
+    HSM CPU code
+
+``--c29-cpu-code C29_CPU_CODE``
+    C29 CPU code
+
+``--seccfg SECURITY_CONFIG``
+    Security configuration
+
+Example:
+
+.. code-block:: bash
+
+    cst --device f29h85x jtag_codeprov --ccs-path ~/ti/ccs2050/ --jtag-kernel /path/to/jtag_kernel.out --hsm-image /path/to/hsm_image.bin --hsm-cpu-code /path/to/hsm_cpu_code.bin --c29-cpu-code /path/to/c29_cpu_code.bin --seccfg /path/to/seccfg.bin --verbose
+
+6.7.5 endevrecov
+------------
+
+Enables device recovery mode via JTAG. This command configures the device to accept a device recovery certificate, which is the first step in the device recovery workflow for enabling debug access on secured devices.
+
+.. code-block:: bash
+
+    cst --device f29h85x endevrecov --ccs-path CCS_PATH [options]
+
+Required Parameters:
+
+``--ccs-path CCS_PATH``
+    Path to CCS installation
+
+Example:
+
+.. code-block:: bash
+
+    cst --device f29h85x endevrecov --ccs-path ~/ti/ccs2050/ --verbose
+
+.. note::
+    After running this command, the device must be soft reset (XRSTN) before proceeding to the next step.
+
+6.8 Command Chaining and Automation
+================================
+
+The CLI is designed for automation and supports scripted workflows for streamlined provisioning. The following sections provide examples of common command chains for various scenarios.
+
+6.8.1 Complete Key Provisioning Workflow
+------------------------------------
+
+.. code-block:: bash
+
+    #!/bin/bash
+
+    # 1. Generate keys
+    cst --device f29h85x --smpk_signing_algorithm rsa4k genkeys -s production_keys -p secure_password
+
+    # 2. Generate certificate
+    cst gencert -s production_keys -p secure_password \
+        --tifek-pub /path/to/ti_fek_public.pem \
+        --msv 0x1E22D --msv_protect \
+        --smpk --smek --s_protect --smek_protect \
+        --sr_sbl 1 --sr_hsmRT 1 --sr_app 1 \
+        --keycnt 1 --keyrev 1 \
+        -d f29h85x --devSrVer SR_10 \
+        -o certificate.bin
+
+    # 3. Get device info
+    cst --device f29h85x getSoCId --port /dev/ttyACM0
+
+    # 4. Provision keys via UART
+    cst --device f29h85x uart_keyprov \
+        --otp-kw-bin /path/to/otp_kw_binary.bin \
+        --uart-kernel /path/to/uart_kernel.bin \
+        --certificate certificate.bin \
+        --port /dev/ttyACM0
+
+6.8.2 Complete Code Provisioning Workflow
+-------------------------------------
+
+.. code-block:: bash
+
+    #!/bin/bash
+
+    # 1. Sign application images
+    cst --device f29h85x --session production_keys --password secure_password signapp \
+        --image /path/to/hsm_app.bin \
+        --input-format BIN --core HSM --keyrev 1 \
+        --loadaddr 0x00000000 --swrv 1 --boot FLASH
+
+    cst --device f29h85x --session production_keys --password secure_password signapp \
+        --image /path/to/c29_app.bin \
+        --input-format BIN --core C29 --keyrev 1 \
+        --loadaddr 0x10001000 --swrv 1 --boot FLASH
+
+    # 2. Sign security configuration
+    cst --device f29h85x --session production_keys --password secure_password signSecCfg \
+        --swrv 1 --keyrev 1 \
+        --ccs-path ~/ti/ccs2050 \
+        --image /path/to/seccfg.out \
+        --output_path ~/output/directory \
+        --boot FLASH
+
+    # 3. Provision code via UART
+    cst --device f29h85x uart_codeprov \
+        --uart-kernel /path/to/uart_kernel.bin \
+        --hsm-image /path/to/hsm_image.bin \
+        --hsm-cpu-code /path/to/signed_hsm_app.bin \
+        --c29-cpu-code /path/to/signed_c29_app.bin \
+        --seccfg /path/to/signed_seccfg.bin \
+        --port /dev/ttyACM0 --targetbaud 921600 \
+        --input 3,5,6,7
+
+.. _device-recovery-workflow:
+
+6.8.3 Device Recovery Workflow
+---------------------------
+
+The device recovery workflow enables debug access on secured devices (HS-KP or HS-SE state) that have been provisioned with keys. This process is essential for enabling JTAG debugging on devices where debug access has been restricted by the security configuration.
+
+**Overview**
+
+The device recovery process involves the following steps in order:
+
+1. **Enable Device Recovery Mode**: Configure the device to accept a recovery certificate
+2. **Retrieve Device UID and Security Capabilities**: Obtain the unique device identifier
+3. **Generate Device Recovery Certificate**: Create a certificate signed with the manufacturer's keys
+4. **Validate Recovery Certificate**: Load and validate the certificate on the device to enable debug access
+
+.. note::
+   If the device UID cannot be retrieved correctly via the standard ``getUIDSecap`` command, you can alternatively use the ``getSoCId`` command to retrieve the SoC ID via UART, then use ``parseSoCId`` to extract the device UID from the SoC ID data.
+
+**Complete Workflow Example**
+
+.. code-block:: bash
+
+    #!/bin/bash
+
+    # Step 1: Enable device recovery mode
+    # This configures the device to accept a recovery certificate
+    cst --device f29h85x endevrecov --ccs-path ~/ti/ccs2050/ --verbose
+
+    # Perform a soft reset (XRSTN) on the device before continuing
+
+    # Step 2: Get device UID and security capabilities
+    # This retrieves the unique device identifier needed for certificate generation
+    cst --device f29h85x getUIDSecap --ccs-path ~/ti/ccs2050/ --verbose
+
+    # Alternative Step 2: If getUIDSecap fails, use getSoCId and parseSoCId
+    # cst --device f29h85x getSoCId --port /dev/ttyACM0 --timeout 10
+    # cst --device f29h85x parseSoCId -s <soc_id_hex_string>
+
+    # Step 3: Generate device recovery certificate
+    # Use the device UID obtained in Step 2
+    cst --device f29h85x --session production_keys --password secure_password devicerecovery \
+        --keyrev 1 \
+        --dev_uid C2BF02F62B090F025E3479F71FDEA022E4862D8AE5135189E8D1C7E2AC20600489DEC02AA01D1957A5F53A3F91DFBC2AE33D4AE1104ACAFB7716E9518590557E
+
+    # Step 4: Validate the recovery certificate
+    # This loads the certificate onto the device and enables debug access
+    cst --device f29h85x valdcert \
+        --dev_recov_cert /path/to/device_recovery.bin \
+        --ccs-path ~/ti/ccs2050/ --verbose
+
+    # After successful validation, debug access is enabled on the device
+
+6.9 Environment Variables
+======================
+
+The following environment variables affect CLI behavior:
+
+``PKCS11_LIB``
+    Path to the PKCS#11 library for HSM support
+    Default: /usr/local/lib/libsc-hsm-pkcs11.so
+
+``SPT_LOG_LEVEL``
+    Controls the verbosity of logging
+    Values: DEBUG, INFO, WARNING, ERROR
+    Default: INFO
+
+``SPT_CONFIG_DIR``
+    Directory for configuration files
+    Default: ~/.ti_cst_f29h85x_0X_XX_XX
+
+6.10 Command Pattern Reference
+===========================
+
+The CLI follows several command patterns that can be combined for different workflows:
+
+**Device and Key Type**:
+    Always specify the device type and optionally the key algorithms:
+
+    .. code-block:: bash
+
+        cst --device f29h85x [--smpk_signing_algorithm ALGO] [--bmpk_signing_algorithm ALGO]
+
+**Key Specification**:
+    Either use an existing session:
+
+    .. code-block:: bash
+
+        --session SESSION_NAME --password PASSWORD
+
+    Or specify algorithms directly (for HSM usage):
+
+    .. code-block:: bash
+
+        --smpk_signing_algorithm ALGO --bmpk_signing_algorithm ALGO
+
+**Connection Type**:
+    For UART connections:
+
+    .. code-block:: bash
+
+        --port PORT_NAME --uart-kernel KERNEL_PATH
+
+    For JTAG connections:
+
+    .. code-block:: bash
+
+        --ccs-path CCS_PATH --jtag-kernel KERNEL_PATH
+
+**Command Structure**:
+    Consistently follows this pattern:
+
+    .. code-block:: bash
+
+        cst [global_options] --device DEVICE [key_specification] COMMAND [command_options]
+
+6.11 Exit Codes
+============
+
+The CLI returns the following exit codes:
+
+``0``
+    Success
+
+``1``
+    General error
+
+``2``
+    Command line argument error
+
+``3``
+    Key error
+
+``4``
+    Certificate error
+
+``5``
+    Device communication error
+
+``10``
+    Internal error

@@ -1,0 +1,118 @@
+/* Theme overrides for TI Cybershield Toolkit documentation */
+
+/* Colors */
+:root {
+    --ti-red: #cc0000;
+    --ti-dark-red: #990000;
+    --ti-light-gray: #f2f2f2;
+    --ti-dark-gray: #333333;
+}
+
+/* Global styles */
+.wy-nav-content {
+    max-width: 1200px;
+}
+
+/* Header styling */
+.wy-side-nav-search {
+    background-color: var(--ti-red);
+}
+
+.wy-side-nav-search > a {
+    color: white;
+}
+
+.wy-menu-vertical header, .wy-menu-vertical p.caption {
+    color: var(--ti-red);
+}
+
+/* Code blocks */
+div[class^="highlight"] {
+    border: 1px solid #e1e4e5;
+    border-radius: 4px;
+}
+
+/* Tables */
+table.docutils {
+    border: 1px solid #e1e4e5;
+}
+
+table.docutils th {
+    background-color: var(--ti-light-gray);
+}
+
+/* Notes and warnings */
+.rst-content .note .admonition-title {
+    background-color: #2980B9;
+}
+
+.rst-content .warning .admonition-title {
+    background-color: var(--ti-red);
+}
+
+.rst-content .important .admonition-title {
+    background-color: var(--ti-dark-red);
+}
+
+/* Logo size */
+.wy-side-nav-search .logo {
+    width: 150px;
+}
+
+/* Mobile view improvements */
+@media screen and (max-width: 768px) {
+    .wy-nav-content-wrap {
+        margin-left: 0;
+    }
+}
+
+/* Better readability for content */
+.wy-nav-content {
+    color: var(--ti-dark-gray);
+}
+
+.wy-body-for-nav {
+    background-color: white;
+}
+
+/* Links */
+a {
+    color: var(--ti-red);
+}
+
+a:visited {
+    color: #ccaa00;
+}
+
+/* Navigation */
+.wy-menu-vertical a:hover {
+    background-color: var(--ti-light-gray);
+    color: var(--ti-red);
+}
+
+.wy-menu-vertical li.current {
+    background-color: var(--ti-light-gray);
+}
+
+/* Code highlighting */
+.highlight {
+    background: #f8f8f8;
+}
+
+/* Print styles */
+@media print {
+    .wy-nav-side {
+        display: none;
+    }
+
+    .wy-nav-content-wrap {
+        margin-left: 0;
+    }
+}
+
+/* Table of contents */
+.toctree-wrapper {
+    padding: 10px;
+    background-color: var(--ti-light-gray);
+    border-radius: 4px;
+}

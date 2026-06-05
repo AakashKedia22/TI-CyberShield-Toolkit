@@ -1,0 +1,446 @@
+{
+  "device_name": "f29h85x",
+  "device_family": "asm",
+  "variants": {
+    "hsfs": {
+      "display_name": "F29H85x HSFS",
+      "description": "Texas Instruments F29H85x High Security Field Secure device",
+      "otp_keywriter_binary": "otp_kw_f29h85x_hs_fs.hsmimage.bin",
+      "secure_debug": true
+    },
+    "hsse": {
+      "display_name": "F29H85x HSSE",
+      "description": "Texas Instruments F29H85x High Security Secure Environment device",
+      "otp_keywriter_binary": "otp_kw_f29h85x_hs_se.hsmimage.bin",
+      "secure_debug": false
+    }
+  },
+  "cert_flags": [
+    "msv_protect", "s_protect", "smek_protect", "b_protect", "bmek_protect",
+    "keycnt_protect", "smpk", "smek", "bmpk", "bmek"
+  ],
+  "cert_fields": [
+    {
+      "key": "output_dir_path",
+      "label": "Output Folder",
+      "widget_type": "dir_browse",
+      "default": "",
+      "tab": null,
+      "required": true
+    },
+    {
+      "key": "pub_key_path",
+      "label": "TI FEK Public Key",
+      "widget_type": "file_browse",
+      "default": "",
+      "tab": "Basic",
+      "required": true
+    },
+    {
+      "key": "msv",
+      "label": "MSV",
+      "widget_type": "text",
+      "default": "0x1E22D",
+      "tab": "Basic"
+    },
+    {
+      "key": "dev_sr_ver",
+      "label": "Device SR Version",
+      "widget_type": "combo",
+      "default": "SR_20",
+      "tab": "Basic",
+      "options": [
+        ["Software Release v10 (RevA Silicon)", "SR_10"],
+        ["Software Release v20 (RevB Silicon)", "SR_20"]
+      ]
+    },
+    {
+      "key": "keycnt",
+      "label": "Program Keys",
+      "widget_type": "combo",
+      "default": "2",
+      "tab": "Keys",
+      "options": [
+        ["SMPK", "1"],
+        ["SMPK and BMPK", "2"]
+      ]
+    },
+    {
+      "key": "keyrev",
+      "label": "Key Revision",
+      "widget_type": "combo",
+      "default": "1",
+      "tab": "Keys",
+      "options": [
+        ["Use SMPK (1)", "1"],
+        ["Use BMPK (2)", "2"]
+      ]
+    },
+    {
+      "key": "sr_sbl",
+      "label": "SBL",
+      "widget_type": "text",
+      "default": "1",
+      "tab": "SW Revisions"
+    },
+    {
+      "key": "sr_hsmRT",
+      "label": "HSM Runtime",
+      "widget_type": "text",
+      "default": "1",
+      "tab": "SW Revisions"
+    },
+    {
+      "key": "sr_app",
+      "label": "CPU1 Application",
+      "widget_type": "text",
+      "default": "1",
+      "tab": "SW Revisions"
+    },
+    {
+      "key": "sr_ssu",
+      "label": "CPU1 SECCFG",
+      "widget_type": "text",
+      "default": "1",
+      "tab": "SW Revisions"
+    },
+    {
+      "key": "ext_otp_rows",
+      "label": "Extended OTP",
+      "widget_type": "ext_otp_rows",
+      "default_value": "0x80000001",
+      "default_size": "128",
+      "num_rows": 13,
+      "row_bits": 128,
+      "tab": "Extended OTP"
+    }
+  ],
+  "boot_modes": [
+    {
+      "id":                "UART",
+      "connection_type":   "uart",
+      "connection_widget": "serial",
+      "connection_param":  "port",
+      "extra_params":      {"baudrate": "115200"},
+      "session_params":    []
+    },
+    {
+      "id":                "JTAG",
+      "connection_type":   "jtag",
+      "connection_widget": "ccs",
+      "connection_param":  "ccs_path",
+      "extra_params":      {"verbose": true},
+      "session_params":    ["target_config_path"]
+    }
+  ],
+  "binary_signing": true,
+  "advanced_tabs": [
+    {"id": "rot_cert",    "label": "Root of Trust",         "output_dir_key": "rot_cert"},
+    {"id": "debug_cert",  "label": "Debug Authentication",  "output_dir_key": "debug_cert"},
+    {"id": "sec_cfg",     "label": "Sec-Cfg Signing",       "output_dir_key": "seccfg"},
+    {"id": "custom_sign", "label": "Custom Binary Signing", "output_dir_key": "custom_signed"}
+  ],
+  "device_states": ["HSFS", "HSKP", "HSSE"],
+  "device_state_labels": {
+    "HSFS": "Field Secure",
+    "HSKP": "Keys Provisioned",
+    "HSSE": "Code Provisioned"
+  },
+  "initial_state": "HSFS",
+  "provisioning_type": "f29",
+  "key_provisioning": {
+    "enabled_in_states": ["HSFS"],
+    "files": [
+      {"id": "flash_kernel",  "label": "Flash Kernel",         "required": true},
+      {"id": "otp_keywriter", "label": "OTP Keywriter Binary", "required": true},
+      {"id": "certificate",   "label": "Certificate",          "required": true}
+    ],
+    "ui": {
+      "UART": {
+        "provision_button_label": "Provision Keys via UART",
+        "task_key": "uart_keyprov",
+        "stream": false,
+        "requires_reset_before": true,
+        "advanced_fields": [
+          {
+            "id": "serial_port",
+            "label": "Serial Port",
+            "widget_type": "serial_combo",
+            "required": true,
+            "param_key": "port"
+          },
+          {
+            "id": "flash_kernel",
+            "label": "Flash Kernel",
+            "widget_type": "file_browse",
+            "required": true,
+            "param_key": "uart_kernel",
+            "default_path": {
+              "base": "signedImages",
+              "filename": "ram_based_uart_sbl.cert.bin"
+            }
+          },
+          {
+            "id": "otp_keywriter",
+            "label": "OTP Keywriter Binary",
+            "widget_type": "file_browse",
+            "required": true,
+            "param_key": "otp_kw_bin",
+            "default_path": {
+              "variant_key": "otp_keywriter_binary"
+            }
+          },
+          {
+            "id": "certificate",
+            "label": "Certificate",
+            "widget_type": "file_browse",
+            "required": true,
+            "param_key": "certificate",
+            "default_path": {
+              "priority": [
+                {"from_session": "certificate_info.output_dir_path", "filename": "final_certificate.bin"},
+                {"base": "certificates", "filename": "final_certificate.bin"}
+              ]
+            }
+          }
+        ],
+        "main_fields": []
+      },
+      "JTAG": {
+        "provision_button_label": "Provision Keys via JTAG",
+        "task_key": "jtag_keyprov",
+        "stream": false,
+        "requires_reset_before": false,
+        "advanced_fields": [
+          {
+            "id": "ccs_path",
+            "label": "CCS Path",
+            "widget_type": "dir_browse",
+            "required": true,
+            "param_key": "ccs_path",
+            "default_path": {
+              "from_session": "connection_info.ccs_path"
+            }
+          },
+          {
+            "id": "flash_kernel",
+            "label": "Flash Kernel",
+            "widget_type": "file_browse",
+            "required": true,
+            "param_key": "jtag_kernel",
+            "default_path": {
+              "base": "prebuilt",
+              "filename": "secure_ram_based_jtag_kernel.out"
+            }
+          },
+          {
+            "id": "otp_keywriter",
+            "label": "OTP Keywriter Binary",
+            "widget_type": "file_browse",
+            "required": true,
+            "param_key": "otp_kw_bin",
+            "default_path": {
+              "variant_key": "otp_keywriter_binary"
+            }
+          },
+          {
+            "id": "certificate",
+            "label": "Certificate",
+            "widget_type": "file_browse",
+            "required": true,
+            "param_key": "certificate",
+            "default_path": {
+              "priority": [
+                {"from_session": "certificate_info.output_dir_path", "filename": "final_certificate.bin"},
+                {"base": "certificates", "filename": "final_certificate.bin"}
+              ]
+            }
+          }
+        ],
+        "main_fields": []
+      }
+    }
+  },
+  "code_provisioning": {
+    "enabled_in_states": ["HSKP"],
+    "shared_main_fields": [
+      {
+        "id": "hsm_cp_image",
+        "label": "HSM CP Image",
+        "widget_type": "file_browse",
+        "required": true,
+        "param_key": "hsm_image",
+        "parameter_id": "3",
+        "default_path": {
+          "priority": [
+            {"base": "signedImages", "filename_template": "tifs_{device_name}_hs_se_code_provisioning.release.hs.hsmimage"},
+            {"base": "prebuilt",     "filename_template": "tifs_{device_name}_hs_se_code_provisioning.release.bin"}
+          ]
+        }
+      },
+      {
+        "id": "hsm_cpu_code",
+        "label": "HSM CPU Code",
+        "widget_type": "optional_file",
+        "required": false,
+        "default_checked": false,
+        "param_key": "hsm_cpu_code",
+        "parameter_id": "6",
+        "default_path": {
+          "base": "signedImages",
+          "filename_template": "tifs_{device_name}_hs_se.release.hs.hsmimage"
+        }
+      },
+      {
+        "id": "c29_cpu_code",
+        "label": "C29 CPU Code",
+        "widget_type": "optional_file",
+        "required": false,
+        "default_checked": false,
+        "param_key": "c29_cpu_code",
+        "parameter_id": "7",
+        "default_path": {
+          "base": "signedImages",
+          "filename": "secure_boot_manager.cert.bin"
+        }
+      },
+      {
+        "id": "c29_cpu3_image",
+        "label": "C29 CPU1/3 Image",
+        "widget_type": "optional_file",
+        "required": false,
+        "default_checked": false,
+        "param_key": "c29_cpu3_code",
+        "parameter_id": "8",
+        "default_path": {
+          "base": "signedImages",
+          "filename": "combined_services_demo.cert.bin"
+        }
+      },
+      {
+        "id": "seccfg",
+        "label": "Security Config",
+        "widget_type": "optional_file",
+        "required": false,
+        "default_checked": false,
+        "mandatory_in_states": ["HSKP"],
+        "param_key": "seccfg",
+        "parameter_id": "5",
+        "default_path": {
+          "base": "signedImages",
+          "filename": "seccfg.bin"
+        }
+      }
+    ],
+    "files": [
+      {"id": "hsm_cp_image", "label": "HSM CP Image",    "required": true},
+      {"id": "hsm_cpu_code", "label": "HSM CPU Code",    "required": false},
+      {"id": "c29_cpu_code", "label": "C29 CPU Code",    "required": false},
+      {"id": "seccfg",       "label": "Security Config", "required": false,
+       "mandatory_in_states": ["HSKP"]}
+    ],
+    "ui": {
+      "UART": {
+        "provision_button_label": "Provision Code via UART",
+        "task_key": "uart_codeprov",
+        "stream": true,
+        "requires_reset_before": true,
+        "advanced_fields": [
+          {
+            "id": "serial_port",
+            "label": "Serial Port",
+            "widget_type": "serial_combo",
+            "required": true,
+            "param_key": "port"
+          },
+          {
+            "id": "flash_kernel",
+            "label": "Flash Kernel",
+            "widget_type": "file_browse",
+            "required": true,
+            "param_key": "uart_kernel",
+            "default_path": {
+              "base": "signedImages",
+              "filename": "ram_based_uart_sbl.cert.bin"
+            }
+          }
+        ],
+        "main_fields": null
+      },
+      "JTAG": {
+        "provision_button_label": "Provision Code via JTAG",
+        "task_key": "jtag_codeprov",
+        "stream": true,
+        "requires_reset_before": false,
+        "advanced_fields": [
+          {
+            "id": "ccs_path",
+            "label": "CCS Path",
+            "widget_type": "dir_browse",
+            "required": true,
+            "param_key": "ccs_path",
+            "default_path": {
+              "from_session": "connection_info.ccs_path"
+            }
+          },
+          {
+            "id": "flash_kernel",
+            "label": "Flash Kernel",
+            "widget_type": "file_browse",
+            "required": true,
+            "param_key": "jtag_kernel",
+            "default_path": {
+              "base": "prebuilt",
+              "filename": "secure_ram_based_jtag_kernel.out"
+            }
+          }
+        ],
+        "main_fields": null
+      }
+    }
+  },
+  "target_config_prefix": "f29",
+  "target_config_dest": "host/src/apps/tifs/kp_cp_f29h85x/F29h85x-hsse.ccxml",
+  "tifek_subpath": "f29h85x/SR_20",
+  "key_options": [
+    {"key_type": "new",      "label": "Generate new keys"},
+    {"key_type": "existing", "label": "Use existing secure session"},
+    {"key_type": "pkcs11",   "label": "Use PKCS#11 Smart Card"},
+    {
+      "key_type": "f29_development",
+      "label": "F29H85x Development Session",
+      "cert_data_mappings": {
+        "smpk_signing_algorithm": "smpk_algo",
+        "bmpk_signing_algorithm": "bmpk_algo"
+      },
+      "fields": [
+        {
+          "key": "smpk_algo",
+          "label": "SMPK Key Type",
+          "widget_type": "combo",
+          "default": "rsa4k",
+          "options": [
+            ["rsa4k",        "rsa4k"],
+            ["secp256r1",    "secp256r1"],
+            ["secp384r1",    "secp384r1"],
+            ["secp521r1",    "secp521r1"],
+            ["brainpool512", "brainpool512"]
+          ]
+        },
+        {
+          "key": "bmpk_algo",
+          "label": "BMPK Key Type",
+          "widget_type": "combo",
+          "default": "rsa4k",
+          "options": [
+            ["rsa4k",        "rsa4k"],
+            ["secp256r1",    "secp256r1"],
+            ["secp384r1",    "secp384r1"],
+            ["secp521r1",    "secp521r1"],
+            ["brainpool512", "brainpool512"]
+          ]
+        }
+      ]
+    }
+  ]
+}

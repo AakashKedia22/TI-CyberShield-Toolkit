@@ -1,0 +1,347 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>7 : Debugging &mdash; TI Cybershield Toolkit 0.8 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=d37b194a" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=a0e24af7"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="8 : Appendix" href="Appendix.html" />
+    <link rel="prev" title="6 : CLI Reference (Used in Python Environment)" href="CLI_Reference.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            TI Cybershield Toolkit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Table of Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Release_Notes.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Disclaimer.html">Disclaimer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Installation.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Introduction.html">1 : Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Key_Management.html">2 : Key Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Certificate_Generation.html">3 : Certificate Generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Device_Provisioning.html">4 : Device Provisioning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="GUI_Reference.html">5 : GUI Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CLI_Reference.html">6 : CLI Reference (Used in Python Environment)</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">7 : Debugging</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#logging-and-diagnostics">7.1 Logging and Diagnostics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#log-file-locations">7.1.1 Log File Locations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#configuring-log-verbosity">7.1.2 Configuring Log Verbosity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#log-file-analysis">7.1.3 Log File Analysis</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#common-issues-and-solutions">7.2 Common Issues and Solutions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#connection-issues">7.2.1 Connection Issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#certificate-generation-issues">7.2.2 Certificate Generation Issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#key-provisioning-issues">7.2.3 Key Provisioning Issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#code-provisioning-issues">7.2.4 Code Provisioning Issues</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#device-recovery-options">7.3 Device Recovery Options</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#hs-fs-devices">7.3.1 HS-FS Devices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hs-kp-hs-se-devices">7.3.2 HS-KP/HS-SE Devices</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#using-external-tools">7.4 Using External Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#getting-support">7.5 Getting Support</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Appendix.html">8 : Appendix</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">TI Cybershield Toolkit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">7 : Debugging</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="debugging">
+<h1>7 : Debugging<a class="headerlink" href="#debugging" title="Link to this heading"></a></h1>
+<p>This section provides guidance on debugging common issues encountered when using the TI Cybershield Toolkit.</p>
+<section id="logging-and-diagnostics">
+<h2>7.1 Logging and Diagnostics<a class="headerlink" href="#logging-and-diagnostics" title="Link to this heading"></a></h2>
+<p>The TI Cybershield Toolkit provides extensive logging and diagnostic capabilities to help identify and resolve issues.</p>
+<section id="log-file-locations">
+<h3>7.1.1 Log File Locations<a class="headerlink" href="#log-file-locations" title="Link to this heading"></a></h3>
+<p>For key log file locations, see <a class="reference internal" href="Device_Provisioning.html#log-file-locations"><span class="std std-ref">4.6.2 Interpreting Provisioning Logs</span></a>.</p>
+</section>
+<section id="configuring-log-verbosity">
+<h3>7.1.2 Configuring Log Verbosity<a class="headerlink" href="#configuring-log-verbosity" title="Link to this heading"></a></h3>
+<p>You can adjust the verbosity of logs:</p>
+<dl class="simple">
+<dt><strong>GUI</strong>:</dt><dd><ul class="simple">
+<li><p>Access the settings menu: Tools &gt; Settings &gt; Logging</p></li>
+<li><p>Adjust the log level slider</p></li>
+<li><p>Enable additional diagnostic logging options</p></li>
+</ul>
+</dd>
+<dt><strong>CLI</strong>:</dt><dd><ul class="simple">
+<li><p>Use the <code class="docutils literal notranslate"><span class="pre">--verbose</span></code> or <code class="docutils literal notranslate"><span class="pre">--debug</span></code> flags</p></li>
+<li><p>Set the <code class="docutils literal notranslate"><span class="pre">SPT_LOG_LEVEL</span></code> environment variable (DEBUG, INFO, WARNING, ERROR)</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="log-file-analysis">
+<h3>7.1.3 Log File Analysis<a class="headerlink" href="#log-file-analysis" title="Link to this heading"></a></h3>
+<p>When analyzing log files for issues:</p>
+<ol class="arabic simple">
+<li><p>Look for ERROR or WARNING level messages</p></li>
+<li><p>Check for specific error codes (e.g., “OTP Write Error 0x…”); see <a class="reference internal" href="Appendix.html#error-codes"><span class="std std-ref">9.2 Error Code Reference</span></a> for a full reference</p></li>
+<li><p>Review the sequence of operations before the error</p></li>
+<li><p>Note any device response codes (a debug response of 0x00000000 typically indicates success)</p></li>
+</ol>
+<p>Example log pattern for successful key programming:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>INFO: OTP Field &#39;SMPKH_P1&#39; programming request sent
+INFO: OTP Write Status: 0x00000000
+INFO: OTP Field &#39;SMPKH_P1&#39; programmed successfully
+</pre></div>
+</div>
+<p>Example log pattern for failed key programming:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>INFO: OTP Field &#39;SMPKH_P1&#39; programming request sent
+ERROR: OTP Write Error: 0x80000001
+ERROR: OTP Field &#39;SMPKH_P1&#39; programming failed
+</pre></div>
+</div>
+</section>
+</section>
+<section id="common-issues-and-solutions">
+<h2>7.2 Common Issues and Solutions<a class="headerlink" href="#common-issues-and-solutions" title="Link to this heading"></a></h2>
+<section id="connection-issues">
+<h3>7.2.1 Connection Issues<a class="headerlink" href="#connection-issues" title="Link to this heading"></a></h3>
+<p><strong>Serial Port Not Detected</strong>:</p>
+<ul class="simple">
+<li><p><strong>Issue</strong>: Device not appearing in serial port list</p></li>
+<li><p><strong>Solutions</strong>:
+* Check physical USB connection
+* Verify driver installation
+* Check device manager for COM port (Windows)
+* Run <code class="docutils literal notranslate"><span class="pre">ls</span> <span class="pre">/dev/tty*</span></code> to verify port visibility (Linux)
+* Add user to dialout and plugdev groups (Linux)</p></li>
+</ul>
+<p><strong>JTAG Connection Failures</strong>:</p>
+<ul class="simple">
+<li><p><strong>Issue</strong>: Unable to establish JTAG connection</p></li>
+<li><p><strong>Solutions</strong>:
+* Verify CCS path is correct
+* Check XDS probe connections
+* Ensure proper power supply to the device
+* Verify CCS 20.5.0 is installed (required for JTAG provisioning and <code class="docutils literal notranslate"><span class="pre">signSecCfg</span></code>)</p></li>
+</ul>
+</section>
+<section id="certificate-generation-issues">
+<h3>7.2.2 Certificate Generation Issues<a class="headerlink" href="#certificate-generation-issues" title="Link to this heading"></a></h3>
+<p><strong>Certificate Generation Fails</strong>:</p>
+<ul class="simple">
+<li><p><strong>Issue</strong>: Certificate creation fails with cryptographic errors</p></li>
+<li><p><strong>Solutions</strong>:
+* Verify the OpenSSL version requirement (see <a class="reference internal" href="Certificate_Generation.html#openssl-requirement"><span class="std std-ref">OpenSSL requirement</span></a>)
+* Verify key file paths and permissions
+* Ensure password is correct
+* Check disk space for output files</p></li>
+</ul>
+<p><strong>Certificate Size Too Large</strong>:</p>
+<ul class="simple">
+<li><p><strong>Issue</strong>: Generated certificate exceeds the maximum size limit (see <a class="reference internal" href="Certificate_Generation.html#cert-size-limit"><span class="std std-ref">certificate size limit</span></a>)</p></li>
+<li><p><strong>Solutions</strong>:
+* Reduce the number of fields in a single certificate
+* Use multiple certificates for incremental programming</p></li>
+</ul>
+</section>
+<section id="key-provisioning-issues">
+<h3>7.2.3 Key Provisioning Issues<a class="headerlink" href="#key-provisioning-issues" title="Link to this heading"></a></h3>
+<p><strong>Device Not in Expected State</strong>:</p>
+<ul class="simple">
+<li><p><strong>Issue</strong>: Device state detection shows wrong state</p></li>
+<li><p><strong>Solutions</strong>:
+* Power cycle the device
+* Verify device is in ROM boot mode for UART
+* Check UART/JTAG connections
+* Use alternative connection method</p></li>
+</ul>
+<p><strong>OTP Programming Failures</strong>:</p>
+<ul class="simple">
+<li><p><strong>Issue</strong>: OTP fields fail to program correctly</p></li>
+<li><p><strong>Solutions</strong>:
+* Verify device is in HS-FS state
+* Check certificate integrity
+* Ensure stable power supply during provisioning
+* Try alternative connection method (UART vs JTAG)</p></li>
+</ul>
+</section>
+<section id="code-provisioning-issues">
+<h3>7.2.4 Code Provisioning Issues<a class="headerlink" href="#code-provisioning-issues" title="Link to this heading"></a></h3>
+<p><strong>HSM Image Loading Failures</strong>:</p>
+<ul class="simple">
+<li><p><strong>Issue</strong>: HSM image fails to load</p></li>
+<li><p><strong>Solutions</strong>:
+* Verify device is in HS-KP state
+* Check HSM image signature
+* Ensure correct binary format
+* Verify flash memory has sufficient space</p></li>
+</ul>
+<p><strong>Security Configuration Issues</strong>:</p>
+<ul class="simple">
+<li><p><strong>Issue</strong>: Security configuration fails to apply</p></li>
+<li><p><strong>Solutions</strong>:
+* Ensure security configuration is properly signed
+* Verify device is in correct state
+* Check if security configuration is compatible with device state</p></li>
+</ul>
+</section>
+</section>
+<section id="device-recovery-options">
+<h2>7.3 Device Recovery Options<a class="headerlink" href="#device-recovery-options" title="Link to this heading"></a></h2>
+<p>For devices that encounter issues during provisioning:</p>
+<section id="hs-fs-devices">
+<h3>7.3.1 HS-FS Devices<a class="headerlink" href="#hs-fs-devices" title="Link to this heading"></a></h3>
+<p>Devices in HS-FS state that encounter issues can generally be recovered by:</p>
+<ol class="arabic simple">
+<li><p>Power cycling the device</p></li>
+<li><p>Retrying the provisioning process</p></li>
+<li><p>Using an alternative connection method</p></li>
+<li><p>Checking for certificate or binary issues</p></li>
+</ol>
+</section>
+<section id="hs-kp-hs-se-devices">
+<h3>7.3.2 HS-KP/HS-SE Devices<a class="headerlink" href="#hs-kp-hs-se-devices" title="Link to this heading"></a></h3>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="Device_Provisioning.html#provisioning-irreversible"><span class="std std-ref">Provisioning Irreversibility Warning</span></a> — recovery options are limited</p></li>
+<li><p><a class="reference internal" href="CLI_Reference.html#device-recovery-workflow"><span class="std std-ref">6.8.3 Device Recovery Workflow</span></a> — complete CLI recovery workflow</p></li>
+</ul>
+</div>
+<p>For devices with issues after key provisioning:</p>
+<ol class="arabic simple">
+<li><p>Verify the device state using the detection tools</p></li>
+<li><p>Ensure proper secure boot configuration</p></li>
+<li><p>Use appropriate signed and encrypted binaries</p></li>
+<li><p>Contact TI support for assistance with irrecoverable devices</p></li>
+</ol>
+</section>
+</section>
+<section id="using-external-tools">
+<h2>7.4 Using External Tools<a class="headerlink" href="#using-external-tools" title="Link to this heading"></a></h2>
+<p>Additional tools that can help with debugging:</p>
+<dl class="simple">
+<dt><strong>Serial Terminal Emulators</strong>:</dt><dd><ul class="simple">
+<li><p>Use tools like minicom, PuTTY, or TeraTerm to directly monitor device output</p></li>
+<li><p>Configure for 115200 baud, 8-N-1, no flow control</p></li>
+</ul>
+</dd>
+<dt><strong>Logic Analyzers</strong>:</dt><dd><ul class="simple">
+<li><p>Can help debug complex timing or signal issues with UART or JTAG connections</p></li>
+<li><p>Useful for monitoring low-level communications</p></li>
+</ul>
+</dd>
+<dt><strong>CCS Debug Tools</strong>:</dt><dd><ul class="simple">
+<li><p>Code Composer Studio provides additional debugging capabilities for JTAG connections</p></li>
+<li><p>Can provide register and memory access during provisioning</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="getting-support">
+<h2>7.5 Getting Support<a class="headerlink" href="#getting-support" title="Link to this heading"></a></h2>
+<p>If you encounter persistent issues:</p>
+<ol class="arabic simple">
+<li><p>Collect relevant log files</p></li>
+<li><p>Document the exact steps that led to the issue</p></li>
+<li><p>Note hardware configuration and connection methods</p></li>
+<li><p>Contact TI support via:
+* E-Support: support.ti.com
+* E3 Forum: e2e.ti.com
+* TI Representative</p></li>
+</ol>
+<p>Include the following information with your support request:</p>
+<ul class="simple">
+<li><p>TI Cybershield Toolkit version</p></li>
+<li><p>Device family and variant</p></li>
+<li><p>Connection method (UART/JTAG)</p></li>
+<li><p>Complete log files</p></li>
+<li><p>Detailed description of the issue and reproduction steps</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="CLI_Reference.html" class="btn btn-neutral float-left" title="6 : CLI Reference (Used in Python Environment)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Appendix.html" class="btn btn-neutral float-right" title="8 : Appendix" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Texas Instruments.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

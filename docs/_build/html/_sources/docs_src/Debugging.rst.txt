@@ -1,0 +1,210 @@
+.. include:: ../device_includes.rst
+
+=====================================
+7 : Debugging
+=====================================
+
+This section provides guidance on debugging common issues encountered when using the |tool_name|.
+
+7.1 Logging and Diagnostics
+=========================
+
+The |tool_name| provides extensive logging and diagnostic capabilities to help identify and resolve issues.
+
+7.1.1 Log File Locations
+---------------------
+
+For key log file locations, see :ref:`log-file-locations`.
+
+7.1.2 Configuring Log Verbosity
+----------------------------
+
+You can adjust the verbosity of logs:
+
+**GUI**:
+    * Access the settings menu: Tools > Settings > Logging
+    * Adjust the log level slider
+    * Enable additional diagnostic logging options
+
+**CLI**:
+    * Use the ``--verbose`` or ``--debug`` flags
+    * Set the ``SPT_LOG_LEVEL`` environment variable (DEBUG, INFO, WARNING, ERROR)
+
+7.1.3 Log File Analysis
+--------------------
+
+When analyzing log files for issues:
+
+1. Look for ERROR or WARNING level messages
+2. Check for specific error codes (e.g., "OTP Write Error 0x..."); see :ref:`error-codes` for a full reference
+3. Review the sequence of operations before the error
+4. Note any device response codes (a debug response of 0x00000000 typically indicates success)
+
+Example log pattern for successful key programming:
+
+.. code-block:: text
+
+    INFO: OTP Field 'SMPKH_P1' programming request sent
+    INFO: OTP Write Status: 0x00000000
+    INFO: OTP Field 'SMPKH_P1' programmed successfully
+
+Example log pattern for failed key programming:
+
+.. code-block:: text
+
+    INFO: OTP Field 'SMPKH_P1' programming request sent
+    ERROR: OTP Write Error: 0x80000001
+    ERROR: OTP Field 'SMPKH_P1' programming failed
+
+7.2 Common Issues and Solutions
+=============================
+
+7.2.1 Connection Issues
+--------------------
+
+**Serial Port Not Detected**:
+
+* **Issue**: Device not appearing in serial port list
+* **Solutions**:
+  * Check physical USB connection
+  * Verify driver installation
+  * Check device manager for COM port (Windows)
+  * Run ``ls /dev/tty*`` to verify port visibility (Linux)
+  * Add user to dialout and plugdev groups (Linux)
+
+**JTAG Connection Failures**:
+
+* **Issue**: Unable to establish JTAG connection
+* **Solutions**:
+  * Verify CCS path is correct
+  * Check XDS probe connections
+  * Ensure proper power supply to the device
+  * Verify CCS 20.5.0 is installed (required for JTAG provisioning and ``signSecCfg``)
+
+7.2.2 Certificate Generation Issues
+--------------------------------
+
+**Certificate Generation Fails**:
+
+* **Issue**: Certificate creation fails with cryptographic errors
+* **Solutions**:
+  * Verify the OpenSSL version requirement (see :ref:`OpenSSL requirement <openssl-requirement>`)
+  * Verify key file paths and permissions
+  * Ensure password is correct
+  * Check disk space for output files
+
+**Certificate Size Too Large**:
+
+* **Issue**: Generated certificate exceeds the maximum size limit (see :ref:`certificate size limit <cert-size-limit>`)
+* **Solutions**:
+  * Reduce the number of fields in a single certificate
+  * Use multiple certificates for incremental programming
+
+7.2.3 Key Provisioning Issues
+--------------------------
+
+**Device Not in Expected State**:
+
+* **Issue**: Device state detection shows wrong state
+* **Solutions**:
+  * Power cycle the device
+  * Verify device is in ROM boot mode for UART
+  * Check UART/JTAG connections
+  * Use alternative connection method
+
+**OTP Programming Failures**:
+
+* **Issue**: OTP fields fail to program correctly
+* **Solutions**:
+  * Verify device is in HS-FS state
+  * Check certificate integrity
+  * Ensure stable power supply during provisioning
+  * Try alternative connection method (UART vs JTAG)
+
+7.2.4 Code Provisioning Issues
+---------------------------
+
+**HSM Image Loading Failures**:
+
+* **Issue**: HSM image fails to load
+* **Solutions**:
+  * Verify device is in HS-KP state
+  * Check HSM image signature
+  * Ensure correct binary format
+  * Verify flash memory has sufficient space
+
+**Security Configuration Issues**:
+
+* **Issue**: Security configuration fails to apply
+* **Solutions**:
+  * Ensure security configuration is properly signed
+  * Verify device is in correct state
+  * Check if security configuration is compatible with device state
+
+7.3 Device Recovery Options
+=========================
+
+For devices that encounter issues during provisioning:
+
+7.3.1 HS-FS Devices
+----------------
+
+Devices in HS-FS state that encounter issues can generally be recovered by:
+
+1. Power cycling the device
+2. Retrying the provisioning process
+3. Using an alternative connection method
+4. Checking for certificate or binary issues
+
+7.3.2 HS-KP/HS-SE Devices
+----------------------
+
+.. seealso::
+
+    * :ref:`Provisioning Irreversibility Warning <provisioning-irreversible>` — recovery options are limited
+    * :ref:`device-recovery-workflow` — complete CLI recovery workflow
+
+For devices with issues after key provisioning:
+
+1. Verify the device state using the detection tools
+2. Ensure proper secure boot configuration
+3. Use appropriate signed and encrypted binaries
+4. Contact TI support for assistance with irrecoverable devices
+
+7.4 Using External Tools
+=====================
+
+Additional tools that can help with debugging:
+
+**Serial Terminal Emulators**:
+    * Use tools like minicom, PuTTY, or TeraTerm to directly monitor device output
+    * Configure for 115200 baud, 8-N-1, no flow control
+
+**Logic Analyzers**:
+    * Can help debug complex timing or signal issues with UART or JTAG connections
+    * Useful for monitoring low-level communications
+
+**CCS Debug Tools**:
+    * Code Composer Studio provides additional debugging capabilities for JTAG connections
+    * Can provide register and memory access during provisioning
+
+7.5 Getting Support
+================
+
+If you encounter persistent issues:
+
+1. Collect relevant log files
+2. Document the exact steps that led to the issue
+3. Note hardware configuration and connection methods
+4. Contact TI support via:
+   * E-Support: support.ti.com
+   * E3 Forum: e2e.ti.com
+   * TI Representative
+
+Include the following information with your support request:
+
+* |tool_name| version
+* Device family and variant
+* Connection method (UART/JTAG)
+* Complete log files
+* Detailed description of the issue and reproduction steps

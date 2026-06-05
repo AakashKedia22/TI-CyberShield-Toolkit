@@ -1,0 +1,14 @@
+.. |f29_device| replace:: F29H85x
+.. |f29_device_capital| replace:: F29H85X
+.. |f29_device_small| replace:: f29h85x
+.. |am62_device| replace:: AM62Px
+.. |am62_device_capital| replace:: AM62PX
+.. |am62_device_small| replace:: am62px
+.. |j722_device| replace:: J722S
+.. |j722_device_capital| replace:: J722S
+.. |j722_device_small| replace:: j722s
+.. |tool_name| replace:: TI Cybershield Toolkit
+.. |tool_name_cli| replace:: Secure Provisioning Tool (CLI)
+.. |tool_name_gui| replace:: CST GUI
+.. |min_python_version| replace:: 3.10
+.. |recommended_python_version| replace:: 3.10 or above

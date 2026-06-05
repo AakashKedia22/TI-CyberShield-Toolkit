@@ -1,0 +1,14 @@
+{
+    "Field Options": [
+        "BMEK",
+        "EXTENDED OTP"
+    ],
+    "Read Options": [
+        "BMEK",
+        "EXTENDED OTP"
+    ],
+    "Write Options": [
+        "BMEK",
+        "EXTENDED OTP"
+    ]
+}

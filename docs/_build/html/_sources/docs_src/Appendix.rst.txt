@@ -1,0 +1,224 @@
+.. include:: ../device_includes.rst
+
+=====================================
+8 : Appendix
+=====================================
+
+This section contains supplementary information for the |tool_name|.
+
+9.1 Glossary
+==========
+
+.. glossary::
+
+    HS-FS
+        High Security - Field Secure. Initial security state of devices where secure boot is not enforced for customer code.
+
+    HS-KP
+        High Security - Key Provisioned. State after key provisioning where customer keys are programmed and secure boot is enforced with customer keys.
+
+    HS-SE
+        High Security - Security Enabled. Final security state where the device is fully secured with customer keys and code.
+
+
+    SMPK
+        Secondary Manufacturer Public Key. Customer-owned key used for image authentication. Abbreviated SMPK.
+
+    SMEK
+        Secondary Manufacturer Encryption Key. Customer-owned key used for image decryption. Abbreviated SMEK.
+
+    BMPK
+        Backup Secondary Manufacturer Public Key. Optional customer-owned backup key for image authentication.
+
+    BMEK
+        Backup Secondary Manufacturer Encryption Key. Optional customer-owned backup key for image decryption.
+
+    TI FEK
+        Texas Instruments Field Encryption Key. TI-owned public key embedded in TI's HSM firmware binary,
+        used to encrypt sensitive information (RNG AES key) in provisioning certificates.
+        Customers do not generate this key — it is fixed per device family and provided by TI.
+
+    HSM
+        Hardware Security Module. Dedicated hardware device for secure key storage and cryptographic operations.
+
+    PKCS#11
+        Public Key Cryptography Standards #11. API for cryptographic token interface.
+
+    OTP
+        One-Time Programmable. Memory that can be programmed only once.
+
+    CCS
+        Code Composer Studio. TI's integrated development environment.
+
+    ROM Boot Mode
+        Initial boot mode where the device executes code from internal ROM.
+
+    UART Boot Mode
+        Boot mode where the device can receive code over a serial connection.
+
+    JTAG
+        Joint Test Action Group. Industry standard for hardware debugging.
+
+    XDS
+        eXtended Debug Support. TI's debug probe technology.
+
+.. note::
+    In TI's device security architecture, "Manufacturer" keys are TI-owned keys (e.g., TI FEK).
+    "Secondary Manufacturer" keys (SMPK/SMEK and their backups BMPK/BMEK) are customer-owned keys
+    provisioned via this tool.
+
+.. _error-codes:
+
+9.2 Error Code Reference
+======================
+
+This section provides a reference for common error codes encountered during provisioning.
+
+9.2.1 General Error Codes
+----------------------
+
++----------------+-----------------------------+--------------------------------------------------------+
+| Error Code     | Description                 | Possible Solutions                                     |
++================+=============================+========================================================+
+| 0x00000000     | Success                     | N/A (operation completed successfully)                 |
++----------------+-----------------------------+--------------------------------------------------------+
+| 0x80000001     | Generic Error               | Check logs for more specific information               |
++----------------+-----------------------------+--------------------------------------------------------+
+| 0x80000002     | Communication Error         | Check physical connections and retry                   |
++----------------+-----------------------------+--------------------------------------------------------+
+| 0x80000003     | Timeout Error               | Verify device is powered and responsive                |
++----------------+-----------------------------+--------------------------------------------------------+
+| 0x80000004     | Authentication Error        | Check certificate integrity and signature              |
++----------------+-----------------------------+--------------------------------------------------------+
+| 0x80000005     | Permission Error            | Verify device state supports the requested operation   |
++----------------+-----------------------------+--------------------------------------------------------+
+
+9.2.2 OTP Programming Error Codes
+------------------------------
+
++----------------+-----------------------------+--------------------------------------------------------+
+| Error Code     | Description                 | Possible Solutions                                     |
++================+=============================+========================================================+
+| 0x90000001     | Field Already Programmed    | Field is locked; cannot be modified                    |
++----------------+-----------------------------+--------------------------------------------------------+
+| 0x90000002     | Invalid Field ID            | Check certificate field configuration                  |
++----------------+-----------------------------+--------------------------------------------------------+
+| 0x90000003     | Field Write Error           | Hardware issue or power interruption during write      |
++----------------+-----------------------------+--------------------------------------------------------+
+| 0x90000004     | Field Verification Error    | Written value does not match expected value            |
++----------------+-----------------------------+--------------------------------------------------------+
+| 0x90000005     | Field Access Error          | Current device state prohibits access                  |
++----------------+-----------------------------+--------------------------------------------------------+
+
+9.2.3 Code Provisioning Error Codes
+--------------------------------
+
++----------------+-----------------------------+--------------------------------------------------------+
+| Error Code     | Description                 | Possible Solutions                                     |
++================+=============================+========================================================+
+| 0xA0000001     | Image Authentication Failed | Check image signature and key validity                 |
++----------------+-----------------------------+--------------------------------------------------------+
+| 0xA0000002     | Image Decryption Failed     | Verify encryption key and algorithm                    |
++----------------+-----------------------------+--------------------------------------------------------+
+| 0xA0000003     | Flash Write Error           | Check flash memory health and power stability          |
++----------------+-----------------------------+--------------------------------------------------------+
+| 0xA0000004     | Flash Verify Error          | Written data does not match expected data              |
++----------------+-----------------------------+--------------------------------------------------------+
+| 0xA0000005     | Invalid Image Format        | Check binary format and header                         |
++----------------+-----------------------------+--------------------------------------------------------+
+
+9.3 Certificate Format
+====================
+
+9.3.1 Certificate Structure
+------------------------
+
+The |tool_name| generates X.509 certificates with the following structure:
+
+.. code-block:: text
+
+    Certificate
+    ├── Version
+    ├── Serial Number
+    ├── Signature Algorithm
+    ├── Issuer
+    ├── Validity Period
+    ├── Subject
+    ├── Subject Public Key Info
+    ├── X.509 Extensions
+    │   ├── TI_Field_1 (Encrypted with TI FEK)
+    │   ├── TI_Field_2 (Encrypted with TI FEK)
+    │   ├── ...
+    │   └── TI_Field_N (Encrypted with TI FEK)
+    └── Certificate Signature
+
+9.3.2 Certificate Fields
+---------------------
+
+The certificate includes the following key fields:
+
+* **SMPK**: Secondary Manufacturer Public Key for image authentication
+* **SMEK**: Secondary Manufacturer Encryption Key for image decryption
+* **BMPK**: Backup Secondary Manufacturer Public Key (optional)
+* **BMEK**: Backup Secondary Manufacturer Encryption Key (optional)
+* **KEY_COUNT**: Number of key sets (1 or 2)
+* **KEY_REVISION**: Active key revision (1 or 2)
+* **SWREV fields**: Software revision values
+* **MSV**: Model Specific Value (customer-specific)
+
+9.4 Security Recommendations
+=========================
+
+9.4.1 Key Management
+-----------------
+
+* Use strong passwords (12+ characters, mixed case, symbols) for key protection
+* Store keys in a secure, controlled environment
+* Consider using an HSM for production key operations
+* Maintain separate key sets for development and production
+* Implement a key rotation strategy for long-term product security
+
+9.4.2 Production Environment
+------------------------
+
+* Establish a secure provisioning area with limited access
+* Use dedicated provisioning hardware that is physically secured
+* Implement procedural controls for handling security materials
+* Train personnel on security procedures and best practices
+* Maintain detailed logs of all provisioning activities
+
+9.4.3 Post-Provisioning Verification
+--------------------------------
+
+* Verify device state after provisioning
+* Perform security validation tests on provisioned devices
+* Document device provisioning status and security configurations
+* Implement secure methods for tracking provisioned devices
+
+9.5 References
+============
+
+9.5.1 TI Documentation
+------------------
+
+* |f29_device| Technical Reference Manual
+* |am62_device| Technical Reference Manual
+* |j722_device| Technical Reference Manual
+* TI Security Developer's Guide
+* Code Composer Studio User Guide
+
+9.5.2 Security Standards
+--------------------
+
+* FIPS 140-2/3: Security Requirements for Cryptographic Modules
+* NIST SP 800-57: Recommendation for Key Management
+* NIST SP 800-90A: Recommendation for Random Number Generation
+* ISO/IEC 11889: Trusted Platform Module
+
+9.5.3 Additional Resources
+----------------------
+
+* OpenSSL Documentation (https://www.openssl.org/docs/)
+* PKCS#11 Specification (http://docs.oasis-open.org/pkcs11/pkcs11-base/v2.40/pkcs11-base-v2.40.html)
+* Python Cryptography Documentation (https://cryptography.io/en/latest/)
+* Qt Documentation (https://doc.qt.io/)
