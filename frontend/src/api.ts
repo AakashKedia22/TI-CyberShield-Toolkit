@@ -28,6 +28,22 @@ export class ApiError extends Error {
   }
 }
 
+/** Extract failing field paths from a FastAPI validation error payload. */
+function validationLocations(detail?: ErrorResponse): string {
+  const details = detail?.error?.details as Record<string, unknown> | null | undefined;
+  const errors = details?.errors;
+  if (!Array.isArray(errors)) return "";
+  return errors
+    .map((e) => {
+      const err = e as { loc?: unknown; msg?: unknown; type?: unknown };
+      const loc = Array.isArray(err.loc) ? err.loc.join(".") : "";
+      const msg = typeof err.msg === "string" ? err.msg : "";
+      return loc && msg ? `${loc} (${msg})` : loc || msg;
+    })
+    .filter(Boolean)
+    .join("; ");
+}
+
 // Optional static API key (sent as X-API-Key). Only needed if the services
 // were started with CST_CRYPTO_API_KEY / CST_TARGET_API_KEY set.
 let apiKey: string | null = null;
@@ -50,11 +66,10 @@ async function request<T>(
     } catch {
       /* not JSON */
     }
-    throw new ApiError(
-      res.status,
-      detail?.error?.message ?? `HTTP ${res.status}`,
-      detail
-    );
+    const baseMsg = detail?.error?.message ?? `HTTP ${res.status}`;
+    const fields = validationLocations(detail);
+    const message = fields ? `${baseMsg} — field(s): ${fields}` : baseMsg;
+    throw new ApiError(res.status, message, detail);
   }
   if (res.status === 204) return undefined as T;
   return (await res.json()) as T;

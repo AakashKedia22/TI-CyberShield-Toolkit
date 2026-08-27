@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { NavLink } from "react-router-dom";
 import { healthApi } from "../api";
@@ -13,54 +13,44 @@ const NAV = [
 ];
 
 function useBackends() {
-  const [state, setState] = useState<{ crypto: boolean; target: boolean }>({
-    crypto: false,
-    target: false,
-  });
-  useEffect(() => {
-    let cancelled = false;
-    const poll = async () => {
-      const [crypto, target] = await Promise.allSettled([
-        healthApi.crypto(),
-        healthApi.target(),
-      ]);
-      if (cancelled) return;
-      setState({
-        crypto: crypto.status === "fulfilled",
-        target: target.status === "fulfilled",
-      });
-    };
-    poll();
-    const timer = window.setInterval(poll, 3000);
-    return () => {
-      cancelled = true;
-      window.clearInterval(timer);
-    };
+  const [crypto, setCrypto] = useState<boolean>(false);
+  const [checking, setChecking] = useState(true);
+  const check = useCallback(async () => {
+    setChecking(true);
+    try {
+      await healthApi.crypto();
+      setCrypto(true);
+    } catch {
+      setCrypto(false);
+    } finally {
+      setChecking(false);
+    }
   }, []);
-  return state;
+  // Check once on mount, and only re-check when the user clicks the pill.
+  // A repeated timer would otherwise spam the Vite proxy with ECONNREFUSED
+  // log lines whenever a service is stopped.
+  useEffect(() => {
+    void check();
+  }, [check]);
+  return { crypto, checking, recheck: check };
 }
 
 export function Layout({ children }: { children: ReactNode }) {
   const { session, clearSession, apiKey, setApiKey } = useApi();
-  const backends = useBackends();
+  const { crypto, checking, recheck } = useBackends();
 
   return (
     <div className="shell">
       <header className="topbar">
         <span className="brand">TI CyberShield Toolkit</span>
         <span className="spacer" />
-        <span
-          className={`health ${backends.crypto ? "ok" : "err"}`}
-          title={`crypto service ${backends.crypto ? "up" : "DOWN"}`}
+        <button
+          className={`health ${crypto ? "ok" : "err"}`}
+          onClick={() => void recheck()}
+          title={`crypto service ${crypto ? "up" : "DOWN"} — click to re-check`}
         >
-          crypto {backends.crypto ? "up" : "down"}
-        </span>
-        <span
-          className={`health ${backends.target ? "ok" : "err"}`}
-          title={`target service ${backends.target ? "up" : "DOWN"}`}
-        >
-          target {backends.target ? "up" : "down"}
-        </span>
+          {checking ? "checking…" : `crypto ${crypto ? "up" : "down"}`}
+        </button>
         <input
           className="apikey"
           placeholder="API key (optional)"

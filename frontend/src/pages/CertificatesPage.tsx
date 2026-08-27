@@ -186,73 +186,133 @@ export default function CertificatesPage() {
 
       <section className="card">
         <h2>OTP key certificate</h2>
-        <form onSubmit={genCert} className="form grid2">
-          <label>
-            Silicon revision{" "}
-            <select value={devSrVer} onChange={(e) => setDevSrVer(e.target.value)}>
-              {SR_VERS.map((v) => (
-                <option key={v}>{v}</option>
-              ))}
-            </select>
-          </label>
-          <label>
-            MSV <input value={msv} onChange={(e) => setMsv(e.target.value)} />
-          </label>
-          <label>
-            SBL SR <input value={srSbl} onChange={(e) => setSrSbl(e.target.value)} />
-          </label>
-          <label>
-            HSM RT SR <input value={srHsmRT} onChange={(e) => setSrHsmRT(e.target.value)} />
-          </label>
-          <label>
-            App SR <input value={srApp} onChange={(e) => setSrApp(e.target.value)} />
-          </label>
-          <label>
-            SSU SR <input value={srSsu} onChange={(e) => setSrSsu(e.target.value)} />
-          </label>
-          <label>
-            Key count{" "}
-            <input
-              type="number"
-              value={keycnt}
-              onChange={(e) => setKeycnt(Number(e.target.value))}
-            />
-          </label>
-          <label>
-            Key rev{" "}
-            <input
-              type="number"
-              value={keyrev}
-              onChange={(e) => setKeyrev(Number(e.target.value))}
-            />
-          </label>
-          <label className="check">
-            <input type="checkbox" checked={msvProtect} onChange={(e) => setMsvProtect(e.target.checked)} />
-            MSV protect
-          </label>
-          <label className="check">
-            <input type="checkbox" checked={keycntProtect} onChange={(e) => setKeycntProtect(e.target.checked)} />
-            Keycnt protect
-          </label>
-          <label className="check">
-            <input type="checkbox" checked={sProtect} onChange={(e) => setSProtect(e.target.checked)} />
-            SMPK/SMEK protect
-          </label>
-          <label className="check">
-            <input type="checkbox" checked={bProtect} onChange={(e) => setBProtect(e.target.checked)} />
-            BMPK/BMEK protect
-          </label>
-          <label>
-            Ext OTP value{" "}
-            <input value={extValue} onChange={(e) => setExtValue(e.target.value)} placeholder="0x80000001" />
-          </label>
-          <label>
-            Ext OTP index/size{" "}
-            <span className="row">
-              <input type="number" value={extIndex} onChange={(e) => setExtIndex(Number(e.target.value))} />
-              <input type="number" value={extSize} onChange={(e) => setExtSize(Number(e.target.value))} />
-            </span>
-          </label>
+        <form onSubmit={genCert} className="cert-form">
+          <div className="field-group">
+            <h3>Revision</h3>
+            <div className="fields">
+              <label className="field">
+                Silicon revision
+                <select value={devSrVer} onChange={(e) => setDevSrVer(e.target.value)}>
+                  {SR_VERS.map((v) => (
+                    <option key={v}>{v}</option>
+                  ))}
+                </select>
+              </label>
+              <label className="field">
+                MSV
+                <input value={msv} onChange={(e) => setMsv(e.target.value)} />
+              </label>
+            </div>
+          </div>
+
+          <div className="field-group">
+            <h3>Software revisions</h3>
+            <div className="fields">
+              <label className="field">
+                SBL
+                <input value={srSbl} onChange={(e) => setSrSbl(e.target.value)} />
+              </label>
+              <label className="field">
+                HSM runtime
+                <input value={srHsmRT} onChange={(e) => setSrHsmRT(e.target.value)} />
+              </label>
+              <label className="field">
+                App
+                <input value={srApp} onChange={(e) => setSrApp(e.target.value)} />
+              </label>
+              <label className="field">
+                SSU
+                <input value={srSsu} onChange={(e) => setSrSsu(e.target.value)} />
+              </label>
+            </div>
+          </div>
+
+          <div className="field-group">
+            <h3>Key slots</h3>
+            <div className="fields">
+              <label className="field">
+                Key count
+                <input
+                  type="number"
+                  value={keycnt}
+                  onChange={(e) => setKeycnt(Number(e.target.value))}
+                />
+              </label>
+              <label className="field">
+                Key revision
+                <input
+                  type="number"
+                  value={keyrev}
+                  onChange={(e) => setKeyrev(Number(e.target.value))}
+                />
+              </label>
+            </div>
+            <div className="flags">
+              <label className="flag">
+                <input
+                  type="checkbox"
+                  checked={msvProtect}
+                  onChange={(e) => setMsvProtect(e.target.checked)}
+                />
+                MSV protect
+              </label>
+              <label className="flag">
+                <input
+                  type="checkbox"
+                  checked={keycntProtect}
+                  onChange={(e) => setKeycntProtect(e.target.checked)}
+                />
+                Keycnt protect
+              </label>
+              <label className="flag">
+                <input
+                  type="checkbox"
+                  checked={sProtect}
+                  onChange={(e) => setSProtect(e.target.checked)}
+                />
+                SMPK/SMEK protect
+              </label>
+              <label className="flag">
+                <input
+                  type="checkbox"
+                  checked={bProtect}
+                  onChange={(e) => setBProtect(e.target.checked)}
+                />
+                BMPK/BMEK protect
+              </label>
+            </div>
+          </div>
+
+          <div className="field-group">
+            <h3>Extended OTP</h3>
+            <div className="fields">
+              <label className="field">
+                Value
+                <input
+                  value={extValue}
+                  onChange={(e) => setExtValue(e.target.value)}
+                  placeholder="0x80000001"
+                />
+              </label>
+              <label className="field">
+                Index
+                <input
+                  type="number"
+                  value={extIndex}
+                  onChange={(e) => setExtIndex(Number(e.target.value))}
+                />
+              </label>
+              <label className="field">
+                Size (bits)
+                <input
+                  type="number"
+                  value={extSize}
+                  onChange={(e) => setExtSize(Number(e.target.value))}
+                />
+              </label>
+            </div>
+          </div>
+
           <button disabled={busy}>Generate certificate</button>
         </form>
 
@@ -292,23 +352,43 @@ export default function CertificatesPage() {
 
       <section className="card">
         <h2>Debug certificate</h2>
-        <form onSubmit={genDebug} className="form grid2">
-          <label>
-            Key rev{" "}
-            <input type="number" value={dbgKeyrev} onChange={(e) => setDbgKeyrev(Number(e.target.value))} />
-          </label>
-          <label>
-            SW rev{" "}
-            <input type="number" value={dbgSwrv} onChange={(e) => setDbgSwrv(Number(e.target.value))} />
-          </label>
-          <label>
-            Debug type{" "}
-            <input type="number" value={dbgType} onChange={(e) => setDbgType(Number(e.target.value))} />
-          </label>
-          <label>
-            Device UID (128 hex chars){" "}
-            <input value={dbgUid} onChange={(e) => setDbgUid(e.target.value)} />
-          </label>
+        <form onSubmit={genDebug} className="cert-form">
+          <div className="field-group">
+            <div className="fields">
+              <label className="field">
+                Key revision
+                <input
+                  type="number"
+                  value={dbgKeyrev}
+                  onChange={(e) => setDbgKeyrev(Number(e.target.value))}
+                />
+              </label>
+              <label className="field">
+                SW revision
+                <input
+                  type="number"
+                  value={dbgSwrv}
+                  onChange={(e) => setDbgSwrv(Number(e.target.value))}
+                />
+              </label>
+              <label className="field">
+                Debug type
+                <input
+                  type="number"
+                  value={dbgType}
+                  onChange={(e) => setDbgType(Number(e.target.value))}
+                />
+              </label>
+            </div>
+          </div>
+          <div className="field-group">
+            <div className="fields">
+              <label className="field" style={{ minWidth: 320 }}>
+                Device UID (128 hex chars)
+                <input value={dbgUid} onChange={(e) => setDbgUid(e.target.value)} />
+              </label>
+            </div>
+          </div>
           <button disabled={busy}>Generate</button>
         </form>
         {dbgResult && (
@@ -320,15 +400,23 @@ export default function CertificatesPage() {
 
       <section className="card">
         <h2>Device recovery certificate</h2>
-        <form onSubmit={genRecovery} className="form grid2">
-          <label>
-            Key rev{" "}
-            <input type="number" value={recKeyrev} onChange={(e) => setRecKeyrev(Number(e.target.value))} />
-          </label>
-          <label>
-            Device UID (128 hex chars){" "}
-            <input value={recUid} onChange={(e) => setRecUid(e.target.value)} />
-          </label>
+        <form onSubmit={genRecovery} className="cert-form">
+          <div className="field-group">
+            <div className="fields">
+              <label className="field">
+                Key revision
+                <input
+                  type="number"
+                  value={recKeyrev}
+                  onChange={(e) => setRecKeyrev(Number(e.target.value))}
+                />
+              </label>
+              <label className="field" style={{ minWidth: 320 }}>
+                Device UID (128 hex chars)
+                <input value={recUid} onChange={(e) => setRecUid(e.target.value)} />
+              </label>
+            </div>
+          </div>
           <button disabled={busy}>Generate</button>
         </form>
         {recResult && (

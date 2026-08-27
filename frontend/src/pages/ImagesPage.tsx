@@ -109,6 +109,10 @@ export default function ImagesPage() {
       setError("Upload a seccfg image first");
       return;
     }
+    if (!ccsPath.trim()) {
+      setError("CCS path is required to sign a Sec-Cfg image");
+      return;
+    }
     setError(null);
     setBusy(true);
     try {

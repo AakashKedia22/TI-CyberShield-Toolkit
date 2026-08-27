@@ -10,7 +10,7 @@ export default function JobsPage() {
   const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
-    const timer = window.setInterval(() => setRefreshKey((k) => k + 1), 1500);
+    const timer = window.setInterval(() => setRefreshKey((k) => k + 1), 5000);
     return () => window.clearInterval(timer);
   }, []);
 
