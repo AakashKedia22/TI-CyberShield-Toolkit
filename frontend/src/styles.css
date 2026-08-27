@@ -1,0 +1,314 @@
+:root {
+  --ti-red: #cc0000;
+  --ti-red-dark: #990000;
+  --bg: #f5f5f5;
+  --card: #ffffff;
+  --border: #dddddd;
+  --text: #1a1a1a;
+  --muted: #666666;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: var(--text);
+  background: var(--bg);
+}
+
+.shell {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  background: var(--ti-red);
+  color: #fff;
+  font-weight: 600;
+}
+
+.topbar .active-session {
+  font-size: 13px;
+  opacity: 0.95;
+}
+
+.health {
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.health.ok {
+  color: #c7f0c7;
+}
+
+.health.err {
+  color: #ffd9d9;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.apikey {
+  min-width: 140px;
+  font-size: 12px;
+  padding: 4px 8px;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.sidebar {
+  width: 200px;
+  padding: 12px 8px;
+  background: #fff;
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nav-link {
+  display: block;
+  padding: 8px 12px;
+  border-radius: 6px;
+  text-decoration: none;
+  color: var(--text);
+  font-size: 14px;
+}
+
+.nav-link:hover {
+  background: #f0f0f0;
+}
+
+.nav-link.active {
+  background: var(--ti-red);
+  color: #fff;
+}
+
+.content {
+  flex: 1;
+  overflow: auto;
+  padding: 20px;
+}
+
+h1 {
+  font-size: 20px;
+  margin: 0 0 16px;
+}
+
+h2 {
+  font-size: 16px;
+  margin: 0 0 10px;
+}
+
+h3 {
+  font-size: 14px;
+  margin: 8px 0;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  max-width: 860px;
+}
+
+.box {
+  margin-top: 12px;
+  padding: 10px;
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.grid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.form.row {
+  flex-direction: row;
+}
+
+.form label {
+  display: flex;
+  flex-direction: column;
+  font-size: 13px;
+  color: var(--muted);
+  gap: 4px;
+}
+
+.form .check {
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+  color: var(--text);
+}
+
+input,
+select {
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  font-size: 14px;
+  min-width: 180px;
+}
+
+button {
+  background: var(--ti-red);
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 7px 14px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: var(--ti-red-dark);
+}
+
+button.ghost {
+  background: transparent;
+  color: var(--ti-red);
+  border: 1px solid var(--ti-red);
+}
+
+button.ghost:hover {
+  background: #fff0f0;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 14px;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.pill {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  color: #fff;
+}
+
+.pill.queued {
+  background: #888;
+}
+.pill.running {
+  background: #1e6fd9;
+}
+.pill.ok {
+  background: #1a7f37;
+}
+.pill.err {
+  background: #cc0000;
+}
+.pill.cancel {
+  background: #7a5b00;
+}
+
+.muted {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.error-box {
+  background: #fdecec;
+  border: 1px solid #e0b4b4;
+  color: #a00;
+  border-radius: 6px;
+  padding: 10px 12px;
+  margin-bottom: 12px;
+  white-space: pre-wrap;
+  max-width: 860px;
+}
+
+.notice-box {
+  background: #ecf7ec;
+  border: 1px solid #b4d9b4;
+  color: #1a7f37;
+  border-radius: 6px;
+  padding: 10px 12px;
+  margin-bottom: 12px;
+  max-width: 860px;
+}
+
+.download {
+  color: var(--ti-red);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.progress {
+  height: 8px;
+  background: #eee;
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 10px 0;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--ti-red);
+  transition: width 0.3s;
+}
+
+.log {
+  background: #111;
+  color: #d4d4d4;
+  padding: 12px;
+  border-radius: 6px;
+  max-height: 60vh;
+  overflow: auto;
+  font-size: 12px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  white-space: pre-wrap;
+}
+
+.jobview {
+  max-width: 900px;
+}
