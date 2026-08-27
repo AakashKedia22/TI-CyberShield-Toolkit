@@ -1,0 +1,1635 @@
+openapi: 3.1.0
+info:
+  title: TI CyberShield Toolkit Service API
+  version: 0.1.0
+  license:
+    name: MIT
+    identifier: MIT
+  description: >
+    HTTP contract for the TI CyberShield Toolkit. Two logical backends are
+    exposed behind a single origin (gateway), tagged `crypto` and `target`:
+
+
+    * **crypto** (Backend #1): sessions & keys, certificates (OTP/ROT/debug/
+      recovery), image signing/encryption, SoC ID parsing. Private key
+      material never leaves this service; it is a signing oracle.
+    * **target** (Backend #2): all hardware interaction over UART (serial,
+      xmodem, uart_flash_programmer) and JTAG (CCS scripting). It holds no
+      key material, only public artifacts to flash.
+
+
+    Frontends (current PyQt wizard, future React SPA) consume only this API.
+    Target operations are long-running and are modelled as cancellable jobs
+    with streamable logs. Certificate/image operations are synchronous and
+    return artifact references; batch signing is a job.
+servers:
+  - url: https://cst.local/api/v1
+    description: Single-origin gateway that routes to the crypto and target services
+tags:
+  - name: crypto
+    description: Backend #1 - crypto/HSM service (key custody, certificates, image signing)
+  - name: target
+    description: Backend #2 - target service (UART/JTAG hardware access)
+  - name: jobs
+    description: Async job lifecycle shared by both services
+  - name: artifacts
+    description: File upload/download store
+security:
+  - ApiKeyAuth: []
+paths:
+  /health:
+    get:
+      tags: [crypto]
+      operationId: getHealth
+      summary: Combined service liveness
+      responses:
+        "200":
+          description: Service status of both backends
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Health"
+        "500":
+          $ref: "#/components/responses/InternalError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  # ============================== crypto ==============================
+  /devices/{device}:
+    get:
+      tags: [crypto]
+      operationId: getDeviceConfig
+      summary: Device configuration and OTP layout
+      parameters:
+        - $ref: "#/components/parameters/DevicePath"
+      responses:
+        "200":
+          description: Device configuration for the target device
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeviceConfig"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /sessions:
+    post:
+      tags: [crypto]
+      operationId: createSession
+      summary: Generate manufacturer keys and create a new key session (genkeys)
+      description: >
+        Equivalent to `cst genkeys`. Supports the standard RSA/ECC path, the
+        F29 per-key algorithm path (smpk/bmpk signing algorithms) and HSM.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SessionCreateRequest"
+      responses:
+        "201":
+          description: Session created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SessionSummary"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "409":
+          $ref: "#/components/responses/Conflict"
+    get:
+      tags: [crypto]
+      operationId: listSessions
+      summary: List existing key sessions (names + metadata only)
+      responses:
+        "200":
+          description: List of sessions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SessionSummary"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /sessions/{name}:
+    get:
+      tags: [crypto]
+      operationId: getSession
+      summary: Session metadata (never key material)
+      parameters:
+        - $ref: "#/components/parameters/SessionPath"
+      responses:
+        "200":
+          description: Session metadata
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SessionSummary"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    delete:
+      tags: [crypto]
+      operationId: deleteSession
+      summary: Delete a session and its encrypted key store
+      parameters:
+        - $ref: "#/components/parameters/SessionPath"
+      responses:
+        "204":
+          description: Session deleted
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /sessions/{name}/open:
+    post:
+      tags: [crypto]
+      operationId: openSession
+      summary: Unlock a session and obtain a short-lived session token
+      description: >
+        The password is exchanged once for an ephemeral token that is sent on
+        subsequent session-scoped operations via `X-Session-Token`. The raw
+        password is never needed by a frontend beyond this call.
+      parameters:
+        - $ref: "#/components/parameters/SessionPath"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SessionOpenRequest"
+      responses:
+        "200":
+          description: Session token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SessionToken"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /sessions/{name}/public-keys:
+    get:
+      tags: [crypto]
+      operationId: getSessionPublicKeys
+      summary: Export public keys and wrapped MEK blobs for a session
+      parameters:
+        - $ref: "#/components/parameters/SessionPath"
+        - $ref: "#/components/parameters/SessionTokenHeader"
+      responses:
+        "200":
+          description: Public key material (no private keys)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicKeysResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /sessions/{name}/development:
+    post:
+      tags: [crypto]
+      operationId: createDevelopmentSession
+      summary: Create/recreate the F29 Development session (create_development_session)
+      parameters:
+        - $ref: "#/components/parameters/SessionPath"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DevelopmentSessionRequest"
+      responses:
+        "201":
+          description: Development session ready
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SessionSummary"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "409":
+          $ref: "#/components/responses/Conflict"
+
+  /devices/{device}/certificates:
+    post:
+      tags: [crypto]
+      operationId: generateCertificate
+      summary: Generate the OTP key certificate (gencert)
+      parameters:
+        - $ref: "#/components/parameters/DevicePath"
+        - $ref: "#/components/parameters/SessionTokenHeader"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CertificateRequest"
+      responses:
+        "200":
+          description: Certificate generated; result artifacts referenced by ID
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CertificateResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "409":
+          $ref: "#/components/responses/Conflict"
+
+  /devices/{device}/certificates/rot:
+    post:
+      tags: [crypto]
+      operationId: generateRotCert
+      summary: Generate a Root of Trust switching certificate (rotcert)
+      parameters:
+        - $ref: "#/components/parameters/DevicePath"
+        - $ref: "#/components/parameters/SessionTokenHeader"
+      responses:
+        "200":
+          description: ROT certificate generated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RotCertResult"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /devices/{device}/certificates/debug:
+    post:
+      tags: [crypto]
+      operationId: generateDebugCert
+      summary: Generate a debug authentication certificate (debugcert)
+      parameters:
+        - $ref: "#/components/parameters/DevicePath"
+        - $ref: "#/components/parameters/SessionTokenHeader"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DebugCertRequest"
+      responses:
+        "200":
+          description: Debug certificate generated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DebugCertResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /devices/{device}/certificates/recovery:
+    post:
+      tags: [crypto]
+      operationId: generateDeviceRecoveryCert
+      summary: Generate a device recovery certificate (devicerecovery)
+      parameters:
+        - $ref: "#/components/parameters/DevicePath"
+        - $ref: "#/components/parameters/SessionTokenHeader"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RecoveryCertRequest"
+      responses:
+        "200":
+          description: Device recovery certificate generated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RecoveryCertResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /devices/{device}/images/sign:
+    post:
+      tags: [crypto]
+      operationId: signImage
+      summary: Sign an application image for a core and boot mode (signapp)
+      parameters:
+        - $ref: "#/components/parameters/DevicePath"
+        - $ref: "#/components/parameters/SessionTokenHeader"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SignImageRequest"
+      responses:
+        "200":
+          description: Signed image artifact
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SignedImageResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /devices/{device}/images/sign-seccfg:
+    post:
+      tags: [crypto]
+      operationId: signSecCfg
+      summary: Sign a security configuration image (signSecCfg)
+      parameters:
+        - $ref: "#/components/parameters/DevicePath"
+        - $ref: "#/components/parameters/SessionTokenHeader"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SignSecCfgRequest"
+      responses:
+        "200":
+          description: Signed seccfg artifact
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SignedSecCfgResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /devices/{device}/images/encrypt:
+    post:
+      tags: [crypto]
+      operationId: encryptImage
+      summary: Encrypt a binary with a symmetric key (encrypt)
+      parameters:
+        - $ref: "#/components/parameters/DevicePath"
+        - $ref: "#/components/parameters/SessionTokenHeader"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EncryptRequest"
+      responses:
+        "200":
+          description: Encrypted image artifact
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EncryptResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /devices/{device}/images/sign-batch:
+    post:
+      tags: [crypto]
+      operationId: signBatchImages
+      summary: Sign the prebuilt binary set for a device (async job)
+      description: >
+        Processes each binary in the device's prebuilt set (HSM image, CP image,
+        secure boot manager, combined services demo, seccfg). Returns a job with
+        per-binary progress and a results summary.
+      parameters:
+        - $ref: "#/components/parameters/DevicePath"
+        - $ref: "#/components/parameters/SessionTokenHeader"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SignBatchRequest"
+      responses:
+        "202":
+          description: Batch signing job accepted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Job"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+
+  /devices/{device}/socid/parse:
+    post:
+      tags: [crypto]
+      operationId: parseSoCId
+      summary: Parse and analyze SoC ID data (parseSoCId)
+      parameters:
+        - $ref: "#/components/parameters/DevicePath"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ParseSoCIdRequest"
+      responses:
+        "200":
+          description: Parsed SoC information
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ParseSoCIdResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+
+  # ============================== target ==============================
+  /ports:
+    get:
+      tags: [target]
+      operationId: listPorts
+      summary: List available serial ports (cross-platform)
+      responses:
+        "200":
+          description: Available serial ports
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PortInfo"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /devices:
+    get:
+      tags: [target]
+      operationId: listTargetDevices
+      summary: List installed device addons
+      responses:
+        "200":
+          description: Installed device addons
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/DeviceInfo"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /targets/socid:
+    post:
+      tags: [target]
+      operationId: getSoCId
+      summary: Retrieve SoC ID from a device via UART (getSoCId)
+      responses:
+        "202":
+          description: Detection job accepted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Job"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SocIdRequest"
+
+  /targets/type/uart:
+    post:
+      tags: [target]
+      operationId: getDeviceTypeUart
+      summary: Detect device type via UART (devTypeUART)
+      responses:
+        "202":
+          description: Detection job accepted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Job"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DeviceTypeUartRequest"
+
+  /targets/type/jtag:
+    post:
+      tags: [target]
+      operationId: getDeviceTypeJtag
+      summary: Detect device type via JTAG (devTypeJTAG)
+      responses:
+        "202":
+          description: Detection job accepted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Job"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DeviceTypeJtagRequest"
+
+  /targets/{device}/key-provisioning:
+    post:
+      tags: [target]
+      operationId: keyProvisioning
+      summary: Provision keys into the target (uart_keyprov / jtag_keyprov)
+      description: >
+        Asynchronous job. On success the device transitions HS-FS -> HSKP/HS-SE.
+        Logs are streamable via `GET /jobs/{id}/stream`.
+      parameters:
+        - $ref: "#/components/parameters/DevicePath"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/KeyProvisioningRequest"
+      responses:
+        "202":
+          description: Provisioning job accepted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Job"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+
+  /targets/{device}/code-provisioning:
+    post:
+      tags: [target]
+      operationId: codeProvisioning
+      summary: Provision firmware code into the target (uart_codeprov / jtag_codeprov)
+      description: Asynchronous, cancellable, with streamable logs.
+      parameters:
+        - $ref: "#/components/parameters/DevicePath"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CodeProvisioningRequest"
+      responses:
+        "202":
+          description: Provisioning job accepted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Job"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+
+  /targets/recovery/enable:
+    post:
+      tags: [target]
+      operationId: enableDeviceRecovery
+      summary: Enable device recovery mode (endevrecov)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CcsOperationRequest"
+      responses:
+        "202":
+          description: Recovery job accepted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Job"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+
+  /targets/recovery/uid-secap:
+    post:
+      tags: [target]
+      operationId: getUidSecap
+      summary: Retrieve device UID and security capabilities (getUIDSecap)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CcsOperationRequest"
+      responses:
+        "202":
+          description: UID/Secap job accepted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Job"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+
+  /targets/recovery/validate:
+    post:
+      tags: [target]
+      operationId: validateDeviceRecoveryCert
+      summary: Send and validate a device recovery certificate (valdcert)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ValidateRecoveryRequest"
+      responses:
+        "202":
+          description: Validation job accepted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Job"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+
+  /targets/download:
+    post:
+      tags: [target]
+      operationId: downloadBinary
+      summary: Download a bootloader/keywriter binary into the target (download)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DownloadRequest"
+      responses:
+        "202":
+          description: Download job accepted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Job"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+
+  # ============================== jobs ==============================
+  /jobs:
+    get:
+      tags: [jobs]
+      operationId: listJobs
+      summary: List jobs (optionally filtered by service and status)
+      parameters:
+        - name: service
+          in: query
+          schema:
+            type: string
+            enum: [crypto, target]
+        - name: status
+          in: query
+          schema:
+            $ref: "#/components/schemas/JobStatus"
+      responses:
+        "200":
+          description: List of jobs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Job"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /jobs/{id}:
+    get:
+      tags: [jobs]
+      operationId: getJob
+      summary: Get job status and result
+      parameters:
+        - $ref: "#/components/parameters/JobPath"
+      responses:
+        "200":
+          description: Job state
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Job"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    delete:
+      tags: [jobs]
+      operationId: cancelJob
+      summary: Cancel a running job (maps to cancel_event)
+      parameters:
+        - $ref: "#/components/parameters/JobPath"
+      responses:
+        "202":
+          description: Cancellation requested
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /jobs/{id}/logs:
+    get:
+      tags: [jobs]
+      operationId: getJobLogs
+      summary: Get paginated job log tail
+      parameters:
+        - $ref: "#/components/parameters/JobPath"
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 200
+      responses:
+        "200":
+          description: Log lines
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  lines:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/LogLine"
+                  next_offset:
+                    type: integer
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /jobs/{id}/stream:
+    get:
+      tags: [jobs]
+      operationId: streamJobLogs
+      summary: Stream job logs over SSE (mirrors _drain_jtag/_drain_proc)
+      parameters:
+        - $ref: "#/components/parameters/JobPath"
+      responses:
+        "200":
+          description: Server-sent event stream of log lines and progress
+          content:
+            text/event-stream:
+              schema:
+                type: string
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  # ============================== artifacts ==============================
+  /artifacts:
+    post:
+      tags: [artifacts]
+      operationId: uploadArtifact
+      summary: Upload a binary, certificate, or key file (multipart)
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file:
+                  type: string
+                  format: binary
+                device:
+                  type: string
+                  description: Device the artifact belongs to (optional)
+                purpose:
+                  type: string
+                  enum: [tifek, uart_kernel, jtag_kernel, otp_kw, hsm_image, certificate, image, seccfg, aes_key]
+                  description: Declared use so services can validate it
+      responses:
+        "201":
+          description: Uploaded artifact
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ArtifactRef"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+
+  /artifacts/{id}:
+    get:
+      tags: [artifacts]
+      operationId: getArtifact
+      summary: Download a generated artifact (certificates, signed images, headers)
+      parameters:
+        - $ref: "#/components/parameters/ArtifactPath"
+      responses:
+        "200":
+          description: Artifact bytes
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: Static per-service API key.
+
+  parameters:
+    DevicePath:
+      name: device
+      in: path
+      required: true
+      schema:
+        type: string
+        description: Target device, e.g. f29h85x, am261x, am263x
+    SessionPath:
+      name: name
+      in: path
+      required: true
+      schema:
+        type: string
+        description: Key session name
+    JobPath:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    ArtifactPath:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    SessionTokenHeader:
+      name: X-Session-Token
+      in: header
+      required: false
+      schema:
+        type: string
+      description: Short-lived session token. Required for session-scoped operations.
+
+  responses:
+    BadRequest:
+      description: Invalid request payload or validation failure (ValueError)
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    Unauthorized:
+      description: Missing or invalid API key / session token
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    Conflict:
+      description: Session exists / operation state conflict (RuntimeError)
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    InternalError:
+      description: Unexpected server error / subprocess failure (exit code != 0)
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+
+  schemas:
+    Health:
+      type: object
+      additionalProperties: false
+      required: [crypto, target]
+      properties:
+        crypto:
+          type: string
+          enum: [up, down]
+        target:
+          type: string
+          enum: [up, down]
+        version:
+          type: string
+        target_hardware:
+          type: string
+          description: Optional diagnostics, e.g. serial ports present / CCS found
+
+    ErrorResponse:
+      type: object
+      additionalProperties: false
+      required: [error]
+      properties:
+        error:
+          type: object
+          additionalProperties: false
+          required: [code, message]
+          properties:
+            code:
+              type: string
+              enum:
+                - INVALID_ARGUMENT
+                - SESSION_NOT_FOUND
+                - SESSION_EXISTS
+                - DEVICE_NOT_FOUND
+                - TARGET_TIMEOUT
+                - OPERATION_CANCELLED
+                - UNAUTHORIZED
+                - INTERNAL
+            message:
+              type: string
+            details:
+              type: object
+              additionalProperties: true
+
+    DeviceConfig:
+      type: object
+      additionalProperties: true
+      description: Mirrors tisecprov.device_config.get_device_config output (OTP layout, limits).
+
+    DeviceInfo:
+      type: object
+      additionalProperties: false
+      required: [name, family]
+      properties:
+        name:
+          type: string
+        family:
+          type: string
+        boot_modes:
+          type: array
+          items:
+            type: string
+            enum: [UART, JTAG]
+        addon_version:
+          type: string
+
+    PortInfo:
+      type: object
+      additionalProperties: false
+      required: [name, description]
+      properties:
+        name:
+          type: string
+          description: Platform-formatted port name (COM<n> / /dev/tty* / /dev/cu.*)
+        description:
+          type: string
+        hwid:
+          type: string
+
+    SessionCreateRequest:
+      type: object
+      additionalProperties: false
+      required: [name, password]
+      properties:
+        name:
+          type: string
+          description: Session name
+        password:
+          type: string
+          description: Password protecting the keys on disk
+        key_type:
+          type: string
+          enum: [rsa, ecc]
+          description: Standard path only
+        devel:
+          type: string
+          enum: [v15, v22]
+          description: TI developer keys (standard path)
+        hsm:
+          type: boolean
+          description: Use PKCS#11 HSM smartcard backend
+        smpk_signing_algorithm:
+          type: string
+          enum: [rsa4k, secp256r1, secp384r1, secp521r1]
+          description: F29 per-key path for SMPK
+        bmpk_signing_algorithm:
+          type: string
+          enum: [rsa4k, secp256r1, secp384r1, secp521r1]
+          description: F29 per-key path for BMPK
+
+    SessionSummary:
+      type: object
+      additionalProperties: false
+      required: [name]
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        hsm:
+          type: boolean
+        smpk_algorithm:
+          type: string
+        bmpk_algorithm:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+
+    SessionOpenRequest:
+      type: object
+      additionalProperties: false
+      required: [password]
+      properties:
+        password:
+          type: string
+
+    SessionToken:
+      type: object
+      additionalProperties: false
+      required: [token, expires_at]
+      properties:
+        token:
+          type: string
+        expires_at:
+          type: string
+          format: date-time
+
+    PublicKeysResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        smpk_public_key:
+          $ref: "#/components/schemas/ArtifactRef"
+        bmpk_public_key:
+          $ref: "#/components/schemas/ArtifactRef"
+        smek_wrapped:
+          $ref: "#/components/schemas/ArtifactRef"
+          description: MEK wrapped with its own RSA public key (HSM mode)
+        bmek_wrapped:
+          $ref: "#/components/schemas/ArtifactRef"
+
+    DevelopmentSessionRequest:
+      type: object
+      additionalProperties: false
+      required: [smpk_signing_algorithm, bmpk_signing_algorithm]
+      properties:
+        smpk_signing_algorithm:
+          type: string
+          enum: [rsa4k, secp256r1, secp384r1, secp521r1]
+        bmpk_signing_algorithm:
+          type: string
+          enum: [rsa4k, secp256r1, secp384r1, secp521r1]
+
+    CertificateRequest:
+      type: object
+      additionalProperties: false
+      description: Full F29 OTP certificate field set (maps to gencert args).
+      properties:
+        session:
+          type: string
+          description: Session name; ignored for the Development session
+        devSrVer:
+          type: string
+          enum: [SR_10, SR_11, SR_12, SR_20]
+        tifek_artifact:
+          $ref: "#/components/schemas/ArtifactRef"
+          description: TI FEK public key (uploaded via /artifacts)
+        msv:
+          type: string
+          description: Hex MSV, e.g. 0x1E22D
+        msv_protect:
+          type: boolean
+        smpk:
+          type: boolean
+          default: true
+        s_protect:
+          type: boolean
+        s_ovrd:
+          type: boolean
+        smek:
+          type: boolean
+          default: true
+        smek_protect:
+          type: boolean
+        smek_ovrd:
+          type: boolean
+        bmpk:
+          type: boolean
+          default: true
+        b_protect:
+          type: boolean
+        b_ovrd:
+          type: boolean
+        bmek:
+          type: boolean
+          default: true
+        bmek_protect:
+          type: boolean
+        bmek_ovrd:
+          type: boolean
+        sr_sbl:
+          type: string
+        sr_sbl_protect:
+          type: boolean
+        sr_sbl_ovrd:
+          type: boolean
+        sr_hsmRT:
+          type: string
+        sr_hsmRT_protect:
+          type: boolean
+        sr_hsmRT_ovrd:
+          type: boolean
+        sr_app:
+          type: string
+        sr_app_protect:
+          type: boolean
+        sr_app_ovrd:
+          type: boolean
+        sr_ssu:
+          type: string
+        sr_ssu_protect:
+          type: boolean
+        sr_ssu_ovrd:
+          type: boolean
+        keycnt:
+          type: integer
+        keycnt_protect:
+          type: boolean
+        keycnt_ovrd:
+          type: boolean
+        keyrev:
+          type: integer
+        keyrev_protect:
+          type: boolean
+        keyrev_ovrd:
+          type: boolean
+        ext_otp:
+          $ref: "#/components/schemas/ExtOtpConfig"
+        aes256:
+          type: string
+          description: Optional AES-256 key override (hex)
+        output:
+          type: string
+          description: Optional output directory name; artifacts are returned by ID regardless
+
+    ExtOtpConfig:
+      type: object
+      additionalProperties: false
+      properties:
+        value:
+          type: string
+          description: Hex value, e.g. 0x80000001
+        index:
+          type: integer
+        size:
+          type: integer
+          description: Multiple of 8, at least 32
+        wprp:
+          type: string
+        protect:
+          type: boolean
+
+    CertificateResult:
+      type: object
+      additionalProperties: false
+      required: [certificates]
+      properties:
+        certificates:
+          type: array
+          items:
+            $ref: "#/components/schemas/CertificateBundle"
+        keycert_headers:
+          type: array
+          items:
+            $ref: "#/components/schemas/ArtifactRef"
+          description: keycert_*.h C headers
+
+    CertificateBundle:
+      type: object
+      additionalProperties: false
+      properties:
+        primary_cert:
+          $ref: "#/components/schemas/ArtifactRef"
+        secondary_cert:
+          $ref: "#/components/schemas/ArtifactRef"
+        final_cert:
+          $ref: "#/components/schemas/ArtifactRef"
+
+    RotCertResult:
+      type: object
+      additionalProperties: false
+      required: [rot_switching_cert]
+      properties:
+        rot_switching_cert:
+          $ref: "#/components/schemas/ArtifactRef"
+
+    DebugCertRequest:
+      type: object
+      additionalProperties: false
+      required: [keyrev, swrv, dev_dbg_type, dev_uid]
+      properties:
+        keyrev:
+          type: integer
+          description: 1 -> SMPK, 2 -> BMPK
+        swrv:
+          type: integer
+        dev_dbg_type:
+          type: integer
+          enum: [1, 2, 3, 4]
+        dev_uid:
+          type: string
+          description: 64-byte hex device UID
+
+    DebugCertResult:
+      type: object
+      additionalProperties: false
+      required: [debug_cert]
+      properties:
+        debug_cert:
+          $ref: "#/components/schemas/ArtifactRef"
+
+    RecoveryCertRequest:
+      type: object
+      additionalProperties: false
+      required: [keyrev, dev_uid]
+      properties:
+        keyrev:
+          type: integer
+        dev_uid:
+          type: string
+          description: 64-byte hex device UID
+
+    RecoveryCertResult:
+      type: object
+      additionalProperties: false
+      required: [recovery_cert]
+      properties:
+        recovery_cert:
+          $ref: "#/components/schemas/ArtifactRef"
+
+    SignImageRequest:
+      type: object
+      additionalProperties: false
+      required: [image_artifact, input_format, core, keyrev, loadaddr, swrv, boot]
+      properties:
+        image_artifact:
+          $ref: "#/components/schemas/ArtifactRef"
+        input_format:
+          type: string
+          enum: [BIN, ELF]
+        core:
+          type: string
+          enum: [C29, HSM]
+        keyrev:
+          type: string
+          description: '1 or 2'
+        loadaddr:
+          type: string
+          description: Hex load address, e.g. 0x10001000
+        swrv:
+          type: string
+        boot:
+          type: string
+          enum: [FLASH, RAM]
+        debug:
+          type: string
+          description: e.g. DBG_SOC_DEFAULT
+        ccs_path:
+          type: string
+          description: Required for ELF input (symbol-based signing)
+        sbl_enc:
+          type: boolean
+        tifs_enc:
+          type: boolean
+        fw_enc:
+          type: boolean
+        enc_key:
+          $ref: "#/components/schemas/ArtifactRef"
+        fw_enc_key:
+          $ref: "#/components/schemas/ArtifactRef"
+        kd_salt:
+          $ref: "#/components/schemas/ArtifactRef"
+        fw_type:
+          type: string
+        img_integ:
+          type: boolean
+        crypto_unlock:
+          type: string
+          default: "no"
+
+    SignedImageResult:
+      type: object
+      additionalProperties: false
+      required: [signed_image]
+      properties:
+        signed_image:
+          $ref: "#/components/schemas/ArtifactRef"
+          description: .hs.hsmimage.bin (HSM) or .cert.bin (C29)
+
+    SignSecCfgRequest:
+      type: object
+      additionalProperties: false
+      required: [image_artifact, swrv, keyrev]
+      properties:
+        image_artifact:
+          $ref: "#/components/schemas/ArtifactRef"
+        swrv:
+          type: string
+        keyrev:
+          type: string
+          description: 1 -> SMPK, 2 -> BMPK
+        boot:
+          type: string
+          enum: [FLASH, RAM]
+          default: FLASH
+        ccs_path:
+          type: string
+        fw_enc:
+          type: boolean
+        fw_enc_key:
+          $ref: "#/components/schemas/ArtifactRef"
+        kd_salt:
+          $ref: "#/components/schemas/ArtifactRef"
+
+    SignedSecCfgResult:
+      type: object
+      additionalProperties: false
+      required: [seccfg_bin]
+      properties:
+        seccfg_bin:
+          $ref: "#/components/schemas/ArtifactRef"
+
+    EncryptRequest:
+      type: object
+      additionalProperties: false
+      required: [image_artifact]
+      properties:
+        image_artifact:
+          $ref: "#/components/schemas/ArtifactRef"
+        key:
+          $ref: "#/components/schemas/ArtifactRef"
+          description: Symmetric key; defaults to session MEK if omitted
+        output:
+          type: string
+
+    EncryptResult:
+      type: object
+      additionalProperties: false
+      required: [encrypted_image]
+      properties:
+        encrypted_image:
+          $ref: "#/components/schemas/ArtifactRef"
+
+    SignBatchRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        binaries:
+          type: array
+          items:
+            type: string
+          description: Optional subset of prebuilt binary names; defaults to full set
+        ccs_path:
+          type: string
+
+    ParseSoCIdRequest:
+      type: object
+      additionalProperties: false
+      required: [soc_id_hex]
+      properties:
+        soc_id_hex:
+          type: string
+          description: Raw SoC ID hex string
+
+    ParseSoCIdResult:
+      type: object
+      additionalProperties: true
+      description: Parsed SoC information (lifecycle, UID, security capabilities, etc.)
+
+    SocIdRequest:
+      type: object
+      additionalProperties: false
+      required: [port]
+      properties:
+        port:
+          type: string
+        baudrate:
+          type: integer
+          default: 115200
+        timeout:
+          type: integer
+          default: 10
+
+    DeviceTypeUartRequest:
+      type: object
+      additionalProperties: false
+      required: [port, targetbaud, uart_kernel]
+      properties:
+        port:
+          type: string
+        targetbaud:
+          type: integer
+        uart_kernel:
+          $ref: "#/components/schemas/ArtifactRef"
+
+    DeviceTypeJtagRequest:
+      type: object
+      additionalProperties: false
+      required: [ccs_path]
+      properties:
+        ccs_path:
+          type: string
+        verbose:
+          type: boolean
+          default: false
+
+    UartConnection:
+      type: object
+      additionalProperties: false
+      required: [port]
+      properties:
+        port:
+          type: string
+        targetbaud:
+          type: integer
+          default: 115200
+        timeout:
+          type: integer
+
+    JtagConnection:
+      type: object
+      additionalProperties: false
+      required: [ccs_path]
+      properties:
+        ccs_path:
+          type: string
+        verbose:
+          type: boolean
+          default: false
+        ccxml_path:
+          type: string
+        target_config_path:
+          type: string
+          description: Custom CCS target configuration to copy for this run
+
+    KeyProvisioningRequest:
+      type: object
+      additionalProperties: false
+      required: [interface, otp_kw_bin, certificate]
+      properties:
+        interface:
+          type: string
+          enum: [uart, jtag]
+        otp_kw_bin:
+          $ref: "#/components/schemas/ArtifactRef"
+        certificate:
+          $ref: "#/components/schemas/ArtifactRef"
+          description: Generated OTP certificate
+        uart:
+          $ref: "#/components/schemas/UartConnection"
+          description: uart_kernel + connection when interface=uart
+        jtag:
+          $ref: "#/components/schemas/JtagConnection"
+          description: jtag_kernel + connection when interface=jtag
+
+    CodeProvisioningRequest:
+      type: object
+      additionalProperties: false
+      required: [interface, hsm_image, hsm_cpu_code, c29_cpu_code, seccfg]
+      properties:
+        interface:
+          type: string
+          enum: [uart, jtag]
+        hsm_image:
+          $ref: "#/components/schemas/ArtifactRef"
+        hsm_cpu_code:
+          $ref: "#/components/schemas/ArtifactRef"
+        c29_cpu_code:
+          $ref: "#/components/schemas/ArtifactRef"
+        c29_cpu3_code:
+          $ref: "#/components/schemas/ArtifactRef"
+        seccfg:
+          $ref: "#/components/schemas/ArtifactRef"
+        uart:
+          $ref: "#/components/schemas/UartConnection"
+          description: uart_kernel + connection + input sequence when interface=uart
+        jtag:
+          $ref: "#/components/schemas/JtagConnection"
+          description: jtag_kernel + connection when interface=jtag
+
+    CcsOperationRequest:
+      type: object
+      additionalProperties: false
+      required: [ccs_path]
+      properties:
+        ccs_path:
+          type: string
+        verbose:
+          type: boolean
+          default: false
+
+    ValidateRecoveryRequest:
+      type: object
+      additionalProperties: false
+      required: [ccs_path, dev_recov_cert]
+      properties:
+        ccs_path:
+          type: string
+        dev_recov_cert:
+          $ref: "#/components/schemas/ArtifactRef"
+        verbose:
+          type: boolean
+          default: false
+
+    DownloadRequest:
+      type: object
+      additionalProperties: false
+      required: [port, bootloader]
+      properties:
+        port:
+          type: string
+        bootloader:
+          $ref: "#/components/schemas/ArtifactRef"
+
+    ArtifactRef:
+      type: object
+      additionalProperties: false
+      required: [id]
+      properties:
+        id:
+          type: string
+          format: uuid
+        filename:
+          type: string
+        content_type:
+          type: string
+        size:
+          type: integer
+          format: int64
+
+    JobStatus:
+      type: string
+      enum: [queued, running, succeeded, failed, cancelled]
+
+    Job:
+      type: object
+      additionalProperties: false
+      required: [id, service, type, status]
+      properties:
+        id:
+          type: string
+          format: uuid
+        service:
+          type: string
+          enum: [crypto, target]
+          description: Which backend owns the job
+        type:
+          type: string
+          description: e.g. key_provisioning, code_provisioning, device_type, sign_batch
+        status:
+          $ref: "#/components/schemas/JobStatus"
+        progress:
+          type: integer
+          minimum: 0
+          maximum: 100
+        exit_code:
+          type: integer
+        result:
+          type: object
+          additionalProperties: true
+          description: Successful result (artifact refs, parsed SoC, device state, etc.)
+        error:
+          $ref: "#/components/schemas/ErrorResponse"
+        created_at:
+          type: string
+          format: date-time
+        started_at:
+          type: string
+          format: date-time
+        finished_at:
+          type: string
+          format: date-time
+        logs_url:
+          type: string
+        stream_url:
+          type: string
+
+    LogLine:
+      type: object
+      additionalProperties: false
+      required: [seq, timestamp, message]
+      properties:
+        seq:
+          type: integer
+        timestamp:
+          type: string
+          format: date-time
+        level:
+          type: string
+          enum: [info, warn, error]
+          default: info
+        message:
+          type: string
