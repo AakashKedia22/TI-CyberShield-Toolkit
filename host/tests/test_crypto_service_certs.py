@@ -243,7 +243,9 @@ def test_sign_batch(ctx):
     from services.jobs import job_manager
 
     client, _ = ctx
-    r = client.post(f"/devices/{DEVICE}/images/sign-batch", headers=AUTH_HEADERS)
+    r = client.post(
+        f"/devices/{DEVICE}/images/sign-batch", json={}, headers=AUTH_HEADERS
+    )
     assert r.status_code == 202, r.text
     job_id = r.json()["id"]
 

@@ -279,6 +279,16 @@ class EncryptResult(BaseModel):
     encrypted_image: ArtifactRef
 
 
+class SignBatchRequest(BaseModel):
+    """Parameters for signing the prebuilt binary set for a device."""
+
+    binaries: Optional[list[str]] = Field(
+        default=None,
+        description="Optional subset of prebuilt binary names; defaults to the full set",
+    )
+    ccs_path: Optional[str] = None
+
+
 class SignBatchResult(BaseModel):
     """Per-binary result of the prebuilt batch signing operation."""
 

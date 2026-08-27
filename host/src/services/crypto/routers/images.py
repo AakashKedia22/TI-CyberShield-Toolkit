@@ -49,7 +49,7 @@
 Image signing/encryption endpoints (Backend #1).
 """
 
-from typing import Dict, List, Optional
+from typing import Dict
 
 from fastapi import APIRouter, Depends
 
@@ -58,6 +58,7 @@ from services.crypto.auth import require_api_key, require_session_token
 from services.crypto.schemas import (
     EncryptRequest,
     EncryptResult,
+    SignBatchRequest,
     SignedImageResult,
     SignedSecCfgResult,
     SignImageRequest,
@@ -122,17 +123,17 @@ def encrypt_image(
 )
 def sign_batch_images(
     device: str,
-    binaries: Optional[List[str]] = None,
-    ccs_path: Optional[str] = None,
+    req: SignBatchRequest | None = None,
     token_entry: Dict = Depends(require_session_token),
 ) -> dict:
     from services.jobs import job_manager, to_job_response
 
+    req = req or SignBatchRequest()
     job = job_manager.submit(
         "crypto",
         "sign_batch",
         lambda ctx: imgops.sign_batch(
-            device, token_entry, binaries, ccs_path, ctx=ctx
+            device, token_entry, req.binaries, req.ccs_path, ctx=ctx
         ).model_dump(mode="json"),
     )
     return to_job_response(job)

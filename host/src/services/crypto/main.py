@@ -107,6 +107,11 @@ def create_app() -> FastAPI:
     async def handle_validation_error(
         request: Request, exc: RequestValidationError
     ) -> JSONResponse:
+        import logging
+
+        logging.getLogger("uvicorn.error").warning(
+            "Validation failed %s %s: %s", request.method, request.url.path, exc.errors()
+        )
         body = ErrorResponse(
             error=ErrorDetail(
                 code="INVALID_ARGUMENT",
