@@ -44,6 +44,19 @@ The tool is split into two HTTP services plus a browser frontend, so any client
 The machine-readable API contract lives in `docs/api/openapi.yaml`, with the
 design rationale in `docs/api/ARCHITECTURE.md`.
 
+## Pros and Cons
+
+| Aspect | Pros | Cons |
+| --- | --- | --- |
+| **Client surface** | One API contract (`docs/api/openapi.yaml`) used by the GUI, CLI and scripts — no logic is forked. | Three processes to run (crypto + target + web) instead of a single-binary CLI. |
+| **Security** | Private keys and password-protected sessions live only in the crypto service; the target service and frontend never see key material. | Dev-mode auth is a static API key (only enforced when `CST_*_API_KEY` is set); TLS is expected to be terminated by an upstream gateway. |
+| **Deployment** | The crypto service can run on a secure host (ideally with the HSM attached) while the target service sits near the hardware (serial / CCS). | Requires two toolchains: Python for the services, Node.js for the web GUI. |
+| **Long-running operations** | Hardware ops are async, cancellable jobs with streamable logs (SSE) — provisioning doesn't block the UI. | The job manager is in-memory: jobs are lost on service restart (no history/persistence). |
+| **Session handling** | Sessions are password-protected and stored on disk; public keys are exportable. | Session tokens are in-memory and expire after 30 minutes. |
+| **Concurrency** | — | Jobs that capture stdout are serialized by a global lock (one provisioning at a time). |
+| **Extensibility** | New devices plug in via addons and the registry without changing the API surface. | Hardware ops still shell out to existing CCS/UART tools (a pre-existing core limitation). |
+| **Backward compatibility** | The original `cst` CLI keeps working against the same core library. | The web GUI is a crypto workbench — target provisioning screens are not wired in yet. |
+
 ## Requirements
 
 - Python 3.10+ (with `pip`)
