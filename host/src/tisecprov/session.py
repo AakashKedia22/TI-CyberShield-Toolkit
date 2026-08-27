@@ -120,10 +120,15 @@ class SecureSession:
                 ) from e
 
         # Set default storage path to XDG_DATA_HOME/secure_Provisioning_Tool/sessions
+        # (overridable with the TISECPROV_SESSION_DIR environment variable)
         appname = os.path.join("tisecprov", "sessions")
         app_author = "tisecprov"
         if storage_path is None:
-            storage_path = Path(user_data_dir(appname, app_author))
+            override = os.environ.get("TISECPROV_SESSION_DIR")
+            if override:
+                storage_path = Path(override)
+            else:
+                storage_path = Path(user_data_dir(appname, app_author))
 
         storage_path.mkdir(parents=True, exist_ok=True)
         self.storage_path = storage_path
