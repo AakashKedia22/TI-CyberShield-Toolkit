@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "TI CyberShield Toolkit",
+    "quality_profile": "showcase",
+    "viewBox": [1060, 460],
+    "views": [
+      { "id": "key-to-silicon", "label": "Keys to silicon", "focus": ["gui", "crypto", "target", "soc"], "note": "Generate sessions and signed images, then provision them to the target." },
+      { "id": "key-material", "label": "Key material stays local", "focus": ["crypto", "sessions"], "note": "Private keys and password-protected sessions never leave the crypto service." },
+      { "id": "hardware-jobs", "label": "Hardware jobs", "focus": ["target", "artifacts", "soc"], "note": "Async, cancellable provisioning jobs over UART and JTAG/CCS." }
+    ]
+  },
+  "components": [
+    { "id": "gui", "type": "frontend", "label": "Web GUI", "sublabel": "React + Vite SPA", "pos": [40, 30], "size": [140, 64] },
+    { "id": "cli", "type": "external", "label": "cst CLI", "sublabel": "original CLI", "pos": [560, 70], "size": [140, 64] },
+    { "id": "crypto", "type": "backend", "label": "Crypto Service", "sublabel": "sessions · certs · sign/encrypt", "pos": [40, 150], "size": [190, 74], "tag": ":8000" },
+    { "id": "target", "type": "backend", "label": "Target Service", "sublabel": "provisioning · recovery", "pos": [560, 180], "size": [190, 74], "tag": ":8001" },
+    { "id": "sessions", "type": "database", "label": "Sessions", "sublabel": "password-protected", "pos": [55, 260], "size": [160, 64] },
+    { "id": "artifacts", "type": "database", "label": "Artifacts", "sublabel": "signed images · certs", "pos": [660, 330], "size": [160, 64] },
+    { "id": "soc", "type": "external", "label": "TI SoC", "sublabel": "F29H85x · AM2xxx", "pos": [880, 330], "size": [160, 64] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "Host", "wraps": ["crypto", "target", "sessions", "artifacts"] },
+    { "kind": "security-group", "label": "Key material — never leaves", "wraps": ["crypto", "sessions"] }
+  ],
+  "connections": [
+    { "id": "gui-to-crypto", "from": "gui", "to": "crypto", "label": "HTTPS/JSON", "fromSide": "bottom", "toSide": "top" },
+    { "id": "cli-to-target", "from": "cli", "to": "target", "label": "HTTPS/JSON", "fromSide": "bottom", "toSide": "top" },
+    { "id": "gui-to-target", "from": "gui", "to": "target", "label": "HTTPS/JSON", "fromSide": "top", "toSide": "right", "via": [[110, 20], [780, 20], [780, 217]], "labelAt": [788, 120] },
+    { "id": "cli-to-crypto", "from": "cli", "to": "crypto", "label": "core lib", "variant": "dashed", "fromSide": "left", "toSide": "right", "via": [[480, 102], [480, 187]], "labelAt": [488, 145] },
+    { "id": "crypto-to-sessions", "from": "crypto", "to": "sessions", "label": "load/save", "fromSide": "bottom", "toSide": "top", "via": [[135, 244]], "labelAt": [143, 245] },
+    { "id": "crypto-to-artifacts", "from": "crypto", "to": "artifacts", "label": "write", "fromSide": "right", "toSide": "left" },
+    { "id": "target-to-artifacts", "from": "target", "to": "artifacts", "label": "read", "fromSide": "bottom", "toSide": "top" },
+    { "id": "target-to-soc", "from": "target", "to": "soc", "label": "UART / JTAG", "variant": "emphasis", "fromSide": "bottom", "toSide": "top" }
+  ],
+  "cards": [
+    { "dot": "rose", "title": "Security", "items": ["Private keys and password-protected sessions live only in the crypto service", "Target service and frontend never see key material", "Dev-mode auth is a static API key (CST_*_API_KEY)"] },
+    { "dot": "cyan", "title": "Hardware", "items": ["UART serial for device access", "JTAG via CCS (Code Composer Studio)", "Async cancellable jobs with streamable SSE logs"] },
+    { "dot": "emerald", "title": "Deployment", "items": ["Crypto service on a secure host; optional PKCS#11 HSM", "Target service runs near the hardware", "One API contract (docs/api/openapi.yaml) shared by GUI, CLI, and scripts"] }
+  ]
+}
