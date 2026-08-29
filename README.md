@@ -44,6 +44,15 @@ The tool is split into two HTTP services plus a browser frontend, so any client
 The machine-readable API contract lives in `docs/api/openapi.yaml`, with the
 design rationale in `docs/api/ARCHITECTURE.md`.
 
+### Architecture map
+
+![TI CyberShield Toolkit runtime architecture](tisecprov.architecture.visual-check.1440x900.light.png)
+
+An interactive version (focus nodes, trace routes, guided views, dark/light
+themes) is in [`tisecprov.architecture.html`](tisecprov.architecture.html) —
+open it locally in a browser, or via GitHub Pages once enabled. See
+[`ARCHITECTURE_MAP.md`](ARCHITECTURE_MAP.md) for details.
+
 ## Pros and Cons
 
 | Aspect | Pros | Cons |
