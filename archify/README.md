@@ -8,16 +8,16 @@ Interactive architecture map generated with [Archify](https://github.com/tt-a1i/
 
 ## Interactive artifact
 
-The self-contained interactive diagram is [`tisecprov.architecture.html`](./tisecprov.architecture.html).
+The self-contained interactive diagram is [`index.html`](./index.html).
 Open it in any browser to focus nodes, trace upstream/downstream reach, probe exact routes,
 compare semantic roles, switch light/dark themes, and play the three guided views. The typed
 source specification is [`tisecprov.architecture.json`](./tisecprov.architecture.json).
 
 To render the interactive HTML on GitHub, enable **GitHub Pages** for this repository
-(Settings -> Pages), then open:
+(Settings -> Pages, deploy from branch `http-api`, folder `/root`), then open:
 
 ```
-https://<owner>.github.io/TI-CyberShield-Toolkit/docs/archify/tisecprov.architecture.html
+https://<owner>.github.io/TI-CyberShield-Toolkit/archify/index.html
 ```
 
 ## Guided views

@@ -46,12 +46,12 @@ design rationale in `docs/api/ARCHITECTURE.md`.
 
 ### Architecture map
 
-![TI CyberShield Toolkit runtime architecture](tisecprov.architecture.visual-check.1440x900.light.png)
+![TI CyberShield Toolkit runtime architecture](archify/tisecprov.architecture.visual-check.1440x900.light.png)
 
 An interactive version (focus nodes, trace routes, guided views, dark/light
-themes) is in [`tisecprov.architecture.html`](tisecprov.architecture.html) —
+themes) is in [`archify/index.html`](archify/index.html) —
 open it locally in a browser, or via GitHub Pages once enabled. See
-[`ARCHITECTURE_MAP.md`](ARCHITECTURE_MAP.md) for details.
+[`archify/README.md`](archify/README.md) for details.
 
 ## Pros and Cons
 
