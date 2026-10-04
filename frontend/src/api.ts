@@ -75,10 +75,15 @@ async function request<T>(
   return (await res.json()) as T;
 }
 
-function json(method: string, body?: unknown): RequestInit {
+function json(method: string, body?: unknown, token?: string | null): RequestInit {
+  // Both headers must be merged here; overwriting `headers` after spreading
+  // this object silently drops the Content-Type and makes the server receive
+  // the body as unparsed bytes.
+  const headers: Record<string, string> = { "Content-Type": "application/json" };
+  if (token) headers["X-Session-Token"] = token;
   return {
     method,
-    headers: { "Content-Type": "application/json" },
+    headers,
     body: body === undefined ? undefined : JSON.stringify(body),
   };
 }
@@ -161,25 +166,25 @@ export const certificatesApi = {
     request<CertificateResult>(
       CRYPTO_BASE,
       `/devices/${device}/certificates`,
-      { ...json("POST", body), headers: tokenHeader(token) }
+      json("POST", body, token)
     ),
   rot: (device: string, token?: string | null) =>
     request<{ rot_switching_cert: ArtifactRef }>(
       CRYPTO_BASE,
       `/devices/${device}/certificates/rot`,
-      { method: "POST", headers: tokenHeader(token) }
+      json("POST", undefined, token)
     ),
   debug: (device: string, body: Record<string, unknown>, token?: string | null) =>
     request<{ debug_cert: ArtifactRef }>(
       CRYPTO_BASE,
       `/devices/${device}/certificates/debug`,
-      { ...json("POST", body), headers: tokenHeader(token) }
+      json("POST", body, token)
     ),
   recovery: (device: string, body: Record<string, unknown>, token?: string | null) =>
     request<{ recovery_cert: ArtifactRef }>(
       CRYPTO_BASE,
       `/devices/${device}/certificates/recovery`,
-      { ...json("POST", body), headers: tokenHeader(token) }
+      json("POST", body, token)
     ),
 };
 
@@ -191,19 +196,19 @@ export const imagesApi = {
     request<SignedImageResult>(
       CRYPTO_BASE,
       `/devices/${device}/images/sign`,
-      { ...json("POST", body), headers: tokenHeader(token) }
+      json("POST", body, token)
     ),
   signSeccfg: (device: string, body: Record<string, unknown>, token?: string | null) =>
     request<SignedSecCfgResult>(
       CRYPTO_BASE,
       `/devices/${device}/images/sign-seccfg`,
-      { ...json("POST", body), headers: tokenHeader(token) }
+      json("POST", body, token)
     ),
   encrypt: (device: string, body: Record<string, unknown>, token?: string | null) =>
     request<EncryptResult>(
       CRYPTO_BASE,
       `/devices/${device}/images/encrypt`,
-      { ...json("POST", body), headers: tokenHeader(token) }
+      json("POST", body, token)
     ),
   signBatch: (
     device: string,
@@ -213,7 +218,7 @@ export const imagesApi = {
     request<Job>(
       CRYPTO_BASE,
       `/devices/${device}/images/sign-batch`,
-      { ...json("POST", body), headers: tokenHeader(token) }
+      json("POST", body, token)
     ),
 };
 

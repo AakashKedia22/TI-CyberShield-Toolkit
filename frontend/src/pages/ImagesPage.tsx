@@ -11,6 +11,7 @@ const DEVICE = "f29h85x";
 export default function ImagesPage() {
   const { token, session, rememberArtifact } = useApi();
   const [error, setError] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -75,6 +76,7 @@ export default function ImagesPage() {
     e.preventDefault();
     if (!image) return;
     setError(null);
+    setNotice(null);
     setBusy(true);
     try {
       const r = await imagesApi.sign(
@@ -96,6 +98,7 @@ export default function ImagesPage() {
       );
       setSigned(r.signed_image);
       rememberArtifact(r.signed_image);
+      setNotice(`Image signed successfully (${r.signed_image.filename ?? "signed image"}) — see download below.`);
     } catch (err) {
       setError((err as ApiError).message);
     } finally {
@@ -106,14 +109,17 @@ export default function ImagesPage() {
   async function uploadSeccfg(e: React.FormEvent) {
     e.preventDefault();
     if (!secCfgImage) {
+      setNotice(null);
       setError("Upload a seccfg image first");
       return;
     }
     if (!ccsPath.trim()) {
+      setNotice(null);
       setError("CCS path is required to sign a Sec-Cfg image");
       return;
     }
     setError(null);
+    setNotice(null);
     setBusy(true);
     try {
       const r = await imagesApi.signSeccfg(
@@ -129,6 +135,7 @@ export default function ImagesPage() {
       );
       setSeccfg(r.seccfg_bin);
       rememberArtifact(r.seccfg_bin);
+      setNotice("Sec-Cfg signed successfully — see download below.");
     } catch (err) {
       setError((err as ApiError).message);
     } finally {
@@ -151,6 +158,7 @@ export default function ImagesPage() {
     e.preventDefault();
     if (!image) return;
     setError(null);
+    setNotice(null);
     setBusy(true);
     try {
       const r = await imagesApi.encrypt(
@@ -160,6 +168,7 @@ export default function ImagesPage() {
       );
       setEncrypted(r.encrypted_image);
       rememberArtifact(r.encrypted_image);
+      setNotice(`Image encrypted successfully (${r.encrypted_image.filename ?? "encrypted image"}) — see download below.`);
     } catch (err) {
       setError((err as ApiError).message);
     } finally {
@@ -181,6 +190,7 @@ export default function ImagesPage() {
     <div>
       <h1>Images</h1>
       {error && <div className="error-box">{error}</div>}
+      {notice && <div className="notice-box">{notice}</div>}
 
       <section className="card">
         <h2>Upload image</h2>

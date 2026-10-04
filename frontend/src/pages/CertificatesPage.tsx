@@ -11,6 +11,7 @@ const SR_VERS = ["SR_10", "SR_11", "SR_12", "SR_20"];
 export default function CertificatesPage() {
   const { token, session, rememberArtifact } = useApi();
   const [error, setError] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
   // TI FEK
@@ -76,6 +77,7 @@ export default function CertificatesPage() {
   async function genCert(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
+    setNotice(null);
     setBusy(true);
     try {
       if (!fek) throw new Error("Upload the TI FEK public key first");
@@ -103,6 +105,14 @@ export default function CertificatesPage() {
       [bundle?.primary_cert, bundle?.secondary_cert, bundle?.final_cert]
         .concat(result.keycert_headers)
         .forEach((a) => a && rememberArtifact(a));
+      const names = [
+        bundle?.primary_cert?.filename,
+        bundle?.secondary_cert?.filename,
+        bundle?.final_cert?.filename,
+      ]
+        .filter(Boolean)
+        .join(", ");
+      setNotice(`Certificate generated successfully (${names}) — see downloads below.`);
     } catch (err) {
       setError((err as ApiError).message);
     } finally {
@@ -112,11 +122,13 @@ export default function CertificatesPage() {
 
   async function genRot() {
     setError(null);
+    setNotice(null);
     setBusy(true);
     try {
       const r = await certificatesApi.rot(DEVICE, token);
       setRotResult(r.rot_switching_cert);
       rememberArtifact(r.rot_switching_cert);
+      setNotice("ROT switching certificate generated successfully.");
     } catch (err) {
       setError((err as ApiError).message);
     } finally {
@@ -127,6 +139,7 @@ export default function CertificatesPage() {
   async function genDebug(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
+    setNotice(null);
     setBusy(true);
     try {
       const r = await certificatesApi.debug(DEVICE, {
@@ -137,6 +150,7 @@ export default function CertificatesPage() {
       }, token);
       setDbgResult(r.debug_cert);
       rememberArtifact(r.debug_cert);
+      setNotice("Debug certificate generated successfully.");
     } catch (err) {
       setError((err as ApiError).message);
     } finally {
@@ -147,6 +161,7 @@ export default function CertificatesPage() {
   async function genRecovery(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
+    setNotice(null);
     setBusy(true);
     try {
       const r = await certificatesApi.recovery(DEVICE, {
@@ -155,6 +170,7 @@ export default function CertificatesPage() {
       }, token);
       setRecResult(r.recovery_cert);
       rememberArtifact(r.recovery_cert);
+      setNotice("Device recovery certificate generated successfully.");
     } catch (err) {
       setError((err as ApiError).message);
     } finally {
@@ -166,6 +182,7 @@ export default function CertificatesPage() {
     <div>
       <h1>Certificates</h1>
       {error && <div className="error-box">{error}</div>}
+      {notice && <div className="notice-box">{notice}</div>}
 
       <section className="card">
         <h2>TI FEK public key</h2>
