@@ -15,4 +15,5 @@ htmlcov/
 
 # Build output
 dist/
-build/
+build/package-lock.json
+ai_session.txt
