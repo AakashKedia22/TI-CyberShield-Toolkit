@@ -29,6 +29,8 @@ export default function ImagesPage() {
   const [sblEnc, setSblEnc] = useState(false);
   const [tifsEnc, setTifsEnc] = useState(false);
   const [fwEnc, setFwEnc] = useState(false);
+  const [encKey, setEncKey] = useState<ArtifactRef | null>(null);
+  const [fwEncKey, setFwEncKey] = useState<ArtifactRef | null>(null);
 
   // seccfg
   const [secCfgImage, setSecCfgImage] = useState<ArtifactRef | null>(null);
@@ -74,7 +76,21 @@ export default function ImagesPage() {
 
   async function sign(e: React.FormEvent) {
     e.preventDefault();
-    if (!image) return;
+    if (!image) {
+      setNotice(null);
+      setError("Upload an image first");
+      return;
+    }
+    if ((sblEnc || tifsEnc) && !encKey) {
+      setNotice(null);
+      setError("SBL/TIFS encryption needs an encryption key — upload one below the checkboxes");
+      return;
+    }
+    if (fwEnc && !fwEncKey) {
+      setNotice(null);
+      setError("FW encryption needs a firmware encryption key — upload one below the checkboxes");
+      return;
+    }
     setError(null);
     setNotice(null);
     setBusy(true);
@@ -93,6 +109,8 @@ export default function ImagesPage() {
           sbl_enc: sblEnc,
           tifs_enc: tifsEnc,
           fw_enc: fwEnc,
+          enc_key: sblEnc || tifsEnc ? encKey : null,
+          fw_enc_key: fwEnc ? fwEncKey : null,
         },
         token
       );
@@ -250,6 +268,42 @@ export default function ImagesPage() {
           <label className="check">
             <input type="checkbox" checked={fwEnc} onChange={(e) => setFwEnc(e.target.checked)} /> FW enc
           </label>
+          {(sblEnc || tifsEnc) && (
+            <label>
+              Encryption key (SBL/TIFS){" "}
+              <input
+                type="file"
+                onChange={async (e) => {
+                  const f = e.target.files?.[0];
+                  if (!f) return;
+                  try {
+                    setEncKey(await upload(f, "aes_key"));
+                  } catch (err) {
+                    setError((err as ApiError).message);
+                  }
+                }}
+              />
+              {encKey && <span className="muted"> {encKey.filename}</span>}
+            </label>
+          )}
+          {fwEnc && (
+            <label>
+              FW encryption key{" "}
+              <input
+                type="file"
+                onChange={async (e) => {
+                  const f = e.target.files?.[0];
+                  if (!f) return;
+                  try {
+                    setFwEncKey(await upload(f, "aes_key"));
+                  } catch (err) {
+                    setError((err as ApiError).message);
+                  }
+                }}
+              />
+              {fwEncKey && <span className="muted"> {fwEncKey.filename}</span>}
+            </label>
+          )}
           <button disabled={busy}>Sign</button>
         </form>
         {signed && (

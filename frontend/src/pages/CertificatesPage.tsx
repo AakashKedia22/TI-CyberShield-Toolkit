@@ -7,6 +7,12 @@ import type { ArtifactRef, CertificateResult } from "../types";
 
 const DEVICE = "f29h85x";
 const SR_VERS = ["SR_10", "SR_11", "SR_12", "SR_20"];
+const DEBUG_TYPES: Array<[number, string]> = [
+  [2, "DBG_PUBLIC_ENABLE (2)"],
+  [1, "DBG_SOC_DEFAULT (1)"],
+  [0, "DBG_PERM_DISABLE (0)"],
+  [4, "DBG_FULL_ENABLE (4)"],
+];
 
 export default function CertificatesPage() {
   const { token, session, rememberArtifact } = useApi();
@@ -38,7 +44,7 @@ export default function CertificatesPage() {
   // debug / recovery
   const [dbgKeyrev, setDbgKeyrev] = useState(1);
   const [dbgSwrv, setDbgSwrv] = useState(1);
-  const [dbgType, setDbgType] = useState(4);
+  const [dbgType, setDbgType] = useState(2);
   const [dbgUid, setDbgUid] = useState("");
   const [recKeyrev, setRecKeyrev] = useState(1);
   const [recUid, setRecUid] = useState("");
@@ -390,11 +396,16 @@ export default function CertificatesPage() {
               </label>
               <label className="field">
                 Debug type
-                <input
-                  type="number"
+                <select
                   value={dbgType}
                   onChange={(e) => setDbgType(Number(e.target.value))}
-                />
+                >
+                  {DEBUG_TYPES.map(([v, label]) => (
+                    <option key={v} value={v}>
+                      {label}
+                    </option>
+                  ))}
+                </select>
               </label>
             </div>
           </div>

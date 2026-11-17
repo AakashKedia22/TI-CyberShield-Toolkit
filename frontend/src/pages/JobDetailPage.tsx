@@ -13,18 +13,26 @@ export default function JobDetailPage() {
   useEffect(() => {
     if (!service || !id) return;
     let cancelled = false;
+    let timer: number | undefined;
+    const TERMINAL = ["succeeded", "failed", "cancelled"];
     const load = () =>
       jobsApi
         .get(service, id)
         .then((j) => {
-          if (!cancelled) setJob(j);
+          if (cancelled) return;
+          setJob(j);
+          // Stop polling once the job can no longer change.
+          if (TERMINAL.includes(j.status) && timer !== undefined) {
+            window.clearInterval(timer);
+            timer = undefined;
+          }
         })
         .catch((e: unknown) => setError((e as ApiError).message));
+    timer = window.setInterval(load, 1500);
     load();
-    const timer = window.setInterval(load, 1500);
     return () => {
       cancelled = true;
-      window.clearInterval(timer);
+      if (timer !== undefined) window.clearInterval(timer);
     };
   }, [service, id]);
 

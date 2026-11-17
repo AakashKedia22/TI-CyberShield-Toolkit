@@ -166,10 +166,14 @@ T("T10", "Public keys of the active session are listed and downloadable", async 
   if (d.status !== 200 || d.size === 0) throw new Error(`download ${JSON.stringify(d)}`);
 });
 
-T("T11", "Public keys of a NON-active session (table button) [known bug #2]", async (page) => {
+T("T11", "Public keys of a non-active session prompts for its password and opens it", async (page) => {
+  page.once("dialog", (d) => d.accept(PW));
   await row(page, S2).getByRole("button", { name: "Public keys" }).click();
-  await page.waitForTimeout(1500);
+  const box = page.locator(".box").filter({ hasText: "Public keys" });
+  await expectText(box, /Public keys \(\d+\)/, 30000);
   await expectNoError(page);
+  await expectText(page.locator(".active-session"), new RegExp(S2));
+  await expectText(row(page, S2), /active/);
 });
 
 T("T12", "Create F29 Development session and open it with the published password", async (page) => {
@@ -278,6 +282,14 @@ T("T22", "Generate debug certificate with a valid 128-hex UID", async (page) => 
   await expectText(notice(page), /Debug certificate generated/, 60000);
 }, { timeout: 90000 });
 
+T("T22b", "Debug type is a labelled picker defaulting to DBG_PUBLIC_ENABLE", async (page) => {
+  const sel = card(page, "Debug certificate").getByLabel("Debug type");
+  const selected = await sel.locator("option:checked").innerText();
+  if (!/DBG_PUBLIC_ENABLE/.test(selected)) throw new Error("default: " + selected);
+  const opts = await sel.locator("option").allInnerTexts();
+  if (opts.length !== 4) throw new Error("options: " + opts);
+});
+
 T("T23", "Debug certificate with a malformed UID is rejected", async (page) => {
   const c = card(page, "Debug certificate");
   await c.getByLabel(/Device UID/).fill("1234");
@@ -317,12 +329,21 @@ T("T26", "Sign for RAM boot with key rev 2 and debug option", async (page) => {
   await expectNoError(page);
 }, { timeout: 150000 });
 
-T("T27", "Sign with SBL encryption enabled", async (page) => {
+T("T27", "SBL encryption without a key is blocked with a clear message", async (page) => {
   const c = card(page, /Sign application/);
   await c.getByLabel("SBL enc").check();
   await c.getByRole("button", { name: "Sign" }).click();
-  await expectText(page.locator(".error-box, .notice-box"), /./, 120000);
+  await expectText(errorBox(page), /needs an encryption key/);
+});
+
+T("T27b", "SBL encryption with an uploaded key signs successfully", async (page) => {
+  const c = card(page, /Sign application/);
+  await c.getByLabel(/Encryption key/).setInputFiles(AES);
+  await expectText(c.locator("label").filter({ hasText: "Encryption key" }), /aes256\.key/);
+  await c.getByRole("button", { name: "Sign" }).click();
+  await expectText(notice(page), /Image signed successfully/, 120000);
   await expectNoError(page);
+  await c.getByLabel("SBL enc").uncheck();
 }, { timeout: 150000 });
 
 T("T28", "Encrypt image using the session key (no uploaded key)", async (page) => {
@@ -433,7 +454,7 @@ T("T40", "[API key mode] entering the key in the header makes the sessions list 
   await expectText(row(page, S1), new RegExp(S1));
 }, { group: "apikey" });
 
-T("T41", "[API key mode] artifact upload works with key set [known bug #1]", async (page) => {
+T("T41", "[API key mode] artifact upload works with key set", async (page) => {
   await page.goto(BASE + "/artifacts");
   const c = card(page, "Upload file");
   await c.locator('input[type=file]').setInputFiles(FEK);
@@ -442,16 +463,29 @@ T("T41", "[API key mode] artifact upload works with key set [known bug #1]", asy
   await expectNoError(page);
 }, { group: "apikey" });
 
-T("T42", "[API key mode] download links work with key set [known bug #1]", async (page) => {
+T("T42", "[API key mode] clicking a download link saves the file", async (page) => {
   await openSession(page, S1, PW);
   await row(page, S1).getByRole("button", { name: "Public keys" }).click();
   const link = page.locator(".box a.download").first();
   await link.waitFor({ timeout: 15000 });
-  const href = await link.getAttribute("href");
-  // what a browser click does: plain GET, no custom headers
-  const res = await page.request.get(BASE + href);
-  if (res.status() !== 200) throw new Error(`plain download GET -> HTTP ${res.status()}`);
+  const [dl] = await Promise.all([page.waitForEvent("download", { timeout: 15000 }), link.click()]);
+  const file = await dl.path();
+  const size = fs.statSync(file).size;
+  if (size === 0) throw new Error("empty download");
+  await expectNoError(page);
 }, { group: "apikey" });
+
+T("T43", "[API key mode] batch job reaches 'succeeded' and live log stream works", async (page) => {
+  await nav(page, "Images");
+  await card(page, /Batch sign/).getByRole("button", { name: /Start batch sign/ }).click();
+  await card(page, /Batch sign/).locator("a").click();
+  await page.locator(".jobview .pill").filter({ hasText: "succeeded" }).waitFor({ timeout: 60000 });
+  await page.getByRole("button", { name: "Stream live" }).click();
+  await page.waitForTimeout(1500);
+  const log = await page.locator("pre.log").innerText();
+  if (!/Batch signing/.test(log)) throw new Error("log: " + log.slice(0, 200));
+  await expectNoError(page);
+}, { group: "apikey", timeout: 90000 });
 
 // ================================================================ runner
 const args = process.argv.slice(2);

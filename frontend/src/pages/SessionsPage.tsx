@@ -69,7 +69,8 @@ export default function SessionsPage() {
     }
   }
 
-  async function open(sessionName: string, pw: string) {
+  /** Open a session and make it active. Returns its token, or null on error. */
+  async function open(sessionName: string, pw: string): Promise<string | null> {
     setError(null);
     setNotice(null);
     try {
@@ -78,8 +79,10 @@ export default function SessionsPage() {
       setOpenName("");
       setOpenPassword("");
       setNotice(`Session "${sessionName}" opened.`);
+      return t.token;
     } catch (err) {
       setError((err as ApiError).message);
+      return null;
     }
   }
 
@@ -105,8 +108,19 @@ export default function SessionsPage() {
   async function loadPublicKeys(sessionName: string) {
     setError(null);
     setNotice(null);
+    // A session token is only valid for the session it was issued for, so
+    // a different row has to be opened (made active) first.
+    let tok = session === sessionName ? token : null;
+    if (!tok) {
+      const pw = window.prompt(
+        `Password for session "${sessionName}" (it will become the active session)`
+      );
+      if (pw === null) return;
+      tok = await open(sessionName, pw);
+      if (!tok) return;
+    }
     try {
-      const keys = await sessionsApi.publicKeys(sessionName, token);
+      const keys = await sessionsApi.publicKeys(sessionName, tok);
       setPublicKeys(keys);
       Object.values(keys).forEach((a) => a && rememberArtifact(a));
     } catch (err) {

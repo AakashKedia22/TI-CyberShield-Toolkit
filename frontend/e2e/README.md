@@ -16,7 +16,7 @@ node frontend/e2e/tests.mjs                 # main suite (T01–T38)
 node frontend/e2e/tests.mjs --only T05,T10  # selected tests
 ```
 
-API-key group (T39–T42): restart the crypto service with `CST_CRYPTO_API_KEY=<key>`, then
+API-key group (T39–T43): restart the crypto service with `CST_CRYPTO_API_KEY=<key>`, then
 ```bash
 API_KEY=<key> S1=<existing rsa session name> node frontend/e2e/tests.mjs --group apikey
 ```
@@ -34,4 +34,3 @@ Tests run in order in one browser tab and share state (the open session, uploade
 With `--only`, include the tests that set that state up, e.g. `--only T05,T15,T16,T17`.
 
 Each test is labelled with its ID; see `TEST_REPORT.md` for the test list and the latest results.
-Tests tagged `[known bug #N]` are expected to fail until that bug is fixed.
