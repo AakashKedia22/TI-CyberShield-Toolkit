@@ -55,7 +55,8 @@ generated OpenAPI from FastAPI stays aligned with the frozen contract.
 from datetime import datetime
 from typing import Dict, Literal, Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
+from pydantic_core import PydanticCustomError
 
 # Shared across services (re-exported for existing imports).
 from services.schemas import ArtifactRef, ErrorDetail, ErrorResponse  # noqa: F401
@@ -191,8 +192,18 @@ class DebugCertRequest(BaseModel):
 
     keyrev: int = Field(..., description="1 -> SMPK, 2 -> BMPK")
     swrv: int
-    dev_dbg_type: int
-    dev_uid: str = Field(..., description="64-byte hex device UID")
+    dev_dbg_type: Literal[0, 1, 2, 3, 4] = Field(
+        ...,
+        description=(
+            "0=DBG_PERM_DISABLE, 1=DBG_SOC_DEFAULT, 2=DBG_PUBLIC_ENABLE, "
+            "4=DBG_FULL_ENABLE (3 accepted per the core's docstring)"
+        ),
+    )
+    dev_uid: str = Field(
+        ...,
+        pattern=r"^[0-9a-fA-F]{128}$",
+        description="64-byte device UID as 128 hex characters",
+    )
 
 
 class DebugCertResult(BaseModel):
@@ -205,13 +216,27 @@ class RecoveryCertRequest(BaseModel):
     """Parameters for device recovery certificate generation (devicerecovery)."""
 
     keyrev: int
-    dev_uid: str = Field(..., description="64-byte hex device UID")
+    dev_uid: str = Field(
+        ...,
+        pattern=r"^[0-9a-fA-F]{128}$",
+        description="64-byte device UID as 128 hex characters",
+    )
 
 
 class RecoveryCertResult(BaseModel):
     """Output of device recovery certificate generation."""
 
     recovery_cert: ArtifactRef
+
+
+def _require_key(enabled: bool, key: Optional["ArtifactRef"], flag: str, key_field: str) -> None:
+    """Reject an encryption flag that has no key artifact to encrypt with."""
+    if enabled and key is None:
+        raise PydanticCustomError(
+            "missing_encryption_key",
+            "{flag} requires {key_field} (upload the AES key as an artifact)",
+            {"flag": flag, "key_field": key_field},
+        )
 
 
 class SignImageRequest(BaseModel):
@@ -236,6 +261,13 @@ class SignImageRequest(BaseModel):
     img_integ: bool = False
     crypto_unlock: str = "no"
 
+    @model_validator(mode="after")
+    def _check_encryption_keys(self) -> "SignImageRequest":
+        _require_key(self.sbl_enc, self.enc_key, "sbl_enc", "enc_key")
+        _require_key(self.tifs_enc, self.enc_key, "tifs_enc", "enc_key")
+        _require_key(self.fw_enc, self.fw_enc_key, "fw_enc", "fw_enc_key")
+        return self
+
 
 class SignedImageResult(BaseModel):
     """Output of image signing."""
@@ -254,6 +286,11 @@ class SignSecCfgRequest(BaseModel):
     fw_enc: bool = False
     fw_enc_key: Optional[ArtifactRef] = None
     kd_salt: Optional[ArtifactRef] = None
+
+    @model_validator(mode="after")
+    def _check_encryption_keys(self) -> "SignSecCfgRequest":
+        _require_key(self.fw_enc, self.fw_enc_key, "fw_enc", "fw_enc_key")
+        return self
 
 
 class SignedSecCfgResult(BaseModel):

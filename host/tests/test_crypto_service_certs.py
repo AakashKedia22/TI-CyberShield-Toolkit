@@ -182,6 +182,24 @@ def test_generate_recovery_cert(ctx):
     assert r.json()["recovery_cert"]["filename"] == "device_recovery.bin"
 
 
+
+@pytest.mark.parametrize(
+    "path,body",
+    [
+        ("debug", {"keyrev": 1, "swrv": 1, "dev_dbg_type": 4, "dev_uid": "1234"}),
+        ("debug", {"keyrev": 1, "swrv": 1, "dev_dbg_type": 4, "dev_uid": "G" * 128}),
+        ("debug", {"keyrev": 1, "swrv": 1, "dev_dbg_type": 99, "dev_uid": DEV_UID}),
+        ("recovery", {"keyrev": 1, "dev_uid": "A" * 64}),
+    ],
+)
+def test_debug_and_recovery_reject_bad_input(ctx, path, body):
+    client, _ = ctx
+    r = client.post(
+        f"/devices/{DEVICE}/certificates/{path}", json=body, headers=AUTH_HEADERS
+    )
+    assert r.status_code == 400, r.text
+    assert r.json()["error"]["code"] == "INVALID_ARGUMENT"
+
 def test_cert_requires_token(ctx):
     client, _ = ctx
     body = {"devSrVer": "SR_20", "tifek_artifact": None}
@@ -209,6 +227,43 @@ def test_sign_image(ctx):
     assert r.status_code == 200
     assert len(r.content) > 0
 
+
+
+@pytest.mark.parametrize(
+    "flags,missing",
+    [({"sbl_enc": True}, "enc_key"), ({"tifs_enc": True}, "enc_key"), ({"fw_enc": True}, "fw_enc_key")],
+)
+def test_sign_image_encryption_requires_key(ctx, flags, missing):
+    client, refs = ctx
+    body = {
+        "image_artifact": refs["img"],
+        "core": "C29",
+        "keyrev": "1",
+        "loadaddr": "0x10001000",
+        "swrv": "1",
+        "boot": "FLASH",
+        **flags,
+    }
+    r = client.post(f"/devices/{DEVICE}/images/sign", json=body, headers=AUTH_HEADERS)
+    assert r.status_code == 400, r.text
+    assert missing in r.text
+
+
+def test_sign_image_with_sbl_encryption(ctx):
+    client, refs = ctx
+    body = {
+        "image_artifact": refs["img"],
+        "core": "C29",
+        "keyrev": "1",
+        "loadaddr": "0x10001000",
+        "swrv": "1",
+        "boot": "FLASH",
+        "sbl_enc": True,
+        "enc_key": refs["key"],
+    }
+    r = client.post(f"/devices/{DEVICE}/images/sign", json=body, headers=AUTH_HEADERS)
+    assert r.status_code == 200, r.text
+    assert r.json()["signed_image"]["size"] > 0
 
 def test_encrypt_image(ctx):
     client, refs = ctx

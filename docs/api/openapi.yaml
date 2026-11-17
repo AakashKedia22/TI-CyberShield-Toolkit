@@ -1238,10 +1238,12 @@ components:
           type: integer
         dev_dbg_type:
           type: integer
-          enum: [1, 2, 3, 4]
+          enum: [0, 1, 2, 3, 4]
+          description: 0=DBG_PERM_DISABLE, 1=DBG_SOC_DEFAULT, 2=DBG_PUBLIC_ENABLE, 4=DBG_FULL_ENABLE
         dev_uid:
           type: string
-          description: 64-byte hex device UID
+          pattern: '^[0-9a-fA-F]{128}$'
+          description: 64-byte device UID as 128 hex characters
 
     DebugCertResult:
       type: object
@@ -1260,7 +1262,8 @@ components:
           type: integer
         dev_uid:
           type: string
-          description: 64-byte hex device UID
+          pattern: '^[0-9a-fA-F]{128}$'
+          description: 64-byte device UID as 128 hex characters
 
     RecoveryCertResult:
       type: object
@@ -1302,8 +1305,10 @@ components:
           description: Required for ELF input (symbol-based signing)
         sbl_enc:
           type: boolean
+          description: Requires enc_key (400 otherwise)
         tifs_enc:
           type: boolean
+          description: Requires enc_key (400 otherwise)
         fw_enc:
           type: boolean
         enc_key:
