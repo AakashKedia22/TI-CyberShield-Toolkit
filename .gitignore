@@ -15,5 +15,9 @@ htmlcov/
 
 # Build output
 dist/
-build/package-lock.json
+build/
+package-lock.json
 ai_session.txt
+
+# OS cruft
+.DS_Store
