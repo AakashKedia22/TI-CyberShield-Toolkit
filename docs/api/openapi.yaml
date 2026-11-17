@@ -1238,8 +1238,8 @@ components:
           type: integer
         dev_dbg_type:
           type: integer
-          enum: [0, 1, 2, 3, 4]
-          description: 0=DBG_PERM_DISABLE, 1=DBG_SOC_DEFAULT, 2=DBG_PUBLIC_ENABLE, 4=DBG_FULL_ENABLE
+          enum: [0, 1, 2, 4]
+          description: 0=DBG_PERM_DISABLE, 1=DBG_SOC_DEFAULT, 2=DBG_PUBLIC_ENABLE, 4=DBG_FULL_ENABLE (3 is reserved)
         dev_uid:
           type: string
           pattern: '^[0-9a-fA-F]{128}$'

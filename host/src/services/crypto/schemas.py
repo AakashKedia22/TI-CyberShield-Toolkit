@@ -192,11 +192,11 @@ class DebugCertRequest(BaseModel):
 
     keyrev: int = Field(..., description="1 -> SMPK, 2 -> BMPK")
     swrv: int
-    dev_dbg_type: Literal[0, 1, 2, 3, 4] = Field(
+    dev_dbg_type: Literal[0, 1, 2, 4] = Field(
         ...,
         description=(
             "0=DBG_PERM_DISABLE, 1=DBG_SOC_DEFAULT, 2=DBG_PUBLIC_ENABLE, "
-            "4=DBG_FULL_ENABLE (3 accepted per the core's docstring)"
+            "4=DBG_FULL_ENABLE (3 is reserved)"
         ),
     )
     dev_uid: str = Field(

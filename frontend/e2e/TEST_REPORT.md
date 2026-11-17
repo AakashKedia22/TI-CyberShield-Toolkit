@@ -22,7 +22,7 @@ The first run, against unmodified `http-api` @ `3ee6283`, scored **37/43**. All 
 | 2 | T11 | "Public keys" failed for any session other than the active one | The UI prompts for that session's password, opens it, then loads its keys |
 | 3 | T41 | Artifact upload didn't send `X-API-Key` | A single `authHeaders()` in `api.ts` is now used by every request, including uploads |
 | 4 | T42/T43 | Download links and live log streaming got a 401 with an API key set | With a key set, downloads go through fetch + blob. The job stream now uses fetch with SSE parsing instead of `EventSource` |
-| 5 | T23 | Debug and recovery certificates accepted a malformed UID and any debug type | Schemas require exactly 128 hex characters and a debug type of 0–4 (400 otherwise). The UI uses a labelled debug-type picker that defaults to DBG_PUBLIC_ENABLE (2) instead of DBG_FULL_ENABLE (4) |
+| 5 | T23 | Debug and recovery certificates accepted a malformed UID and any debug type | Schemas require exactly 128 hex characters and a debug type of 0, 1, 2 or 4 (3 is reserved; 400 otherwise). The UI uses a labelled debug-type picker that defaults to DBG_PUBLIC_ENABLE (2) instead of DBG_FULL_ENABLE (4) |
 | 6 | T27 | Ticking an encryption option without a key gave a 500 | The sign form has key uploads for SBL/TIFS and FW encryption and checks for them before submitting. The schema rejects `sbl_enc`/`tifs_enc` without `enc_key` and `fw_enc` without `fw_enc_key` (400), including on Sec-Cfg |
 
 ## Test list and results

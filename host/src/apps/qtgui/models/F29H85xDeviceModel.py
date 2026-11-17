@@ -1007,7 +1007,7 @@ class F29H85xDeviceModel:
             keyrev (str): Key revision to use: 1-> SMPK and 2->BMPK
             swrv (str): Software revision number
             dev_uid (str): Device UID (64-byte hexadecimal string)
-            dev_dbg_type (int): Debug type (1, 2, 3, or 4)
+            dev_dbg_type (int): Debug type (0, 1, 2 or 4; 3 is reserved)
             output_path (Path, optional): Output directory for debug certificate
             hsm (bool, optional): Whether to use HSM Device to access the keys
 

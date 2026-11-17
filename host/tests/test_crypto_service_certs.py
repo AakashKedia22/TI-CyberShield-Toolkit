@@ -172,6 +172,16 @@ def test_generate_debug_cert(ctx):
     assert r.json()["debug_cert"]["filename"] == "debug_auth.cert"
 
 
+
+@pytest.mark.parametrize("dbg_type", [0, 1, 2, 4])
+def test_debug_cert_accepts_valid_debug_types(ctx, dbg_type):
+    client, _ = ctx
+    body = {"keyrev": 1, "swrv": 1, "dev_dbg_type": dbg_type, "dev_uid": DEV_UID}
+    r = client.post(
+        f"/devices/{DEVICE}/certificates/debug", json=body, headers=AUTH_HEADERS
+    )
+    assert r.status_code == 200, r.text
+
 def test_generate_recovery_cert(ctx):
     client, _ = ctx
     body = {"keyrev": 1, "dev_uid": DEV_UID}
@@ -189,6 +199,7 @@ def test_generate_recovery_cert(ctx):
         ("debug", {"keyrev": 1, "swrv": 1, "dev_dbg_type": 4, "dev_uid": "1234"}),
         ("debug", {"keyrev": 1, "swrv": 1, "dev_dbg_type": 4, "dev_uid": "G" * 128}),
         ("debug", {"keyrev": 1, "swrv": 1, "dev_dbg_type": 99, "dev_uid": DEV_UID}),
+        ("debug", {"keyrev": 1, "swrv": 1, "dev_dbg_type": 3, "dev_uid": DEV_UID}),
         ("recovery", {"keyrev": 1, "dev_uid": "A" * 64}),
     ],
 )
